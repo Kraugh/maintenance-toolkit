@@ -9,6 +9,9 @@ temp_non_eliminati.txt
 # Release packages
 *.zip
 
+# Notepad++
+*.bak
+
 # Windows
 Thumbs.db
 Desktop.ini
