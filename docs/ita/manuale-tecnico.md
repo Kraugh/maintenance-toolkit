@@ -76,9 +76,9 @@ Per utilizzarlo è sufficiente:
 
 Al primo avvio Maintenance Toolkit presenta un menu interattivo contenente tutti i moduli disponibili.
 
-> **Screenshot**
->
-> Inserire qui la schermata principale del Toolkit.
+![Menu principale di Maintenance Toolkit](../../Images/screenshots/ita-main-menu.png)
+
+*Figura 1 - Menu principale del Toolkit 3.7.1.*
 
 Ogni modulo è identificato da un numero progressivo.
 
@@ -137,9 +137,9 @@ Il riepilogo indica:
 - gli eventuali errori rilevati;
 - il percorso della cartella contenente i log della sessione.
 
-> **Screenshot**
->
-> Inserire qui il riepilogo finale visualizzato dal Toolkit.
+![Riepilogo Finale di Maintenance Toolkit](../../Images/screenshots/ita-riepilogo-finale.png)
+
+*Figura 2 - Riepilogo finale del Toolkit 3.7.1.*
 
 > **Nota**
 >
@@ -176,9 +176,9 @@ logs/
 
 Ogni nuova esecuzione genera una cartella dedicata, rendendo semplice consultare anche interventi effettuati in passato.
 
-> **Screenshot**
->
-> Inserire qui uno screenshot della struttura della cartella `logs`.
+![Struttura Logs di Maintenance Toolkit](../../Images/screenshots/ita-log.png)
+
+*Figura 3 - Struttura dei logs del Toolkit.*
 
 I file più importanti sono:
 
