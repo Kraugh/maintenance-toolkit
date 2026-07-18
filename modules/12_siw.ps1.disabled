@@ -1,0 +1,9 @@
+﻿. "$PSScriptRoot\00_common.ps1";$C=Read-IniFile $env:MT_INI;$M="SIW"
+$Dir=Join-Path $env:MT_ROOT "tools\SIW";$Preferred=Get-IniValue $C "SIW" "PreferredExecutable" "siw64.exe"
+$Candidates=@((Join-Path $Dir $Preferred),(Join-Path $Dir "siw64.exe"),(Join-Path $Dir "siw.exe"))|Select-Object -Unique
+$Exe=$Candidates|Where-Object{Test-Path$_}|Select-Object -First 1
+if(!$Exe){Write-Skip "SIW non presente in tools\SIW." $M;Set-ModuleResult "Inventario SIW" "SKIP" "Copiare SIW con relativa licenza in tools\SIW";exit 10}
+$Out=Join-Path $env:MT_SESSION_DIR ("SIW_{0}.html"-f$env:COMPUTERNAME)
+$R=Invoke-LoggedProcess $Exe @("/log:html=$Out") "SIW inventory" $M
+if($R-eq0){Set-ModuleResult "Inventario SIW" "OK" "Creato $([IO.Path]::GetFileName($Out))";exit 0}
+Set-ModuleResult "Inventario SIW" "ERROR" "Exit code $R";exit 1

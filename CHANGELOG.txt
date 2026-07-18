@@ -1,0 +1,163 @@
+﻿3.0.6.2 - 18/07/2026
+--------------------
+BUGFIX:
+- Corretto l'errore di formattazione del modulo Pulizia TEMP.
+- Aggiunto temp_non_eliminati.txt con percorso e motivo dell'errore.
+- Nessun'altra modifica alla logica del Toolkit.
+
+3.0.6.1 - 17/07/2026
+
+--------------------
+
+BUGFIX:
+
+- Corretto il lock di rete.txt durante l'esecuzione da Dropbox/share.
+
+- Il report rete viene costruito in memoria e scritto una sola volta.
+
+- Nessun'altra modifica alla logica del Toolkit.
+
+
+
+3.0.6 - 17/07/2026
+
+------------------
+
+ROBUSTEZZA E USABILITÀ:
+
+- Logger con retry e file sharing ReadWrite.
+
+- I lock dei log cumulativi non interrompono il Toolkit.
+
+- Heartbeat durante DISM e SFC.
+
+- Classificazione intelligente dell'esito SFC.
+
+- Nome Crea punto di ripristino uniformato.
+
+- Dettaglio dei file TEMP non eliminati.
+
+- Riepilogo rapido dei controlli eseguiti e mancanti.
+
+
+
+3.0.5.1 - 17/07/2026
+
+--------------------
+
+BUGFIX:
+
+- Corretta l'inizializzazione anticipata dei percorsi di log.
+
+- I log vengono inizializzati soltanto dopo la creazione della sessione.
+
+- Il BAT mantiene aperta la finestra in caso di errore iniziale.
+
+- Nessuna modifica alla logica operativa dei moduli.
+
+
+
+3.0.5 - 17/07/2026
+
+------------------
+
+GESTIONE LOG:
+
+- Aggiunta una cartella log distinta per ogni computer.
+
+- Le sessioni usano il formato YYYYMMDD-HHMMSS_NOME-PC.
+
+- I log cumulativi aggiornamenti_script.log ed errori_script.log
+
+  sono separati per macchina.
+
+- La voce Apri cartella log apre direttamente i log del PC corrente.
+
+- La rotazione dei log agisce soltanto sulle sessioni del PC corrente.
+
+- Nessuna modifica alla logica operativa dei moduli.
+
+
+
+3.0.4.1 - 17/07/2026
+
+--------------------
+
+PUBBLICAZIONE:
+
+- Aggiunta licenza MIT.
+
+- Aggiunti LICENSE.txt e ABOUT.txt.
+
+- Aggiunti README.md, ROADMAP.md e BACKLOG.md.
+
+- Aggiunta voce Informazioni nel menu.
+
+- Aggiornati intestazioni, report e documentazione alla versione 3.0.4.1.
+
+- Nessuna modifica alla logica operativa della 3.0.4.
+
+
+
+3.0.4 - 17/07/2026
+
+------------------
+
+BUGFIX E USABILITÀ:
+
+- Corretto Test-Path nel modulo Pulizia TEMP.
+
+- Rinominato Punto di ripristino in Crea punto di ripristino.
+
+- Corretto l'elenco dei moduli selezionati nei log.
+
+- Aggiunto ritorno al menu principale dopo ogni esecuzione.
+
+- Rimossa la pausa obbligatoria dal normale flusso del BAT.
+
+- Ogni esecuzione dal menu crea una nuova sessione di log.
+
+
+
+3.0.3 - 17/07/2026
+
+------------------
+
+CONFIGURAZIONE:
+
+- DISM RestoreHealth disattivato per impostazione predefinita.
+
+- SFC Scannow disattivato per impostazione predefinita.
+
+- I due moduli restano disponibili per l'esecuzione manuale.
+
+- Nessuna modifica alla logica operativa collaudata della 3.0.2.
+
+
+
+MAINTENANCE TOOLKIT - CHANGELOG
+===============================
+
+3.0.3 - 17/07/2026
+------------------
+BUGFIX:
+- Corretto Winget quando aggiorna sé stesso/App Installer.
+- Aggiunto secondo passaggio automatico Winget.
+- Riscritto Microsoft Update.
+- Eliminata la collisione PowerShell tra collection $I e indice $i.
+- Corretto Test-Path nei moduli OEM.
+- SIW escluso temporaneamente dal menu e dalla configurazione.
+- Migliorata la gestione della codifica SFC.
+- Migliorato il report dei dischi interni e rimovibili.
+- Aggiornata la numerazione della versione.
+- Aggiunta la firma del progetto.
+
+3.0.1
+-----
+BUGFIX:
+- Rimosso BOM dal BAT.
+- Corretta interpolazione della variabile Label in 00_common.ps1.
+
+3.0.0
+-----
+- Prima versione interattiva modulare.

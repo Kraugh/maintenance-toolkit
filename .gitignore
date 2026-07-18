@@ -1,0 +1,19 @@
+# Runtime logs
+logs/
+*.log
+
+# Generated results
+module_result.json
+temp_non_eliminati.txt
+
+# Release packages
+*.zip
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.tmp

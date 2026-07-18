@@ -1,0 +1,23 @@
+﻿MAINTENANCE TOOLKIT 3.0.6.2
+===========================
+
+Strumento gratuito e open source per la manutenzione e la diagnosi
+di sistemi Windows.
+
+Autore:
+    Luca Miselli
+    https://www.kraugh.it
+
+Licenza:
+    MIT License
+    Consultare LICENSE.txt.
+
+Sviluppato con l'indispensabile aiuto
+di una Rubber Duck molto paziente.
+
+Questo progetto è nato da un'esigenza reale:
+automatizzare le operazioni ripetitive di manutenzione dei PC Windows
+senza rinunciare a log dettagliati e a un comportamento prevedibile.
+
+Se questo toolkit ti ha fatto risparmiare mezz'ora di lavoro,
+allora ha raggiunto il suo scopo.
