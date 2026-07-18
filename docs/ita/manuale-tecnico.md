@@ -1,4 +1,4 @@
-# Guida Tecnico
+# Manuale Tecnico
 
 **Versione documento:** 1.0
 

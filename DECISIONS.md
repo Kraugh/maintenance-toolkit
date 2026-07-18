@@ -158,8 +158,8 @@ User documentation files use lowercase names separated by hyphens.
 
 Examples:
 
-- `guida-tecnico.md`
-- `guida-sistemista.md`
+- `manuale-tecnico.md`
+- `manuale-sistemista.md`
 - `field-technician-guide.md`
 - `system-administrator-guide.md`
 
