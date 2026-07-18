@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.0.6.2 - Modulo Microsoft Update
+# Maintenance Toolkit 3.7.0 - Modulo Microsoft Update
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -28,7 +28,7 @@ try {
     Write-Main "Microsoft Update: apertura Windows Update Agent."
 
     $ServiceManager = New-Object -ComObject Microsoft.Update.ServiceManager
-    $ServiceManager.ClientApplicationID = "Maintenance Toolkit 3.0.6.2"
+    $ServiceManager.ClientApplicationID = "Maintenance Toolkit 3.7.0"
 
     $ServicePresent = @(
         $ServiceManager.Services |
@@ -48,7 +48,7 @@ try {
     }
 
     $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-    $UpdateSession.ClientApplicationID = "Maintenance Toolkit 3.0.6.2"
+    $UpdateSession.ClientApplicationID = "Maintenance Toolkit 3.7.0"
 
     $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
     $UpdateSearcher.ServerSelection = 3

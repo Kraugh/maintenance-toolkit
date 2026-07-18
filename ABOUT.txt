@@ -1,4 +1,4 @@
-MAINTENANCE TOOLKIT 3.0.6.2
+MAINTENANCE TOOLKIT 3.7.0
 ===========================
 
 Strumento gratuito e open source per la manutenzione e la diagnosi

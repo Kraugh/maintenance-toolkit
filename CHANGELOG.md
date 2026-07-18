@@ -5,6 +5,18 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 3.7.0 — 18 luglio 2026
+
+### Nuove funzionalità
+
+- aggiunta la voce di menu **Cerca aggiornamenti**;
+- aggiunto il controllo della versione tramite `kraugh_it/version.json` pubblicato su kraugh.it;
+- aggiunti messaggi della papera in italiano per esiti e anomalie del controllo aggiornamenti;
+- aggiunta la voce di menu **Autotest del Toolkit**;
+- aggiunti i parametri da riga di comando `-SelfTest` e `-CheckUpdates`;
+- l'autotest verifica file richiesti, moduli, sintassi PowerShell, configurazione INI, manifest ed endpoint remoto;
+- il mancato accesso al server degli aggiornamenti non impedisce l'uso del Toolkit.
+
 ## 3.0.6.2 — 18 luglio 2026
 
 ### Correzioni

@@ -2,7 +2,7 @@
 
 **Document version:** 1.0
 
-**Compatible with:** Maintenance Toolkit 3.0.6.2
+**Compatible with:** Maintenance Toolkit 3.7.0
 
 **Last updated:** 18/07/2026
 

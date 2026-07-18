@@ -1,4 +1,4 @@
-﻿CARTELLA RISERVATA A STRUMENTI SYSINTERNALS OPZIONALI
+CARTELLA RISERVATA A STRUMENTI SYSINTERNALS OPZIONALI
 
 La versione 3.0 non esegue automaticamente strumenti Sysinternals.
 La cartella è predisposta per moduli futuri o personalizzazioni interne.

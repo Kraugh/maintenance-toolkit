@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.0.6.2
+# Maintenance Toolkit 3.7.0
 #
 # Autore:
 #   Luca Miselli
@@ -11,15 +11,18 @@
 [CmdletBinding()]
 param(
     [switch]$RunAll,
-    [string[]]$Only
+    [string[]]$Only,
+    [switch]$SelfTest,
+    [switch]$CheckUpdates
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "3.0.6.2"
+$Version = "3.7.0"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ModulesDir = Join-Path $Root "modules"
 $LogsDir = Join-Path $Root "logs"
 $IniPath = Join-Path $Root "MaintenanceToolkit.ini"
+$UpdateManifestUrl = "https://www.kraugh.it/api/maintenance-toolkit/version.json"
 
 # I log sono separati per computer, così il toolkit può essere eseguito
 # anche da una chiavetta USB o da una share senza mescolare le sessioni.
@@ -53,6 +56,270 @@ $Catalog = @(
     [pscustomobject]@{ Id=13; Key="ComponentCleanup"; Name="Pulizia componenti Windows";   File="14_component_cleanup.ps1" }
 )
 
+function Invoke-MTUpdateCheck {
+    [CmdletBinding()]
+    param(
+        [switch]$Quiet
+    )
+
+    if (-not $Quiet) {
+        Write-Host ""
+        Write-Host "La papera sta cercando versioni più recenti..." -ForegroundColor Cyan
+        Write-Host ""
+    }
+
+    try {
+        $Manifest = Invoke-RestMethod -Uri $UpdateManifestUrl -Method Get -TimeoutSec 10 -ErrorAction Stop
+
+        if (-not $Manifest.latest_version) {
+            throw "Il manifest non contiene il campo latest_version."
+        }
+
+        $InstalledVersion = [version]$Version
+        $LatestVersion = [version]([string]$Manifest.latest_version)
+        $MinimumSupported = $null
+
+        if ($Manifest.minimum_supported) {
+            $MinimumSupported = [version]([string]$Manifest.minimum_supported)
+        }
+
+        if (-not $Quiet) {
+            Write-Host ("Versione installata : {0}" -f $InstalledVersion)
+            Write-Host ("Versione disponibile: {0}" -f $LatestVersion)
+            Write-Host ""
+        }
+
+        if ($InstalledVersion -lt $LatestVersion) {
+            if (-not $Quiet) {
+                Write-Host "La papera ha trovato una versione più recente di Maintenance Toolkit." -ForegroundColor Yellow
+
+                if ($MinimumSupported -and $InstalledVersion -lt $MinimumSupported) {
+                    Write-Host "La versione installata non è più tra quelle supportate." -ForegroundColor Yellow
+                }
+
+                if ($Manifest.release_notes) {
+                    Write-Host ""
+                    Write-Host "Novità:"
+                    Write-Host ([string]$Manifest.release_notes)
+                }
+
+                if ($Manifest.download_url) {
+                    Write-Host ""
+                    Write-Host "Download:"
+                    Write-Host ([string]$Manifest.download_url) -ForegroundColor Cyan
+                }
+            }
+
+            return [pscustomobject]@{
+                Status = "UPDATE_AVAILABLE"
+                InstalledVersion = $InstalledVersion
+                LatestVersion = $LatestVersion
+                Manifest = $Manifest
+            }
+        }
+
+        if ($InstalledVersion -gt $LatestVersion) {
+            if (-not $Quiet) {
+                Write-Host "Questa versione è più recente di quella pubblicata. La papera sospetta un ambiente di test." -ForegroundColor Yellow
+            }
+
+            return [pscustomobject]@{
+                Status = "DEVELOPMENT_VERSION"
+                InstalledVersion = $InstalledVersion
+                LatestVersion = $LatestVersion
+                Manifest = $Manifest
+            }
+        }
+
+        if (-not $Quiet) {
+            Write-Host "La papera non ha trovato versioni più recenti." -ForegroundColor Green
+        }
+
+        return [pscustomobject]@{
+            Status = "CURRENT"
+            InstalledVersion = $InstalledVersion
+            LatestVersion = $LatestVersion
+            Manifest = $Manifest
+        }
+    }
+    catch {
+        if (-not $Quiet) {
+            Write-Host "La papera non è riuscita a controllare gli aggiornamenti." -ForegroundColor Yellow
+            Write-Host "Maintenance Toolkit può comunque essere utilizzato normalmente."
+            Write-Host ""
+            Write-Host ("Dettaglio: {0}" -f $_.Exception.Message) -ForegroundColor DarkGray
+        }
+
+        return [pscustomobject]@{
+            Status = "ERROR"
+            InstalledVersion = [version]$Version
+            LatestVersion = $null
+            Manifest = $null
+            Error = $_.Exception.Message
+        }
+    }
+}
+
+function Invoke-MTSelfTest {
+    [CmdletBinding()]
+    param()
+
+    $Results = [System.Collections.Generic.List[object]]::new()
+
+    function Add-SelfTestResult {
+        param(
+            [string]$Test,
+            [ValidateSet("OK", "WARN", "ERROR")][string]$Status,
+            [string]$Detail
+        )
+
+        $Results.Add([pscustomobject]@{
+            Test = $Test
+            Status = $Status
+            Detail = $Detail
+        })
+    }
+
+    Write-Host "============================================================"
+    Write-Host " AUTOTEST MAINTENANCE TOOLKIT $Version"
+    Write-Host "============================================================"
+    Write-Host ""
+    Write-Host "La papera sta controllando il Toolkit..." -ForegroundColor Cyan
+    Write-Host ""
+
+    if ($PSVersionTable.PSVersion -ge [version]"5.1") {
+        Add-SelfTestResult "Versione PowerShell" "OK" ($PSVersionTable.PSVersion.ToString())
+    }
+    else {
+        Add-SelfTestResult "Versione PowerShell" "ERROR" "È richiesto Windows PowerShell 5.1 o successivo."
+    }
+
+    $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $Principal = New-Object Security.Principal.WindowsPrincipal($Identity)
+    if ($Principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Add-SelfTestResult "Privilegi amministrativi" "OK" "Sessione elevata."
+    }
+    else {
+        Add-SelfTestResult "Privilegi amministrativi" "WARN" "Sessione non elevata; il launcher BAT richiede normalmente l'elevazione."
+    }
+
+    foreach ($RequiredPath in @(
+        $IniPath,
+        (Join-Path $Root "Avvia_Manutenzione.bat"),
+        (Join-Path $Root "ABOUT.txt"),
+        (Join-Path $ModulesDir "00_common.ps1")
+    )) {
+        if (Test-Path -LiteralPath $RequiredPath -PathType Leaf) {
+            Add-SelfTestResult ("File: " + (Split-Path $RequiredPath -Leaf)) "OK" "Presente."
+        }
+        else {
+            Add-SelfTestResult ("File: " + (Split-Path $RequiredPath -Leaf)) "ERROR" "File mancante."
+        }
+    }
+
+    foreach ($Module in $Catalog) {
+        $ModulePath = Join-Path $ModulesDir $Module.File
+        if (Test-Path -LiteralPath $ModulePath -PathType Leaf) {
+            Add-SelfTestResult ("Modulo: " + $Module.File) "OK" "Presente."
+        }
+        else {
+            Add-SelfTestResult ("Modulo: " + $Module.File) "ERROR" "File mancante."
+        }
+    }
+
+    $PowerShellFiles = @(
+        Get-ChildItem -LiteralPath $Root -Filter "*.ps1" -File -ErrorAction SilentlyContinue
+        Get-ChildItem -LiteralPath $ModulesDir -Filter "*.ps1" -File -ErrorAction SilentlyContinue
+    )
+
+    foreach ($File in $PowerShellFiles) {
+        $Tokens = $null
+        $ParseErrors = $null
+        [void][System.Management.Automation.Language.Parser]::ParseFile(
+            $File.FullName,
+            [ref]$Tokens,
+            [ref]$ParseErrors
+        )
+
+        if ($ParseErrors.Count -eq 0) {
+            Add-SelfTestResult ("Sintassi: " + $File.Name) "OK" "Nessun errore rilevato."
+        }
+        else {
+            $Detail = ($ParseErrors | ForEach-Object { $_.Message }) -join " | "
+            Add-SelfTestResult ("Sintassi: " + $File.Name) "ERROR" $Detail
+        }
+    }
+
+    try {
+        $TestConfig = Read-IniFile $IniPath
+        if ($TestConfig.ContainsKey("General") -and $TestConfig.ContainsKey("Modules")) {
+            Add-SelfTestResult "Configurazione INI" "OK" "Sezioni General e Modules presenti."
+        }
+        else {
+            Add-SelfTestResult "Configurazione INI" "ERROR" "Mancano le sezioni General o Modules."
+        }
+    }
+    catch {
+        Add-SelfTestResult "Configurazione INI" "ERROR" $_.Exception.Message
+    }
+
+    $LocalManifestPath = Join-Path $Root "kraugh_it\version.json"
+    if (Test-Path -LiteralPath $LocalManifestPath) {
+        try {
+            $LocalManifest = Get-Content -LiteralPath $LocalManifestPath -Raw | ConvertFrom-Json
+            [void][version]([string]$LocalManifest.latest_version)
+            Add-SelfTestResult "Manifest locale" "OK" "version.json valido."
+        }
+        catch {
+            Add-SelfTestResult "Manifest locale" "ERROR" $_.Exception.Message
+        }
+    }
+    else {
+        Add-SelfTestResult "Manifest locale" "WARN" "kraugh_it\version.json non presente nel pacchetto."
+    }
+
+    $UpdateResult = Invoke-MTUpdateCheck -Quiet
+    if ($UpdateResult.Status -eq "ERROR") {
+        Add-SelfTestResult "Endpoint aggiornamenti" "WARN" "Non raggiungibile: $($UpdateResult.Error)"
+    }
+    else {
+        Add-SelfTestResult "Endpoint aggiornamenti" "OK" ("Risponde; versione pubblicata {0}." -f $UpdateResult.LatestVersion)
+    }
+
+    foreach ($Result in $Results) {
+        $Colour = switch ($Result.Status) {
+            "OK" { "Green" }
+            "WARN" { "Yellow" }
+            "ERROR" { "Red" }
+        }
+        Write-Host ("[{0,-5}] {1} - {2}" -f $Result.Status, $Result.Test, $Result.Detail) -ForegroundColor $Colour
+    }
+
+    $Errors = @($Results | Where-Object Status -eq "ERROR").Count
+    $Warnings = @($Results | Where-Object Status -eq "WARN").Count
+
+    Write-Host ""
+    Write-Host "============================================================"
+    Write-Host ("Errori: {0}   Avvisi: {1}" -f $Errors, $Warnings)
+    Write-Host "============================================================"
+
+    if ($Errors -gt 0) {
+        Write-Host "La papera è confusa. Controlliamo insieme i risultati dell'autotest." -ForegroundColor Red
+    }
+    elseif ($Warnings -gt 0) {
+        Write-Host "La papera pensa che alcuni elementi meritino un'occhiata." -ForegroundColor Yellow
+    }
+    else {
+        Write-Host "La papera non ha trovato nulla di insolito." -ForegroundColor Green
+    }
+
+    return [pscustomobject]@{
+        Errors = $Errors
+        Warnings = $Warnings
+        Results = $Results
+    }
+}
+
 
 function Show-Menu {
     Clear-Host
@@ -77,6 +344,8 @@ function Show-Menu {
     Write-Host "[A] Esegui tutti i moduli abilitati"
     Write-Host "[C] Apri configurazione INI"
     Write-Host "[L] Apri cartella log"
+    Write-Host "[T] Autotest del Toolkit"
+    Write-Host "[U] Cerca aggiornamenti"
     Write-Host "[I] Informazioni e licenza"
     Write-Host "[Q] Esci"
     Write-Host ""
@@ -101,6 +370,23 @@ function Select-Modules {
             continue
         }
 
+        if ($Choice -match '^[Tt]$') {
+            Clear-Host
+            $null = Invoke-MTSelfTest
+            Write-Host ""
+            Write-Host "Premere Invio per tornare al menu..."
+            [void](Read-Host)
+            continue
+        }
+
+        if ($Choice -match '^[Uu]$') {
+            Clear-Host
+            $null = Invoke-MTUpdateCheck
+            Write-Host ""
+            Write-Host "Premere Invio per tornare al menu..."
+            [void](Read-Host)
+            continue
+        }
 
 if ($Choice -match '^[Ii]$') {
     Clear-Host
@@ -403,6 +689,35 @@ Grazie per aver utilizzato Maintenance Toolkit.
         Errors = $Errors
         Warnings = $Warnings
     }
+}
+
+# Autotest e controllo aggiornamenti da riga di comando.
+if ($SelfTest) {
+    $SelfTestOutcome = Invoke-MTSelfTest
+
+    if ($SelfTestOutcome.Errors -gt 0) {
+        exit 1
+    }
+
+    if ($SelfTestOutcome.Warnings -gt 0) {
+        exit 20
+    }
+
+    exit 0
+}
+
+if ($CheckUpdates) {
+    $UpdateOutcome = Invoke-MTUpdateCheck
+
+    if ($UpdateOutcome.Status -eq "ERROR") {
+        exit 20
+    }
+
+    if ($UpdateOutcome.Status -eq "UPDATE_AVAILABLE") {
+        exit 10
+    }
+
+    exit 0
 }
 
 # Modalità non interattiva tramite parametri.

@@ -1,4 +1,4 @@
-# Maintenance Toolkit 3.0.6.2
+# Maintenance Toolkit 3.7.0
 
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
@@ -74,7 +74,23 @@ logs/
 
 Ogni nuova operazione avviata dal menu crea una sessione distinta.
 
-## Stato della versione 3.0.6.2
+## Autotest e aggiornamenti
+
+Dal menu principale sono disponibili:
+
+- **T — Autotest del Toolkit**, per verificare integrità dei file, sintassi degli script, configurazione e raggiungibilità del manifest;
+- **U — Cerca aggiornamenti**, per confrontare la versione installata con quella pubblicata su kraugh.it.
+
+Da riga di comando:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -SelfTest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -CheckUpdates
+```
+
+Il controllo aggiornamenti è accessorio: un errore di rete non impedisce l'utilizzo del Toolkit.
+
+## Stato della versione 3.7.0
 
 La versione corrente include:
 

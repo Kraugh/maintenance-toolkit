@@ -6,6 +6,20 @@ Le modifiche alla sola documentazione del repository possono essere
 registrate tramite commit senza cambiare la versione del programma.
 
 
+3.7.0 - 18/07/2026
+------------------
+NUOVE FUNZIONALITÀ:
+- Aggiunta la voce di menu Cerca aggiornamenti.
+- Aggiunto il controllo della versione tramite il manifest pubblicato
+  su kraugh.it.
+- Aggiunti messaggi della papera in italiano.
+- Aggiunta la voce di menu Autotest del Toolkit.
+- Aggiunti i parametri -SelfTest e -CheckUpdates.
+- L'autotest verifica file, moduli, sintassi PowerShell, configurazione,
+  manifest locale ed endpoint remoto.
+- Il mancato accesso al server degli aggiornamenti non blocca il Toolkit.
+
+
 3.0.6.2 - 18/07/2026
 --------------------
 CORREZIONI:

@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-title Maintenance Toolkit 3.0.6.2
+title Maintenance Toolkit 3.7.0
 
 set "ROOT=%~dp0"
 
@@ -13,7 +13,7 @@ if not "%errorlevel%"=="0" (
 )
 
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass ^
-  -File "%ROOT%MaintenanceToolkit.ps1"
+  -File "%ROOT%MaintenanceToolkit.ps1" %*
 
 set "RC=%errorlevel%"
 

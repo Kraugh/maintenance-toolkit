@@ -62,6 +62,8 @@ Miglioramenti utili o caratterizzanti, da valutare dopo la stabilizzazione.
 - Promemoria discreti per idratazione e pause
 - Commenti ed Easter egg nei sorgenti
 - Segnale sonoro opzionale al termine delle operazioni
+- File centralizzato e localizzabile per i messaggi della papera (`duck-messages`)
+- Messaggi della papera coerenti per completamento, avvisi ed errori
 
 ---
 

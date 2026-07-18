@@ -20,7 +20,7 @@
 
 - [ ] Modalità non interattiva `-RunAll`
 - [ ] Modalità diagnostica `-Debug`
-- [ ] Test completo `-TestAll`
+- [x] Autotest da riga di comando `-SelfTest`
 - [ ] Test mirato alle novità della release `-TestRelease`
 - [ ] Logging diagnostico più verboso solo dove utile
 - [ ] Prima integrazione con Task Scheduler e Group Policy
@@ -52,12 +52,12 @@
 
 ## Aggiornamenti del Toolkit
 
-- [ ] File di versione unico
-- [ ] Voce di menu **Cerca aggiornamenti**
+- [x] File di versione unico
+- [x] Voce di menu **Cerca aggiornamenti**
 - [ ] Riorganizzazione del riepilogo finale in sezioni (Moduli eseguiti, Avvisi, Errori e Percorso dei log)
-- [ ] Verifica della versione più recente disponibile
+- [x] Verifica della versione più recente disponibile
 - [ ] Apertura della pagina ufficiale di download
-- [ ] Manifest remoto della release su kraugh.it
+- [x] Manifest remoto della release su kraugh.it
 - [ ] Sistema di aggiornamento automatico, solo dopo il consolidamento
   della verifica manuale
 
@@ -71,7 +71,7 @@
 - [x] Struttura multilingua `docs/ita` e `docs/eng`
 - [x] Completamento della Guida Tecnico in italiano
 - [ ] Completamento della Guida Sistemista in italiano
-- [ ] Traduzione inglese delle guide
+- [ ] Traduzione inglese della Guida Sistemista
 - [ ] Screenshot dell'interfaccia
 - [ ] Guida GPO passo-passo
 - [ ] Guida Task Scheduler passo-passo
