@@ -1,4 +1,4 @@
-# Maintenance Toolkit 3.7.0
+# Maintenance Toolkit 3.7.1
 
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
@@ -20,6 +20,7 @@ Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.
 - report della configurazione di rete;
 - creazione di un punto di ripristino;
 - aggiornamenti applicativi tramite Winget;
+- messaggi di stato durante le installazioni Winget più lunghe;
 - aggiornamenti Microsoft Update;
 - aggiornamento delle firme Microsoft Defender;
 - integrazione opzionale con strumenti OEM già installati;
@@ -90,7 +91,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1
 
 Il controllo aggiornamenti è accessorio: un errore di rete non impedisce l'utilizzo del Toolkit.
 
-## Stato della versione 3.7.0
+## Stato della versione 3.7.1
 
 La versione corrente include:
 
@@ -101,9 +102,9 @@ La versione corrente include:
 - dettaglio degli elementi TEMP non eliminati;
 - riepilogo rapido dei controlli eseguiti e non eseguiti.
 
-Il core è stato collaudato su Windows 11 25H2. I test su Windows 10,
-l'esecuzione come `SYSTEM`, Task Scheduler e Group Policy sono previsti
-nelle prossime fasi di sviluppo.
+Il core è stato collaudato su Windows 11 25H2. Autotest, controllo aggiornamenti
+ed esecuzione del modulo Winget sono stati verificati anche su Windows 10.
+I test come `SYSTEM`, Task Scheduler e Group Policy sono previsti nelle prossime fasi di sviluppo.
 
 ## Documentazione
 

@@ -2,7 +2,7 @@
 
 **Versione documento:** 1.0
 
-**Compatibile con:** Maintenance Toolkit 3.7.0
+**Compatibile con:** Maintenance Toolkit 3.7.1
 
 **Ultimo aggiornamento:** 18/07/2026
 
@@ -109,6 +109,8 @@ Maintenance Toolkit permette di eseguire uno o più moduli in base alle esigenze
 Per una verifica rapida è possibile eseguire un singolo controllo, mentre per un'analisi completa è disponibile l'esecuzione di tutti i moduli abilitati.
 
 Durante l'elaborazione il Toolkit informa costantemente il tecnico sullo stato delle operazioni. Alcuni controlli, come Microsoft Update, DISM RestoreHealth, SFC Scannow o gli aggiornamenti OEM, possono richiedere diversi minuti.
+
+Durante gli aggiornamenti Winget il Toolkit può restare apparentemente fermo mentre gli installer lavorano. Sui computer non aggiornati da tempo l'operazione può durare diversi minuti e possono comparire finestre dei singoli programmi: è un comportamento normale.
 
 Quando un'operazione è particolarmente lunga vengono mostrati messaggi di avanzamento, evitando che il computer sembri bloccato.
 

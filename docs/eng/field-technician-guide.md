@@ -2,7 +2,7 @@
 
 **Document version:** 1.0
 
-**Compatible with:** Maintenance Toolkit 3.7.0
+**Compatible with:** Maintenance Toolkit 3.7.1
 
 **Last updated:** 18/07/2026
 
@@ -109,6 +109,8 @@ Maintenance Toolkit allows you to run one or more modules depending on the requi
 For a quick check, you can run a single check, whilst for a comprehensive analysis, you can run all enabled modules.
 
 During processing, the Toolkit keeps the technician constantly informed of the status of operations. Some checks, such as Microsoft Update, DISM RestoreHealth, SFC Scannow or OEM updates, may take several minutes.
+
+During Winget updates, the Toolkit may appear to pause while individual installers are working. On computers that have not been updated for some time, this may take several minutes and installer windows may appear. This is normal.
 
 When an operation takes a particularly long time, progress messages are displayed, preventing the computer from appearing to be frozen.
 

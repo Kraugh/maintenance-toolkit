@@ -6,6 +6,13 @@ Le modifiche alla sola documentazione del repository possono essere
 registrate tramite commit senza cambiare la versione del programma.
 
 
+3.7.1 - 18/07/2026
+- Migliorati i messaggi durante gli aggiornamenti Winget.
+- Specificato che l'installazione può richiedere diversi minuti.
+- Specificato che le finestre dei singoli installer sono normali.
+- Aggiunto l'esito al termine di ogni passaggio Winget.
+- Nessuna modifica alla logica di installazione.
+
 3.7.0 - 18/07/2026
 ------------------
 NUOVE FUNZIONALITÀ:

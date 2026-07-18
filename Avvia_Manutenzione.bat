@@ -1,6 +1,6 @@
 @echo off
 setlocal EnableExtensions
-title Maintenance Toolkit 3.7.0
+title Maintenance Toolkit 3.7.1
 
 set "ROOT=%~dp0"
 

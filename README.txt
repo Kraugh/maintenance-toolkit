@@ -1,4 +1,4 @@
-MAINTENANCE TOOLKIT 3.7.0
+MAINTENANCE TOOLKIT 3.7.1
 ===========================
 
 Strumento gratuito e open source per la manutenzione, la diagnostica
@@ -54,7 +54,7 @@ MODULI DISPONIBILI
 
 SIW
 ---
-Il modulo SIW è temporaneamente escluso dalla versione 3.7.0.
+Il modulo SIW è temporaneamente escluso dalla versione 3.7.1.
 
 Il relativo sorgente è conservato come:
 
@@ -93,7 +93,7 @@ Questa struttura consente di usare il Toolkit da USB, Dropbox o share
 senza mescolare i risultati provenienti da computer diversi.
 
 
-STATO DELLA VERSIONE 3.7.0
+STATO DELLA VERSIONE 3.7.1
 ----------------------------
 - Logger resistente ai lock temporanei di Dropbox, share e USB.
 - Report rete costruito in memoria e scritto una sola volta.

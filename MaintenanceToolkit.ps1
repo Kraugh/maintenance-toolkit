@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.0
+# Maintenance Toolkit 3.7.1
 #
 # Autore:
 #   Luca Miselli
@@ -17,7 +17,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "3.7.0"
+$Version = "3.7.1"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ModulesDir = Join-Path $Root "modules"
 $LogsDir = Join-Path $Root "logs"

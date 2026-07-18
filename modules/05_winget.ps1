@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.0 - Modulo Winget
+# Maintenance Toolkit 3.7.1 - Modulo Winget
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -22,9 +22,18 @@ function Invoke-WingetUpgradePass {
     $RawLog = Join-Path $env:MT_SESSION_DIR ("winget_passaggio_{0}.txt" -f $Pass)
 
     Write-Main "Winget: avvio passaggio $Pass."
+    Write-Main ""
+    Write-Main "Winget sta installando gli aggiornamenti disponibili."
+    Write-Main "Questa operazione può richiedere diversi minuti, soprattutto sui computer non aggiornati da tempo."
+    Write-Main "Durante l'installazione potrebbero comparire finestre dei singoli programmi: è un comportamento normale."
+    Write-Main "Maintenance Toolkit riprenderà automaticamente al termine."
+    Write-Main ""
 
     $Output = & $WingetPath @Arguments 2>&1
     $ExitCode = $LASTEXITCODE
+
+    Write-Main ""
+    Write-Main "Winget: passaggio $Pass terminato con codice $ExitCode."
 
     $Output | Set-Content -LiteralPath $RawLog -Encoding UTF8
 

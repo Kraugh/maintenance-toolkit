@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.0
+# Maintenance Toolkit 3.7.1
 #
 # Autore:
 #   Luca Miselli

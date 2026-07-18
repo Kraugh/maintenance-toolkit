@@ -5,6 +5,16 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 3.7.1 — 18 luglio 2026
+
+### Miglioramenti di usabilità
+
+- aggiunti messaggi chiari prima dell'installazione degli aggiornamenti Winget;
+- indicato che l'operazione può richiedere diversi minuti sui computer non aggiornati da tempo;
+- indicato che la comparsa delle finestre dei singoli installer è normale;
+- aggiunto un messaggio al termine di ogni passaggio Winget;
+- nessuna modifica alla logica di installazione degli aggiornamenti.
+
 ## 3.7.0 — 18 luglio 2026
 
 ### Nuove funzionalità
