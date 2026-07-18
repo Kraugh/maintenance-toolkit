@@ -1,0 +1,16 @@
+{
+    "project": "Maintenance Toolkit",
+    "latest_version": "3.7.0",
+    "minimum_supported": "3.5.0",
+    "release_date": "2026-07-18",
+    "release_notes": "Added automatic update check and self-test.",
+
+    "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/latest",
+    "repository_url": "https://github.com/Kraugh/maintenance-toolkit",
+    "documentation_url": "https://www.kraugh.it/projects/maintenance-toolkit/",
+
+    "selftest": true,
+    "update_check": true,
+
+    "duck_message": "The duck didn't find any newer versions."
+}

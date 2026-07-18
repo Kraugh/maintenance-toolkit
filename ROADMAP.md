@@ -69,7 +69,7 @@
 - [x] Documentazione in Markdown
 - [x] Convenzioni editoriali
 - [x] Struttura multilingua `docs/ita` e `docs/eng`
-- [ ] Completamento della Guida Tecnico in italiano
+- [x] Completamento della Guida Tecnico in italiano
 - [ ] Completamento della Guida Sistemista in italiano
 - [ ] Traduzione inglese delle guide
 - [ ] Screenshot dell'interfaccia
