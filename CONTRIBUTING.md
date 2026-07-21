@@ -18,3 +18,6 @@ Bug reports and suggestions are always welcome.
 Please do not include personal or sensitive information in public logs or issue reports.
 
 Thank you for contributing.
+
+A gentleman never runs.
+He never stops either.
