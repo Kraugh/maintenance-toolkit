@@ -1,37 +1,83 @@
+# Development process / Processo di sviluppo
+
+Maintenance Toolkit is developed through approximately two-week development sprints.
+
+Maintenance Toolkit viene sviluppato tramite sprint di circa due settimane.
+
+During each sprint, bug reports, feature requests and user feedback are collected.  
+At the end of the sprint, the open issues are reviewed and the work for the next release is selected.
+
+Durante ogni sprint vengono raccolti bug report, richieste di funzionalità e feedback degli utenti.  
+Al termine dello sprint, le issue aperte vengono esaminate e viene selezionato il lavoro per la release successiva.
+
+Release dates are intentionally not fixed. Quality takes priority over speed.
+
+Le date di rilascio non sono prefissate. La qualità ha priorità sulla velocità.
+
+---
+
 # Roadmap
 
-> La roadmap contiene soltanto obiettivi che il progetto ha deciso di
-> realizzare. L'ordine delle sezioni non rappresenta necessariamente
-> l'ordine cronologico di implementazione.
+> La roadmap contiene soltanto obiettivi che il progetto ha deciso di realizzare.
+> L'ordine delle sezioni non rappresenta necessariamente l'ordine cronologico
+> di implementazione.
+
+## Stato attuale
+
+- [x] Release stabile pubblica **3.7.1**
+- [x] Repository GitHub pubblico
+- [x] Pacchetto ZIP allegato alla release
+- [x] Manuale tecnico italiano con screenshot
+- [x] Test su Windows 11
+- [x] Test su Windows 10 22H2
+- [x] Test da cartella locale
+- [x] Test da Dropbox
+- [x] Controllo remoto della versione tramite kraugh.it
 
 ---
 
-## Serie 3.0.6.x — consolidamento del core
+## Prossime release 3.7.x — consolidamento
 
-- [x] Report rete robusto durante l'esecuzione da Dropbox e share
-- [x] Correzione e dettaglio della Pulizia TEMP
+- [ ] Migliorare il feedback durante le operazioni Winget di lunga durata
+- [ ] Mostrare messaggi periodici senza alterare gli argomenti passati a Winget
+- [ ] Interpretare in modo più chiaro gli esiti parziali di Winget
+- [ ] Tradurre in messaggi leggibili i codici Microsoft Update conosciuti
+- [ ] Chiarire nel menu la differenza tra moduli automatici e manuali
+- [ ] Valutare una denominazione più chiara per l'autotest
 - [ ] Classificazione definitiva degli esiti SFC
 - [ ] Heartbeat rifinito per DISM e SFC
-- [ ] Riepilogo rapido della sessione
+- [ ] Riepilogo rapido e più leggibile della sessione
 
 ---
 
-## Serie 3.0.7 — esecuzione e test da riga di comando
+## Internazionalizzazione
+
+- [ ] Separare le stringhe dell'interfaccia dalla logica del Toolkit
+- [ ] Creare risorse linguistiche italiane e inglesi
+- [ ] Selezionare la lingua all'avvio
+- [ ] Cambiare lingua dal menu
+- [ ] Memorizzare la preferenza nel file INI
+- [ ] Usare l'inglese come fallback per le stringhe mancanti
+- [ ] Completare la documentazione inglese
+
+---
+
+## Esecuzione automatizzata
 
 - [ ] Modalità non interattiva `-RunAll`
 - [ ] Modalità diagnostica `-Debug`
 - [x] Autotest da riga di comando `-SelfTest`
 - [ ] Test mirato alle novità della release `-TestRelease`
 - [ ] Logging diagnostico più verboso solo dove utile
-- [ ] Prima integrazione con Task Scheduler e Group Policy
 
 ---
 
 ## Distribuzione centralizzata
 
+- [ ] Guida per amministratori di sistema
+- [ ] Guida Group Policy passo-passo
+- [ ] Guida Task Scheduler passo-passo
 - [ ] Esecuzione come `SYSTEM`
-- [ ] Distribuzione tramite Task Scheduler
-- [ ] Distribuzione tramite Group Policy
 - [ ] Test di Winget in contesto `SYSTEM`
 - [ ] Raccolta e centralizzazione dei log
 - [ ] Verifica da share SMB
@@ -39,43 +85,15 @@
 
 ---
 
-## Compatibilità
-
-- [x] Test su Windows 11 25H2
-- [x] Test da cartella locale
-- [x] Test da Dropbox
-- [ ] Test su Windows 10 22H2
-- [ ] Test con account standard ed elevazione UAC
-- [ ] Matrice di compatibilità documentata
-
----
-
 ## Aggiornamenti del Toolkit
 
 - [x] File di versione unico
 - [x] Voce di menu **Cerca aggiornamenti**
-- [ ] Riorganizzazione del riepilogo finale in sezioni (Moduli eseguiti, Avvisi, Errori e Percorso dei log)
 - [x] Verifica della versione più recente disponibile
-- [ ] Apertura della pagina ufficiale di download
 - [x] Manifest remoto della release su kraugh.it
-- [ ] Sistema di aggiornamento automatico, solo dopo il consolidamento
-  della verifica manuale
-
----
-
-## Documentazione
-
-- [x] Repository GitHub pubblico
-- [x] Documentazione in Markdown
-- [x] Convenzioni editoriali
-- [x] Struttura multilingua `docs/ita` e `docs/eng`
-- [x] Completamento della Guida Tecnico in italiano
-- [ ] Completamento della Guida Sistemista in italiano
-- [ ] Traduzione inglese della Guida Sistemista
-- [ ] Screenshot dell'interfaccia
-- [ ] Guida GPO passo-passo
-- [ ] Guida Task Scheduler passo-passo
-- [ ] Manuale PDF con spiegazioni e screenshot
+- [ ] Apertura della pagina ufficiale di download
+- [ ] Riorganizzazione del riepilogo finale in sezioni
+- [ ] Sistema di aggiornamento automatico, solo dopo il consolidamento della verifica manuale
 
 ---
 
@@ -101,7 +119,7 @@
 
 ## Pubblicazione e distribuzione
 
-- [ ] Prima release GitHub completa di ZIP
+- [x] Prima release GitHub completa di ZIP
 - [ ] Pagina dedicata su kraugh.it
 - [ ] Collegamenti a repository, documentazione e ultima release
 - [ ] Storico delle release sul sito
@@ -111,20 +129,7 @@
 
 ---
 
-## Statistiche di distribuzione
-
-- [ ] Download mediato da kraugh.it
-- [ ] Conteggio dei download per versione
-- [ ] Dashboard amministrativa privata
-- [ ] Registrazione tecnica di timestamp, versione, IP, user agent e referrer
-- [ ] Esclusione identificabile dei download di test dell'autore
-- [ ] Collegamento finale alle release ospitate su GitHub
-
----
-
 ## Evoluzioni future approvate
 
 - [ ] Firma digitale degli script
 - [ ] Localizzazione multilingua dell'interfaccia
-- [ ] Pacchetto MSI
-- [ ] Versione eseguibile
