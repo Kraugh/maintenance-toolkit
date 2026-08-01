@@ -1,9 +1,9 @@
-﻿{
+{
     "project": "Maintenance Toolkit",
-    "latest_version": "3.7.1",
+    "latest_version": "3.7.2",
     "minimum_supported": "3.5.0",
-    "release_date": "2026-07-18",
-    "release_notes": "Current stable release.",
+    "release_date": "2026-08-01",
+    "release_notes": "Reliability improvements, progress reporting and compatibility fixes.",
     "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/latest",
     "repository_url": "https://github.com/Kraugh/maintenance-toolkit",
     "documentation_url": "https://www.kraugh.it/projects/maintenance-toolkit/",

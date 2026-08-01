@@ -5,6 +5,32 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 3.7.2 — 1 August 2026
+
+### Highlights
+
+- improved long-running operation feedback with a single live status line;
+- always displayed elapsed time and used real progress values only;
+- added real SFC and Winget progress when available;
+- used a spinner when progress could not be measured honestly;
+- removed the persistent PowerShell connectivity progress bar;
+- made the HTTPS test destination and purpose explicit;
+- improved Microsoft Update activity feedback;
+- fixed native process exit-code handling on Windows PowerShell 5.1;
+- fixed Winget argument preservation and partial-failure classification;
+- fixed DISM and SFC output handling;
+- fixed SFC clean-result recognition on Windows 10;
+- restored reliable return to the interactive menu;
+- reorganized project documentation under `project/`;
+- added the documented development workflow;
+- renamed menu states to `Automatico` and `Manuale`;
+- renamed `Pulizia TEMP` to `Pulizia file temporanei`;
+- added automatic release-package generation tooling.
+
+### Validation
+
+Validated on Windows 11 and Windows 10.
+
 ## 3.7.2-rc.6 — 1 August 2026
 
 ### Final candidate integration

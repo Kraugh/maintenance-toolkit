@@ -1,4 +1,4 @@
-# Maintenance Toolkit 3.7.2-rc.6
+# Maintenance Toolkit 3.7.2
 
 Maintenance Toolkit is a free and open-source utility for maintaining,
 diagnosing and collecting information from Microsoft Windows systems.

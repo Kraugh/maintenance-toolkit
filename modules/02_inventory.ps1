@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.2-rc.6 - Modulo inventario
+# Maintenance Toolkit 3.7.2 - Modulo inventario
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"

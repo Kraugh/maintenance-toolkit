@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.2-rc.6 - Modulo aggiornamenti OEM
+# Maintenance Toolkit 3.7.2 - Modulo aggiornamenti OEM
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
