@@ -96,9 +96,9 @@ The following project-governance files are stored in the repository root:
 - `README.md`
 - `LICENSE`
 - `CHANGELOG.md`
-- `ROADMAP.md`
-- `BACKLOG.md`
-- `DECISIONS.md`
+- `project/roadmap.md`
+- `project/backlog.md`
+- `project/decisions.md`
 
 User manuals and instructional material are stored in `docs/`.
 
@@ -115,8 +115,8 @@ homepage, while manuals belong to a dedicated documentation tree.
 
 Each planned item has one authoritative location:
 
-- `BACKLOG.md` contains ideas not yet scheduled;
-- `ROADMAP.md` contains approved objectives;
+- `project/backlog.md` contains ideas not yet scheduled;
+- `project/roadmap.md` contains approved objectives;
 - `CHANGELOG.md` contains completed and released work.
 
 Items should not be duplicated across these files.
@@ -255,3 +255,30 @@ identifiable and excludable from aggregate statistics.
 
 Version-specific download statistics help evaluate adoption, update continuity
 and the effectiveness of documentation and publication channels.
+---
+
+## 2026-08-01 — Long-running operation status
+
+### Decision
+
+Every long-running operation always displays elapsed time.
+
+When a real progress value is available from the underlying tool, Maintenance
+Toolkit may display a progress bar based only on that value.
+
+When real progress is not available, Maintenance Toolkit displays a spinner
+instead of an estimated percentage.
+
+The live status is refreshed on the same console line once per second. Periodic
+heartbeat entries may still be written to technical logs at a lower frequency.
+
+Maintenance Toolkit never invents percentages or remaining-time estimates.
+
+After 30 minutes, one discreet reminder may suggest notifying anyone waiting for
+the user. After one hour, one hydration reminder may be shown.
+
+### Reason
+
+Elapsed time is useful even when completion cannot be predicted. A single live
+line keeps the console readable, while honest progress reporting preserves user
+trust.

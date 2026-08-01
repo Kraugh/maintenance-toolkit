@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.1
+# Maintenance Toolkit 3.7.2-rc.6
 #
 # Autore:
 #   Luca Miselli
@@ -17,7 +17,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "3.7.1"
+$Version = "3.7.2-rc.6"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ModulesDir = Join-Path $Root "modules"
 $LogsDir = Join-Path $Root "logs"
@@ -52,7 +52,7 @@ $Catalog = @(
     [pscustomobject]@{ Id=9;  Key="DISM";             Name="DISM RestoreHealth";           File="09_dism.ps1" },
     [pscustomobject]@{ Id=10; Key="SFC";              Name="SFC Scannow";                  File="10_sfc.ps1" },
     [pscustomobject]@{ Id=11; Key="DiskHealth";       Name="Salute dischi";                File="11_disk_health.ps1" },
-    [pscustomobject]@{ Id=12; Key="TempCleanup";      Name="Pulizia TEMP";                 File="13_temp_cleanup.ps1" },
+    [pscustomobject]@{ Id=12; Key="TempCleanup";      Name="Pulizia file temporanei";                 File="13_temp_cleanup.ps1" },
     [pscustomobject]@{ Id=13; Key="ComponentCleanup"; Name="Pulizia componenti Windows";   File="14_component_cleanup.ps1" }
 )
 
@@ -75,8 +75,8 @@ function Invoke-MTUpdateCheck {
             throw "Il manifest non contiene il campo latest_version."
         }
 
-        $InstalledVersion = [version]$Version
-        $LatestVersion = [version]([string]$Manifest.latest_version)
+        $InstalledVersion = [version](([string]$Version -split "-")[0])
+        $LatestVersion = [version](([string]$Manifest.latest_version -split "-")[0])
         $MinimumSupported = $null
 
         if ($Manifest.minimum_supported) {
@@ -330,7 +330,7 @@ function Show-Menu {
 
     foreach ($Module in $Catalog) {
         $Enabled = Get-IniBool $Config "Modules" $Module.Key $false
-        $Flag = if ($Enabled) { "ON " } else { "OFF" }
+        $Flag = if ($Enabled) { "Automatico" } else { "Manuale   " }
 
         Write-Host (
             "[{0,2}] [{1}] {2}" -f
@@ -341,7 +341,7 @@ function Show-Menu {
     }
 
     Write-Host ""
-    Write-Host "[A] Esegui tutti i moduli abilitati"
+    Write-Host "[A] Esegui tutti i moduli automatici"
     Write-Host "[C] Apri configurazione INI"
     Write-Host "[L] Apri cartella log"
     Write-Host "[T] Autotest del Toolkit"

@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.1 - Modulo Winget
+# Maintenance Toolkit 3.7.2-rc.6 - Modulo Winget
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -29,31 +29,25 @@ function Invoke-WingetUpgradePass {
     Write-Main "Maintenance Toolkit riprenderà automaticamente al termine."
     Write-Main ""
 
-    $Output = & $WingetPath @Arguments 2>&1
-    $ExitCode = $LASTEXITCODE
+    $Run = Invoke-LoggedProcessWithHeartbeat `
+        -FilePath $WingetPath `
+        -ArgumentList $Arguments `
+        -Label "Winget passaggio $Pass" `
+        -Module $Module `
+        -SuccessCodes @(0) `
+        -HeartbeatSeconds 60 `
+        -OutputEncoding "UTF8" `
+        -ShowProgressOutput $true
 
-    Write-Main ""
-    Write-Main "Winget: passaggio $Pass terminato con codice $ExitCode."
+    $CombinedOutput = @()
 
-    $Output | Set-Content -LiteralPath $RawLog -Encoding UTF8
-
-    foreach ($Line in $Output) {
-        $Text = [string]$Line
-
-        # Evita di riversare nel log principale le righe puramente grafiche
-        # delle barre di avanzamento.
-        if ([string]::IsNullOrWhiteSpace($Text)) {
-            continue
-        }
-
-        if ($Text -match '^[\s\-\|/\\█▓▒░\.]+$') {
-            continue
-        }
-
-        Add-Log "OUTPUT" $Text $Module
+    foreach ($File in @($Run.OutputPath, $Run.ErrorPath)) {
+        $CombinedOutput += Read-ProcessOutput -Path $File -Encoding "UTF8"
     }
 
-    return $ExitCode
+    $CombinedOutput | Set-Content -LiteralPath $RawLog -Encoding UTF8
+
+    return [int]$Run.ExitCode
 }
 
 try {
@@ -156,7 +150,22 @@ try {
         exit 0
     }
 
-    $Detail = "Winget non completato. Primo codice: $FirstResult; codice finale: $FinalResult"
+    $FinalHex = "0x{0:X8}" -f ($FinalResult -band 0xffffffff)
+
+    if ($FinalHex -eq "0x8A15002C") {
+        $Detail = (
+            "Winget ha completato l'operazione con uno o più aggiornamenti non riusciti. " +
+            "Altri pacchetti potrebbero essere stati aggiornati correttamente. " +
+            "Consultare winget_passaggio_1.txt e winget_passaggio_2.txt. " +
+            "Primo codice: $FirstResult; codice finale: $FinalResult ($FinalHex)"
+        )
+
+        Write-WarnLog "Winget ha terminato con uno o più aggiornamenti non completati." $Module
+        Set-ModuleResult "Aggiornamenti Winget" "WARN" $Detail
+        exit 20
+    }
+
+    $Detail = "Winget non completato. Primo codice: $FirstResult; codice finale: $FinalResult ($FinalHex)"
     Write-ErrorLog $Detail $Module
     Set-ModuleResult "Aggiornamenti Winget" "ERROR" $Detail
     exit 1

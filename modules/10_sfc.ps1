@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.1 - Modulo SFC
+# Maintenance Toolkit 3.7.2-rc.6 - Modulo SFC
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -7,7 +7,7 @@ $Module = "SFC"
 $Run = Invoke-LoggedProcessWithHeartbeat `
     -FilePath "$env:SystemRoot\System32\sfc.exe" `
     -ArgumentList @("/scannow") -Label "SFC Scannow" -Module $Module `
-    -SuccessCodes @(0) -HeartbeatSeconds 15 -OutputEncoding "Unicode"
+    -SuccessCodes @(0) -HeartbeatSeconds 60 -OutputEncoding "Unicode" -ShowProgressOutput $true
 
 if ($Run.ExitCode -ne 0) {
     Set-ModuleResult "SFC Scannow" "ERROR" "Exit code $($Run.ExitCode)"

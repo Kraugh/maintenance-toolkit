@@ -5,6 +5,72 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 3.7.2-rc.6 — 1 August 2026
+
+### Final candidate integration
+
+- integrated the validated connectivity module patch;
+- fixed formatting of the visible HTTPS destination message;
+- integrated the validated Microsoft Update status-script patch;
+- fixed SFC clean-result recognition on Windows 10 by reading native output as Unicode;
+- added `project/DEVELOPMENT_WORKFLOW.md`;
+- retained `kraugh_it/version.json` on stable version 3.7.1 until final promotion;
+- performed additional static checks for version consistency, unsafe host/port
+  interpolation, literal format placeholders and obsolete `Test-NetConnection` usage.
+
+## 3.7.2-rc.5 — 1 August 2026
+
+### Connectivity and Microsoft Update debugging
+
+- fixed ambiguous PowerShell interpolation in connectivity messages;
+- replaced the inline Microsoft Update status command with a temporary script
+  launched through `-File` for Windows PowerShell 5.1 compatibility.
+
+## 3.7.2-rc.4 — 1 August 2026
+
+### User-interface refinements
+
+- refreshed long-running operation status once per second on a single console line;
+- always displayed elapsed time during long operations;
+- displayed real SFC or Winget progress when available;
+- used an honest spinner when real progress was unavailable;
+- avoided invented percentages and estimated remaining times;
+- reduced repetitive heartbeat entries in technical logs;
+- added discreet reminders for exceptionally long operations;
+- made the HTTPS connectivity-test destination and purpose visible.
+
+## 3.7.2-rc.3 — 31 July 2026
+
+### Critical regression fixes
+
+- removed unsafe PowerShell event handlers from the process wrapper;
+- restored reliable module completion and return to the interactive menu;
+- replaced `Test-NetConnection` with an explicit TCP connectivity test;
+- eliminated the persistent blue PowerShell progress bar.
+
+## 3.7.2-rc.2 — 31 July 2026
+
+### Process-wrapper fixes
+
+- improved native exit-code handling;
+- preserved Winget arguments;
+- prevented unreadable DISM output from flooding the console;
+- retained readable SFC progress;
+- restored full `Automatico` and `Manuale` menu labels;
+- renamed `Pulizia TEMP` to `Pulizia file temporanei`.
+
+## 3.7.2-rc.1 — 31 July 2026
+
+### Repository, documentation and initial UX work
+
+- moved project-management documents under `project/`;
+- added the sprint document;
+- made English the primary repository language;
+- preserved Italian documentation;
+- removed duplicated TXT documentation from the repository;
+- added release-package generation tooling;
+- introduced improved feedback for long-running operations.
+
 ## 3.7.1 — 18 luglio 2026
 
 ### Miglioramenti di usabilità
@@ -81,7 +147,7 @@ software version.
 ### Pubblicazione
 
 - aggiunta la licenza MIT;
-- aggiunti `ABOUT.txt`, `README.md`, `ROADMAP.md` e `BACKLOG.md`;
+- aggiunti `ABOUT.txt`, `README.md`, `project/roadmap.md` e `project/backlog.md`;
 - aggiunta la voce **Informazioni** nel menu;
 - aggiornata la documentazione della versione;
 - nessuna modifica alla logica operativa della 3.0.4.

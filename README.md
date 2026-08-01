@@ -1,131 +1,121 @@
-# Maintenance Toolkit 3.7.1
+# Maintenance Toolkit 3.7.2-rc.6
 
-Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
-la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
+Maintenance Toolkit is a free and open-source utility for maintaining,
+diagnosing and collecting information from Microsoft Windows systems.
 
-Automatizza le operazioni più comuni, genera inventari e report e conserva log
-dettagliati per facilitare il troubleshooting e documentare gli interventi.
+It automates common maintenance tasks, generates inventories and reports, and
+stores detailed logs to support troubleshooting and document technical work.
 
-## Autore
+## Author
 
 **Luca Miselli**  
 <https://www.kraugh.it>
 
-Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.
+Developed with the indispensable help of a very patient Rubber Duck.
 
-## Funzioni principali
+## Main features
 
-- verifica della connettività;
-- inventario hardware e software;
-- report della configurazione di rete;
-- creazione di un punto di ripristino;
-- aggiornamenti applicativi tramite Winget;
-- messaggi di stato durante le installazioni Winget più lunghe;
-- aggiornamenti Microsoft Update;
-- aggiornamento delle firme Microsoft Defender;
-- integrazione opzionale con strumenti OEM già installati;
-- DISM e SFC disponibili come controlli diagnostici;
-- verifica dello stato dei dischi;
-- pulizia opzionale delle cartelle TEMP;
-- pulizia opzionale dei componenti Windows;
-- log TXT, CSV e HTML per ogni sessione.
+- connectivity checks;
+- hardware and software inventory;
+- network configuration reports;
+- restore point creation;
+- application updates through Winget;
+- visible status messages during long-running Winget operations;
+- Microsoft Update;
+- Microsoft Defender signature updates;
+- optional integration with installed OEM tools;
+- DISM and SFC diagnostic checks;
+- disk health information;
+- optional TEMP cleanup;
+- optional Windows component cleanup;
+- TXT, CSV and HTML logs for each session.
 
-## Avvio
+## Getting started
 
-1. Estrarre l'intera cartella del Toolkit.
-2. Eseguire `Avvia_Manutenzione.bat`.
-3. Accettare la richiesta di elevazione amministrativa.
-4. Scegliere uno o più moduli dal menu.
+1. Extract the complete Toolkit folder.
+2. Run `Avvia_Manutenzione.bat`.
+3. Accept the administrative elevation request.
+4. Select one or more modules from the menu.
 
-> **Attenzione**
->
-> Non eseguire direttamente i singoli file presenti nella cartella `modules`.
+> Do not run individual files from the `modules` directory directly.
 
-## Impostazioni prudenti
+## Conservative defaults
 
-Per impostazione predefinita sono disattivati:
+The following operations are disabled by default:
 
-- creazione automatica del punto di ripristino;
+- automatic restore point creation;
 - DISM RestoreHealth;
 - SFC Scannow;
-- installazione dei driver tramite Microsoft Update;
-- pulizia TEMP;
-- pulizia dei componenti Windows.
+- driver installation through Microsoft Update;
+- TEMP cleanup;
+- Windows component cleanup.
 
-Nessun modulo riavvia automaticamente il computer.
+No module restarts the computer automatically.
 
-## Log
+## Logs
 
-I log sono separati per computer, così il Toolkit può essere eseguito da una
-chiavetta USB, da Dropbox o da una share di rete senza mescolare i risultati
-provenienti da macchine diverse.
+Logs are separated by computer so the Toolkit can run from USB storage,
+Dropbox or a network share without mixing results from different systems.
 
 ```text
 logs/
-└── NOME-PC/
+└── COMPUTER-NAME/
     ├── aggiornamenti_script.log
     ├── errori_script.log
-    └── YYYYMMDD-HHMMSS_NOME-PC/
+    └── YYYYMMDD-HHMMSS_COMPUTER-NAME/
         ├── sessione.log
         ├── riepilogo.txt
         ├── riepilogo.csv
         ├── riepilogo.html
-        └── output dettagliati dei singoli strumenti
+        └── detailed tool output
 ```
 
-Ogni nuova operazione avviata dal menu crea una sessione distinta.
+Each operation started from the menu creates a separate session.
 
-## Autotest e aggiornamenti
+## Self-test and update check
 
-Dal menu principale sono disponibili:
+The main menu provides:
 
-- **T — Autotest del Toolkit**, per verificare integrità dei file, sintassi degli script, configurazione e raggiungibilità del manifest;
-- **U — Cerca aggiornamenti**, per confrontare la versione installata con quella pubblicata su kraugh.it.
+- **T — Toolkit self-test**, which checks required files, PowerShell syntax,
+  configuration and update-manifest availability;
+- **U — Check for updates**, which compares the installed version with the
+  stable version published on kraugh.it.
 
-Da riga di comando:
+Command-line examples:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -SelfTest
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -CheckUpdates
 ```
 
-Il controllo aggiornamenti è accessorio: un errore di rete non impedisce l'utilizzo del Toolkit.
+The update check is optional: network errors do not prevent Toolkit use.
 
-## Stato della versione 3.7.1
+## Documentation
 
-La versione corrente include:
+User documentation is organized by language:
 
-- logger resistente ai lock temporanei di Dropbox, share e USB;
-- report rete costruito in memoria e scritto una sola volta;
-- heartbeat visibile durante DISM e SFC;
-- classificazione dettagliata del risultato SFC;
-- dettaglio degli elementi TEMP non eliminati;
-- riepilogo rapido dei controlli eseguiti e non eseguiti.
-
-Il core è stato collaudato su Windows 11 25H2. Autotest, controllo aggiornamenti
-ed esecuzione del modulo Winget sono stati verificati anche su Windows 10.
-I test come `SYSTEM`, Task Scheduler e Group Policy sono previsti nelle prossime fasi di sviluppo.
-
-## Documentazione
-
-La documentazione utente è organizzata per lingua:
-
-- [Documentazione italiana](docs/ita/)
+- [Italian documentation](docs/ita/)
 - [English documentation](docs/eng/)
 
-Documenti di progetto:
+Project documentation:
 
-- [Roadmap](ROADMAP.md)
-- [Backlog](BACKLOG.md)
-- [Decisioni architetturali](DECISIONS.md)
+- [Roadmap](project/roadmap.md)
+- [Backlog](project/backlog.md)
+- [Architectural decisions](project/decisions.md)
+- [Sprint history](project/sprints/)
 - [Changelog](CHANGELOG.md)
 
-## Licenza
+## Repository structure
 
-Maintenance Toolkit è distribuito con licenza **MIT**.
+The repository layout is optimized for maintainability. Release packages are
+generated independently and keep the launcher in the package root for immediate
+use by Windows technicians.
 
-Consultare il file [LICENSE](LICENSE).
+## License
 
-Il software viene fornito così com'è, senza garanzie. Prima di utilizzarlo su
-sistemi critici o gestiti centralmente, verificarne il comportamento in un
-ambiente di test e rispettare le policy dell'organizzazione.
+Maintenance Toolkit is distributed under the **MIT License**.
+
+See [LICENSE](LICENSE).
+
+The software is provided as-is, without warranty. Test it before using it on
+critical or centrally managed systems and follow your organization's policies.

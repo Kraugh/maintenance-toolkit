@@ -2,7 +2,7 @@
 
 **Versione documento:** 1.0
 
-**Compatibile con:** Maintenance Toolkit 3.7.1
+**Compatibile con:** Maintenance Toolkit 3.7.2-rc.6
 
 **Ultimo aggiornamento:** 18/07/2026
 
@@ -78,7 +78,7 @@ Al primo avvio Maintenance Toolkit presenta un menu interattivo contenente tutti
 
 ![Menu principale di Maintenance Toolkit](../../Images/screenshots/ita-main-menu.png)
 
-*Figura 1 - Menu principale del Toolkit 3.7.1.*
+*Figura 1 - Menu principale del Toolkit 3.7.2-rc.6.*
 
 Ogni modulo è identificato da un numero progressivo.
 
@@ -139,7 +139,7 @@ Il riepilogo indica:
 
 ![Riepilogo Finale di Maintenance Toolkit](../../Images/screenshots/ita-riepilogo-finale.png)
 
-*Figura 2 - Riepilogo finale del Toolkit 3.7.1.*
+*Figura 2 - Riepilogo finale del Toolkit 3.7.2-rc.6.*
 
 > **Nota**
 >

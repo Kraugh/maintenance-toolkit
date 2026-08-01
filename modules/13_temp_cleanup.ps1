@@ -1,6 +1,6 @@
 ﻿
 ###############################################################################
-# Maintenance Toolkit 3.7.1 - Modulo Pulizia TEMP
+# Maintenance Toolkit 3.7.2-rc.6 - Modulo Pulizia TEMP
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"

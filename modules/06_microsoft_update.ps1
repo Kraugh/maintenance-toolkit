@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.1 - Modulo Microsoft Update
+# Maintenance Toolkit 3.7.2-rc.6 - Modulo Microsoft Update
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -22,13 +22,192 @@ function Get-WuaResultText {
     }
 }
 
+
+function Start-MicrosoftUpdateHeartbeat {
+    param(
+        [string]$Phase,
+        [int]$IntervalSeconds = 1
+    )
+
+    $Identifier = "{0}_{1}" -f `
+        ($Phase -replace '[^A-Za-z0-9_-]', '_'),
+        [guid]::NewGuid().ToString("N")
+
+    $SignalPath = Join-Path $env:MT_SESSION_DIR (
+        "msupdate_{0}.running" -f $Identifier
+    )
+    $ScriptPath = Join-Path $env:MT_SESSION_DIR (
+        "msupdate_{0}_status.ps1" -f $Identifier
+    )
+
+    Set-Content -LiteralPath $SignalPath -Value "running" -Encoding ASCII
+
+    $StatusScript = @'
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$SignalPath,
+
+    [Parameter(Mandatory = $true)]
+    [string]$Phase,
+
+    [int]$IntervalSeconds = 1
+)
+
+$Started = Get-Date
+$Frames = @("|", "/", "-", "\")
+$Index = 0
+$LastLength = 0
+$DinnerShown = $false
+$WaterShown = $false
+
+try {
+    while (Test-Path -LiteralPath $SignalPath) {
+        $Elapsed = (Get-Date) - $Started
+        $Frame = $Frames[$Index % $Frames.Count]
+        $Text = "Microsoft Update - {0}  {1}  {2}" -f `
+            $Phase,
+            $Frame,
+            $Elapsed.ToString("hh\:mm\:ss")
+
+        $Width = [Math]::Max($LastLength, $Text.Length)
+        [Console]::Write(
+            [char]13 + $Text.PadRight($Width)
+        )
+
+        $LastLength = $Width
+        $Index++
+
+        if (-not $DinnerShown -and $Elapsed.TotalMinutes -ge 30) {
+            [Console]::Write(
+                [char]13 + (" " * $LastLength) + [char]13
+            )
+            [Console]::WriteLine()
+            [Console]::ForegroundColor = [ConsoleColor]::DarkYellow
+            [Console]::WriteLine(
+                "Suggerimento: questa operazione è in corso da 30 minuti. " +
+                "Se qualcuno ti sta aspettando per cena, forse è il momento di avvisarlo."
+            )
+            [Console]::ResetColor()
+            [Console]::WriteLine()
+
+            $LastLength = 0
+            $DinnerShown = $true
+        }
+
+        if (-not $WaterShown -and $Elapsed.TotalHours -ge 1) {
+            [Console]::Write(
+                [char]13 + (" " * $LastLength) + [char]13
+            )
+            [Console]::WriteLine()
+            [Console]::ForegroundColor = [ConsoleColor]::DarkYellow
+            [Console]::WriteLine(
+                "È trascorsa un'ora. " +
+                "Questo è un buon momento per bere un bicchiere d'acqua."
+            )
+            [Console]::ResetColor()
+            [Console]::WriteLine()
+
+            $LastLength = 0
+            $WaterShown = $true
+        }
+
+        Start-Sleep -Seconds $IntervalSeconds
+    }
+}
+finally {
+    if ($LastLength -gt 0) {
+        [Console]::Write(
+            [char]13 + (" " * $LastLength) + [char]13
+        )
+    }
+}
+'@
+
+    Set-Content `
+        -LiteralPath $ScriptPath `
+        -Value $StatusScript `
+        -Encoding UTF8
+
+    $Process = Start-Process `
+        -FilePath "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" `
+        -ArgumentList @(
+            "-NoProfile",
+            "-ExecutionPolicy", "Bypass",
+            "-File", ('"{0}"' -f $ScriptPath),
+            "-SignalPath", ('"{0}"' -f $SignalPath),
+            "-Phase", ('"{0}"' -f $Phase),
+            "-IntervalSeconds", $IntervalSeconds
+        ) `
+        -PassThru `
+        -NoNewWindow
+
+    return [pscustomobject]@{
+        SignalPath = $SignalPath
+        ScriptPath = $ScriptPath
+        Process = $Process
+        Started = Get-Date
+        Phase = $Phase
+    }
+}
+
+function Stop-MicrosoftUpdateHeartbeat {
+    param($Heartbeat)
+
+    if ($null -eq $Heartbeat) {
+        return
+    }
+
+    Remove-Item `
+        -LiteralPath $Heartbeat.SignalPath `
+        -Force `
+        -ErrorAction SilentlyContinue
+
+    if ($Heartbeat.Process) {
+        $Heartbeat.Process.WaitForExit(5000) | Out-Null
+
+        if (-not $Heartbeat.Process.HasExited) {
+            Stop-Process `
+                -Id $Heartbeat.Process.Id `
+                -Force `
+                -ErrorAction SilentlyContinue
+        }
+    }
+
+    Remove-Item `
+        -LiteralPath $Heartbeat.ScriptPath `
+        -Force `
+        -ErrorAction SilentlyContinue
+
+    Write-Host ""
+
+    $Elapsed = (Get-Date) - $Heartbeat.Started
+    Add-Log "INFO" (
+        "Microsoft Update - {0} terminato dopo {1}" -f
+        $Heartbeat.Phase,
+        $Elapsed.ToString("hh\:mm\:ss")
+    ) $Module
+}
+
+function Get-WuaHResultExplanation {
+    param([string]$HResultText)
+
+    switch ($HResultText.ToUpperInvariant()) {
+        "0X80240016" {
+            "Installazione non consentita: è già in corso un'altra installazione oppure il computer deve essere riavviato."
+        }
+        default {
+            $null
+        }
+    }
+}
+
 try {
     $MicrosoftUpdateServiceId = "7971f918-a847-4430-9279-4a52d1efe18d"
 
     Write-Main "Microsoft Update: apertura Windows Update Agent."
 
     $ServiceManager = New-Object -ComObject Microsoft.Update.ServiceManager
-    $ServiceManager.ClientApplicationID = "Maintenance Toolkit 3.7.1"
+    $ServiceManager.ClientApplicationID = "Maintenance Toolkit 3.7.2-rc.6"
 
     $ServicePresent = @(
         $ServiceManager.Services |
@@ -48,7 +227,7 @@ try {
     }
 
     $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-    $UpdateSession.ClientApplicationID = "Maintenance Toolkit 3.7.1"
+    $UpdateSession.ClientApplicationID = "Maintenance Toolkit 3.7.2-rc.6"
 
     $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
     $UpdateSearcher.ServerSelection = 3
@@ -83,7 +262,15 @@ try {
     Add-Log "INFO" "Criterio di ricerca: $Criteria" $Module
 
     $SearchStarted = Get-Date
-    $SearchResult = $UpdateSearcher.Search($Criteria)
+    $SearchHeartbeat = Start-MicrosoftUpdateHeartbeat -Phase "ricerca"
+
+    try {
+        $SearchResult = $UpdateSearcher.Search($Criteria)
+    }
+    finally {
+        Stop-MicrosoftUpdateHeartbeat $SearchHeartbeat
+    }
+
     $SearchDuration = (Get-Date) - $SearchStarted
 
     Write-Main (
@@ -134,7 +321,17 @@ try {
     $DownloadStarted = Get-Date
     $UpdateDownloader = $UpdateSession.CreateUpdateDownloader()
     $UpdateDownloader.Updates = $UpdatesToDownload
-    $DownloadResult = $UpdateDownloader.Download()
+
+    Write-Main "Microsoft Update: il download può richiedere molto tempo. Il Toolkit mostrerà periodicamente il proprio stato."
+    $DownloadHeartbeat = Start-MicrosoftUpdateHeartbeat -Phase "download"
+
+    try {
+        $DownloadResult = $UpdateDownloader.Download()
+    }
+    finally {
+        Stop-MicrosoftUpdateHeartbeat $DownloadHeartbeat
+    }
+
     $DownloadDuration = (Get-Date) - $DownloadStarted
 
     Write-Main (
@@ -180,7 +377,16 @@ try {
     $UpdateInstaller.Updates = $UpdatesToInstall
 
     # Install() non esegue autonomamente il riavvio.
-    $InstallResult = $UpdateInstaller.Install()
+    Write-Main "Microsoft Update: l'installazione può richiedere molto tempo. Il Toolkit mostrerà periodicamente il proprio stato."
+    $InstallHeartbeat = Start-MicrosoftUpdateHeartbeat -Phase "installazione"
+
+    try {
+        $InstallResult = $UpdateInstaller.Install()
+    }
+    finally {
+        Stop-MicrosoftUpdateHeartbeat $InstallHeartbeat
+    }
+
     $InstallDuration = (Get-Date) - $InstallStarted
 
     Write-Main (
@@ -203,12 +409,18 @@ try {
         }
         else {
             $InstallFailures++
+            $Explanation = Get-WuaHResultExplanation $HResultText
+
             Write-ErrorLog (
                 "INSTALLAZIONE FALLITA: {0} - {1} - {2}" -f
                 $Update.Title,
                 (Get-WuaResultText $ItemResult.ResultCode),
                 $HResultText
             ) $Module
+
+            if ($Explanation) {
+                Write-WarnLog $Explanation $Module
+            }
         }
     }
 

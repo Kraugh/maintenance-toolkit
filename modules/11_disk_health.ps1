@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.1 - Modulo salute dischi
+# Maintenance Toolkit 3.7.2-rc.6 - Modulo salute dischi
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
