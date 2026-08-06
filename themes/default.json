@@ -1,0 +1,30 @@
+{
+  "Name": "default",
+  "Console": {
+    "ShowColors": true,
+    "ShowSymbols": true,
+    "ShowTimestamp": false
+  },
+  "Status": {
+    "OK": {
+      "Symbol": "[OK   ]",
+      "Color": "Green"
+    },
+    "INFO": {
+      "Symbol": "[INFO ]",
+      "Color": "Cyan"
+    },
+    "WARN": {
+      "Symbol": "[WARN ]",
+      "Color": "Yellow"
+    },
+    "SKIP": {
+      "Symbol": "[SKIP ]",
+      "Color": "DarkGray"
+    },
+    "ERROR": {
+      "Symbol": "[ERROR]",
+      "Color": "Red"
+    }
+  }
+}

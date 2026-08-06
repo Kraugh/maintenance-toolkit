@@ -119,3 +119,8 @@ See [LICENSE](LICENSE).
 
 The software is provided as-is, without warranty. Test it before using it on
 critical or centrally managed systems and follow your organization's policies.
+
+
+## MT4 development
+
+The `app/core`, `config`, `languages`, `themes`, `rules`, `tests`, `logs` and `reports` directories are the initial MT4 foundation. The stable 3.7.2 runtime remains unchanged while the new bilingual core is developed and validated. See `project/MT4-INTEGRATION-MAP.md`.

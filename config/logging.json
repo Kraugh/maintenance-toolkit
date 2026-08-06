@@ -1,0 +1,7 @@
+{
+  "SchemaVersion": 1,
+  "SessionLog": "session.log",
+  "ErrorLog": "errors.log",
+  "ModuleResults": "module-results.json",
+  "Profile": "profile.json"
+}

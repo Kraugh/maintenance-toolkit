@@ -282,3 +282,136 @@ the user. After one hour, one hydration reminder may be shown.
 Elapsed time is useful even when completion cannot be predicted. A single live
 line keeps the console readable, while honest progress reporting preserves user
 trust.
+
+
+---
+
+## 2026-08-06 — MT4 integration baseline
+
+NDP 0.0.19-RC is the immutable network regression baseline. MT4 will integrate its engines as a native domain only after a common bilingual core exists. MT process execution and session logging are retained; NDP localization, profiling, topology, routing, rules and scenario concepts are imported.
+
+
+---
+
+## 2026-08-06 — MT4 compatibility loader
+
+### Decision
+
+`modules/00_common.ps1` becomes a temporary compatibility loader that imports
+focused services from `app/core`.
+
+The current module-facing function names remain available during migration.
+
+### Reason
+
+This prevents a simultaneous rewrite of every stable maintenance module while
+stopping `00_common.ps1` from becoming the permanent dumping ground for MT4.
+
+New MT4 code must import core services through `Bootstrap.ps1` and must not add
+new implementation functions to `modules/00_common.ps1`.
+
+
+---
+
+## 2026-08-06 — Bootstrap core-loading scope
+
+### Decision
+
+`Bootstrap.ps1` loads MT4 core service files at script scope when the bootstrap
+itself is dot-sourced.
+
+`Initialize-MT4Foundation` initializes settings, language and theme only.
+
+### Reason
+
+In Windows PowerShell 5.1, dot-sourcing service files inside an initialization
+function creates the imported functions in that function's local scope. Those
+commands disappear when the function returns.
+
+Loading services at bootstrap script scope keeps them available to the caller
+and to the existing compatibility layer.
+
+
+---
+
+## 2026-08-06 — StrictMode isolation during MT4 migration
+
+### Decision
+
+Dot-sourced MT4 runtime core files must not enable `Set-StrictMode` at top
+level while MT 3.7.2 modules are still using the compatibility loader.
+
+StrictMode remains enabled in standalone developer and AUTOTEST scripts.
+
+New MT4 functions may be written defensively and tested under StrictMode, but
+the compatibility layer must not silently alter the execution semantics of
+legacy modules.
+
+### Reason
+
+Windows PowerShell 5.1 propagates top-level StrictMode through dot-sourced
+scripts into the caller scope.
+
+MT 3.7.2 contains valid legacy constructs, including scalar `.Count`
+behaviour, that become runtime errors when StrictMode is unexpectedly enabled.
+
+
+---
+
+## 2026-08-06 — Legacy scalar Count regression contract
+
+### Decision
+
+The compatibility test reproduces the actual MT 3.7.2 single-selection
+expression instead of asserting that a scalar object has `Count == 1`.
+
+### Reason
+
+In Windows PowerShell 5.1 without StrictMode, a missing scalar `.Count`
+property evaluates to `$null`. The legacy MT expression
+`$Selected.Count -eq 0` therefore evaluates to false and execution continues.
+
+The regression introduced in dev.3 was not a wrong Count value; it was the
+`PropertyNotFoundStrict` exception caused by leaked StrictMode.
+
+---
+
+## 2026-08-07 — Bilingual shell before module localization
+
+### Decision
+
+MT4 localizes the application shell first while preserving the stable 3.7.2
+maintenance module implementations.
+
+The shell owns menu/navigation, module display names, session/report labels,
+update-check presentation and application information.
+
+Module-internal activity text and result details may remain Italian during this
+transition and will be migrated module by module.
+
+For Windows PowerShell 5.1 compatibility, MT4 runtime `.ps1` files are stored
+as UTF-8 with BOM.
+
+
+---
+
+## 2026-08-07 — Foundation settings ownership
+
+### Decision
+
+`Initialize-MT4Foundation` accepts an optional preloaded `Settings` object.
+
+If supplied, that object is authoritative for the initialization cycle and is
+not reloaded from disk.
+
+If omitted, the foundation imports `config/settings.json` normally.
+
+### Reason
+
+Runtime overrides such as `-Language en-US` must survive foundation
+initialization. Dev.6 modified a settings object in the application shell and
+then immediately discarded it because the foundation loaded a second copy from
+disk.
+
+This contract also prepares MT4 for future command-line or test overrides
+without mutating persistent configuration.

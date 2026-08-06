@@ -13,11 +13,13 @@ param(
     [switch]$RunAll,
     [string[]]$Only,
     [switch]$SelfTest,
-    [switch]$CheckUpdates
+    [switch]$CheckUpdates,
+    [ValidateSet("auto", "en-US", "it-IT")]
+    [string]$Language = "auto"
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "3.7.2"
+$Version = "4.0.0-dev.7"
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ModulesDir = Join-Path $Root "modules"
 $LogsDir = Join-Path $Root "logs"
@@ -40,21 +42,54 @@ $env:MT_INI = $IniPath
 . (Join-Path $ModulesDir "00_common.ps1")
 $Config = Read-IniFile $IniPath
 
+# MT4 bilingual application shell.
+. (Join-Path $Root "app\core\Bootstrap.ps1")
+$MT4Settings = Import-MTSettings -ProjectRoot $Root
+
+if ($Language -ne "auto") {
+    $MT4Settings.Language = $Language
+}
+
+$MT4Context = Initialize-MT4Foundation `
+    -ProjectRoot $Root `
+    -Settings $MT4Settings
+$LanguageData = $MT4Context.Language
+$LanguageResolution = $MT4Context.LanguageResolution
+$CurrentLanguage = [string]$LanguageResolution.Language
+
+function T {
+    param(
+        [Parameter(Mandatory)][string]$Key,
+        [object[]]$Arguments = @(),
+        [string]$Fallback = $null
+    )
+
+    Get-MTText -LanguageData $LanguageData -Key $Key -Arguments $Arguments -Fallback $Fallback
+}
+
+if ($LanguageResolution.FallbackUsed) {
+    Write-Host (T "LANGUAGE_FALLBACK_NOTICE") -ForegroundColor Yellow
+}
+
 $Catalog = @(
-    [pscustomobject]@{ Id=1;  Key="Connectivity";     Name="Controllo connettivita";        File="01_connectivity.ps1" },
-    [pscustomobject]@{ Id=2;  Key="Inventory";        Name="Inventario hardware/software"; File="02_inventory.ps1" },
-    [pscustomobject]@{ Id=3;  Key="NetworkReport";    Name="Report rete";                  File="03_network.ps1" },
-    [pscustomobject]@{ Id=4;  Key="RestorePoint";     Name="Crea punto di ripristino";          File="04_restore_point.ps1" },
-    [pscustomobject]@{ Id=5;  Key="Winget";           Name="Aggiornamenti Winget";         File="05_winget.ps1" },
-    [pscustomobject]@{ Id=6;  Key="MicrosoftUpdate";  Name="Microsoft Update";             File="06_microsoft_update.ps1" },
-    [pscustomobject]@{ Id=7;  Key="Defender";         Name="Microsoft Defender";           File="07_defender.ps1" },
-    [pscustomobject]@{ Id=8;  Key="OEM";              Name="Aggiornamenti OEM";            File="08_oem.ps1" },
-    [pscustomobject]@{ Id=9;  Key="DISM";             Name="DISM RestoreHealth";           File="09_dism.ps1" },
-    [pscustomobject]@{ Id=10; Key="SFC";              Name="SFC Scannow";                  File="10_sfc.ps1" },
-    [pscustomobject]@{ Id=11; Key="DiskHealth";       Name="Salute dischi";                File="11_disk_health.ps1" },
-    [pscustomobject]@{ Id=12; Key="TempCleanup";      Name="Pulizia file temporanei";                 File="13_temp_cleanup.ps1" },
-    [pscustomobject]@{ Id=13; Key="ComponentCleanup"; Name="Pulizia componenti Windows";   File="14_component_cleanup.ps1" }
+    [pscustomobject]@{ Id=1;  Key="Connectivity";     NameKey="MODULE_CONNECTIVITY";       File="01_connectivity.ps1" },
+    [pscustomobject]@{ Id=2;  Key="Inventory";        NameKey="MODULE_INVENTORY";          File="02_inventory.ps1" },
+    [pscustomobject]@{ Id=3;  Key="NetworkReport";    NameKey="MODULE_NETWORK_REPORT";     File="03_network.ps1" },
+    [pscustomobject]@{ Id=4;  Key="RestorePoint";     NameKey="MODULE_RESTORE_POINT";      File="04_restore_point.ps1" },
+    [pscustomobject]@{ Id=5;  Key="Winget";           NameKey="MODULE_WINGET";             File="05_winget.ps1" },
+    [pscustomobject]@{ Id=6;  Key="MicrosoftUpdate";  NameKey="MODULE_MICROSOFT_UPDATE";   File="06_microsoft_update.ps1" },
+    [pscustomobject]@{ Id=7;  Key="Defender";         NameKey="MODULE_DEFENDER";           File="07_defender.ps1" },
+    [pscustomobject]@{ Id=8;  Key="OEM";              NameKey="MODULE_OEM";                File="08_oem.ps1" },
+    [pscustomobject]@{ Id=9;  Key="DISM";             NameKey="MODULE_DISM";               File="09_dism.ps1" },
+    [pscustomobject]@{ Id=10; Key="SFC";              NameKey="MODULE_SFC";                File="10_sfc.ps1" },
+    [pscustomobject]@{ Id=11; Key="DiskHealth";       NameKey="MODULE_DISK_HEALTH";        File="11_disk_health.ps1" },
+    [pscustomobject]@{ Id=12; Key="TempCleanup";      NameKey="MODULE_TEMP_CLEANUP";       File="13_temp_cleanup.ps1" },
+    [pscustomobject]@{ Id=13; Key="ComponentCleanup"; NameKey="MODULE_COMPONENT_CLEANUP";  File="14_component_cleanup.ps1" }
 )
+
+foreach ($Module in $Catalog) {
+    $Module | Add-Member -NotePropertyName Name -NotePropertyValue (T $Module.NameKey) -Force
+}
 
 function Invoke-MTUpdateCheck {
     [CmdletBinding()]
@@ -64,7 +99,7 @@ function Invoke-MTUpdateCheck {
 
     if (-not $Quiet) {
         Write-Host ""
-        Write-Host "La papera sta cercando versioni più recenti..." -ForegroundColor Cyan
+        Write-Host (T "UPDATE_CHECKING") -ForegroundColor Cyan
         Write-Host ""
     }
 
@@ -72,7 +107,7 @@ function Invoke-MTUpdateCheck {
         $Manifest = Invoke-RestMethod -Uri $UpdateManifestUrl -Method Get -TimeoutSec 10 -ErrorAction Stop
 
         if (-not $Manifest.latest_version) {
-            throw "Il manifest non contiene il campo latest_version."
+            throw (T "UPDATE_MANIFEST_MISSING")
         }
 
         $InstalledVersion = [version](([string]$Version -split "-")[0])
@@ -84,28 +119,28 @@ function Invoke-MTUpdateCheck {
         }
 
         if (-not $Quiet) {
-            Write-Host ("Versione installata : {0}" -f $InstalledVersion)
-            Write-Host ("Versione disponibile: {0}" -f $LatestVersion)
+            Write-Host ("{0}: {1}" -f (T "UPDATE_INSTALLED"), $InstalledVersion)
+            Write-Host ("{0}: {1}" -f (T "UPDATE_AVAILABLE_VERSION"), $LatestVersion)
             Write-Host ""
         }
 
         if ($InstalledVersion -lt $LatestVersion) {
             if (-not $Quiet) {
-                Write-Host "La papera ha trovato una versione più recente di Maintenance Toolkit." -ForegroundColor Yellow
+                Write-Host (T "UPDATE_FOUND") -ForegroundColor Yellow
 
                 if ($MinimumSupported -and $InstalledVersion -lt $MinimumSupported) {
-                    Write-Host "La versione installata non è più tra quelle supportate." -ForegroundColor Yellow
+                    Write-Host (T "UPDATE_UNSUPPORTED") -ForegroundColor Yellow
                 }
 
                 if ($Manifest.release_notes) {
                     Write-Host ""
-                    Write-Host "Novità:"
+                    Write-Host (T "UPDATE_WHATS_NEW")
                     Write-Host ([string]$Manifest.release_notes)
                 }
 
                 if ($Manifest.download_url) {
                     Write-Host ""
-                    Write-Host "Download:"
+                    Write-Host (T "UPDATE_DOWNLOAD")
                     Write-Host ([string]$Manifest.download_url) -ForegroundColor Cyan
                 }
             }
@@ -120,7 +155,7 @@ function Invoke-MTUpdateCheck {
 
         if ($InstalledVersion -gt $LatestVersion) {
             if (-not $Quiet) {
-                Write-Host "Questa versione è più recente di quella pubblicata. La papera sospetta un ambiente di test." -ForegroundColor Yellow
+                Write-Host (T "UPDATE_DEVELOPMENT") -ForegroundColor Yellow
             }
 
             return [pscustomobject]@{
@@ -132,7 +167,7 @@ function Invoke-MTUpdateCheck {
         }
 
         if (-not $Quiet) {
-            Write-Host "La papera non ha trovato versioni più recenti." -ForegroundColor Green
+            Write-Host (T "UPDATE_CURRENT") -ForegroundColor Green
         }
 
         return [pscustomobject]@{
@@ -144,10 +179,10 @@ function Invoke-MTUpdateCheck {
     }
     catch {
         if (-not $Quiet) {
-            Write-Host "La papera non è riuscita a controllare gli aggiornamenti." -ForegroundColor Yellow
-            Write-Host "Maintenance Toolkit può comunque essere utilizzato normalmente."
+            Write-Host (T "UPDATE_FAILED") -ForegroundColor Yellow
+            Write-Host (T "UPDATE_CAN_CONTINUE")
             Write-Host ""
-            Write-Host ("Dettaglio: {0}" -f $_.Exception.Message) -ForegroundColor DarkGray
+            Write-Host ("{0}: {1}" -f (T "UPDATE_DETAIL"), $_.Exception.Message) -ForegroundColor DarkGray
         }
 
         return [pscustomobject]@{
@@ -181,26 +216,26 @@ function Invoke-MTSelfTest {
     }
 
     Write-Host "============================================================"
-    Write-Host " AUTOTEST MAINTENANCE TOOLKIT $Version"
+    Write-Host (" {0} {1}" -f (T "SELFTEST_TITLE"), $Version)
     Write-Host "============================================================"
     Write-Host ""
-    Write-Host "La papera sta controllando il Toolkit..." -ForegroundColor Cyan
+    Write-Host (T "SELFTEST_CHECKING") -ForegroundColor Cyan
     Write-Host ""
 
     if ($PSVersionTable.PSVersion -ge [version]"5.1") {
-        Add-SelfTestResult "Versione PowerShell" "OK" ($PSVersionTable.PSVersion.ToString())
+        Add-SelfTestResult (T "SELFTEST_PS_VERSION") "OK" ($PSVersionTable.PSVersion.ToString())
     }
     else {
-        Add-SelfTestResult "Versione PowerShell" "ERROR" "È richiesto Windows PowerShell 5.1 o successivo."
+        Add-SelfTestResult (T "SELFTEST_PS_VERSION") "ERROR" (T "SELFTEST_PS_REQUIRED")
     }
 
     $Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $Principal = New-Object Security.Principal.WindowsPrincipal($Identity)
     if ($Principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Add-SelfTestResult "Privilegi amministrativi" "OK" "Sessione elevata."
+        Add-SelfTestResult (T "SELFTEST_ADMIN") "OK" (T "SELFTEST_ADMIN_OK")
     }
     else {
-        Add-SelfTestResult "Privilegi amministrativi" "WARN" "Sessione non elevata; il launcher BAT richiede normalmente l'elevazione."
+        Add-SelfTestResult (T "SELFTEST_ADMIN") "WARN" (T "SELFTEST_ADMIN_WARN")
     }
 
     foreach ($RequiredPath in @(
@@ -300,17 +335,17 @@ function Invoke-MTSelfTest {
 
     Write-Host ""
     Write-Host "============================================================"
-    Write-Host ("Errori: {0}   Avvisi: {1}" -f $Errors, $Warnings)
+    Write-Host (T "SELFTEST_RESULT_ERRORS_WARNINGS" @($Errors, $Warnings))
     Write-Host "============================================================"
 
     if ($Errors -gt 0) {
-        Write-Host "La papera è confusa. Controlliamo insieme i risultati dell'autotest." -ForegroundColor Red
+        Write-Host (T "SELFTEST_DUCK_ERROR") -ForegroundColor Red
     }
     elseif ($Warnings -gt 0) {
-        Write-Host "La papera pensa che alcuni elementi meritino un'occhiata." -ForegroundColor Yellow
+        Write-Host (T "SELFTEST_DUCK_WARN") -ForegroundColor Yellow
     }
     else {
-        Write-Host "La papera non ha trovato nulla di insolito." -ForegroundColor Green
+        Write-Host (T "SELFTEST_DUCK_OK") -ForegroundColor Green
     }
 
     return [pscustomobject]@{
@@ -325,36 +360,32 @@ function Show-Menu {
     Clear-Host
     Write-Host "============================================================"
     Write-Host " Maintenance Toolkit $Version"
+    Write-Host (" {0}: {1} ({2})" -f (T "MENU_LANGUAGE"), (T "LANGUAGE_NAME"), $CurrentLanguage)
     Write-Host "============================================================"
     Write-Host ""
 
     foreach ($Module in $Catalog) {
         $Enabled = Get-IniBool $Config "Modules" $Module.Key $false
-        $Flag = if ($Enabled) { "Automatico" } else { "Manuale   " }
+        $Flag = if ($Enabled) { T "MODE_AUTOMATIC" } else { T "MODE_MANUAL" }
 
-        Write-Host (
-            "[{0,2}] [{1}] {2}" -f
-            $Module.Id,
-            $Flag,
-            $Module.Name
-        )
+        Write-Host ("[{0,2}] [{1,-9}] {2}" -f $Module.Id, $Flag, $Module.Name)
     }
 
     Write-Host ""
-    Write-Host "[A] Esegui tutti i moduli automatici"
-    Write-Host "[C] Apri configurazione INI"
-    Write-Host "[L] Apri cartella log"
-    Write-Host "[T] Autotest del Toolkit"
-    Write-Host "[U] Cerca aggiornamenti"
-    Write-Host "[I] Informazioni e licenza"
-    Write-Host "[Q] Esci"
+    Write-Host ("[A] {0}" -f (T "MENU_RUN_AUTOMATIC"))
+    Write-Host ("[C] {0}" -f (T "MENU_OPEN_CONFIG"))
+    Write-Host ("[L] {0}" -f (T "MENU_OPEN_LOGS"))
+    Write-Host ("[T] {0}" -f (T "MENU_SELFTEST"))
+    Write-Host ("[U] {0}" -f (T "MENU_CHECK_UPDATES"))
+    Write-Host ("[I] {0}" -f (T "MENU_INFO"))
+    Write-Host ("[Q] {0}" -f (T "MENU_EXIT"))
     Write-Host ""
 }
 
 function Select-Modules {
     while ($true) {
         Show-Menu
-        $Choice = Read-Host "Selezione"
+        $Choice = Read-Host (T "MENU_SELECTION")
 
         if ($Choice -match '^[Qq]$') {
             return $null
@@ -374,7 +405,7 @@ function Select-Modules {
             Clear-Host
             $null = Invoke-MTSelfTest
             Write-Host ""
-            Write-Host "Premere Invio per tornare al menu..."
+            Write-Host (T "MENU_PRESS_ENTER")
             [void](Read-Host)
             continue
         }
@@ -383,18 +414,27 @@ function Select-Modules {
             Clear-Host
             $null = Invoke-MTUpdateCheck
             Write-Host ""
-            Write-Host "Premere Invio per tornare al menu..."
+            Write-Host (T "MENU_PRESS_ENTER")
             [void](Read-Host)
             continue
         }
 
 if ($Choice -match '^[Ii]$') {
     Clear-Host
-    Get-Content -LiteralPath (Join-Path $Root "ABOUT.txt") |
-        ForEach-Object { Write-Host $_ }
-
+    Write-Host "============================================================"
+    Write-Host " Maintenance Toolkit $Version"
+    Write-Host "============================================================"
     Write-Host ""
-    Write-Host "Premere Invio per tornare al menu..."
+    Write-Host ("{0}:" -f (T "INFO_AUTHOR"))
+    Write-Host "    Luca Miselli"
+    Write-Host "    https://www.kraugh.it"
+    Write-Host ""
+    Write-Host (T "INFO_DEVELOPED_WITH")
+    Write-Host (T "INFO_DUCK")
+    Write-Host ""
+    Write-Host (T "INFO_THANKS")
+    Write-Host ""
+    Write-Host (T "MENU_PRESS_ENTER")
     [void](Read-Host)
     continue
 }
@@ -444,10 +484,10 @@ function Invoke-ToolkitSession {
     $Start = Get-Date
 
     Write-Main "============================================================"
-    Write-Main "MAINTENANCE TOOLKIT $Version - SESSIONE $SessionId"
-    Write-Main "Computer: $env:COMPUTERNAME"
-    Write-Main "Utente: $env:USERNAME"
-    Write-Main "Moduli selezionati:"
+    Write-Main ("MAINTENANCE TOOLKIT {0} - {1} {2}" -f $Version, (T "SESSION_LABEL"), $SessionId)
+    Write-Main ("{0}: {1}" -f (T "SESSION_COMPUTER"), $env:COMPUTERNAME)
+    Write-Main ("{0}: {1}" -f (T "SESSION_USER"), $env:USERNAME)
+    Write-Main ("{0}:" -f (T "SESSION_SELECTED_MODULES"))
 
     foreach ($SelectedModule in $Selected) {
         Write-Main " - $($SelectedModule.Name)"
@@ -459,7 +499,7 @@ function Invoke-ToolkitSession {
         Remove-Item $env:MT_RESULT -Force -ErrorAction SilentlyContinue
         $ModuleStart = Get-Date
 
-        Write-Main "AVVIO: $($Module.Name)"
+        Write-Main ("{0}: {1}" -f (T "SESSION_START_MODULE"), $Module.Name)
 
         try {
             & (Join-Path $ModulesDir $Module.File)
@@ -501,7 +541,7 @@ function Invoke-ToolkitSession {
         }
 
         $Results.Add([pscustomobject]@{
-            Module = $Result.Module
+            Module = $Module.Name
             Status = $Result.Status
             Duration = ((Get-Date) - $ModuleStart).ToString("hh\:mm\:ss")
             Detail = $Result.Detail
@@ -530,27 +570,27 @@ function Invoke-ToolkitSession {
         "                 Maintenance Toolkit $Version",
         "============================================================",
         "",
-        "Autore:",
+        ("{0}:" -f (T "INFO_AUTHOR")),
         "    Luca Miselli",
         "    https://www.kraugh.it",
         "",
-        "Sviluppato con l'indispensabile aiuto",
-        "di una Rubber Duck molto paziente.",
+        (T "INFO_DEVELOPED_WITH"),
+        (T "INFO_DUCK"),
         "",
-        "Grazie per aver utilizzato Maintenance Toolkit.",
+        (T "INFO_THANKS"),
         "",
         "============================================================"
     )
 
     $Lines = @(
         "MAINTENANCE TOOLKIT $Version",
-        "Sessione: $SessionId",
-        "Computer: $env:COMPUTERNAME",
-        "Inizio: $($Start.ToString('yyyy-MM-dd HH:mm:ss'))",
-        "Fine: $($End.ToString('yyyy-MM-dd HH:mm:ss'))",
-        "Durata: $(($End-$Start).ToString('hh\:mm\:ss'))",
+        ("{0}: {1}" -f (T "SESSION_LABEL"), $SessionId),
+        ("{0}: {1}" -f (T "SESSION_COMPUTER"), $env:COMPUTERNAME),
+        ("{0}: {1}" -f (T "SESSION_START"), $Start.ToString('yyyy-MM-dd HH:mm:ss')),
+        ("{0}: {1}" -f (T "SESSION_END"), $End.ToString('yyyy-MM-dd HH:mm:ss')),
+        ("{0}: {1}" -f (T "SESSION_DURATION"), ($End-$Start).ToString('hh\:mm\:ss')),
         "",
-        ("{0,-30} {1,-7} {2,-10} {3}" -f "MODULO", "STATO", "DURATA", "DETTAGLIO"),
+        ("{0,-30} {1,-9} {2,-10} {3}" -f (T "TABLE_MODULE"), (T "TABLE_STATUS"), (T "TABLE_DURATION"), (T "TABLE_DETAIL")),
         ("-" * 110)
     )
 
@@ -566,10 +606,10 @@ function Invoke-ToolkitSession {
 
     $Lines += @(
         "",
-        "Errori: $Errors",
-        "Avvisi: $Warnings",
-        "Riavvio necessario: $(if($Reboot){'SI'}else{'NO'})",
-        "Riavvio automatico: MAI",
+        ("{0}: {1}" -f (T "SESSION_ERRORS"), $Errors),
+        ("{0}: {1}" -f (T "SESSION_WARNINGS"), $Warnings),
+        ("{0}: {1}" -f (T "SESSION_REBOOT_REQUIRED"), $(if($Reboot){T "YES"}else{T "NO"})),
+        ("{0}: {1}" -f (T "SESSION_AUTO_REBOOT"), (T "NEVER")),
         ""
     )
 
@@ -593,7 +633,7 @@ function Invoke-ToolkitSession {
 
         @"
 <!doctype html>
-<html lang="it">
+<html lang="$CurrentLanguage">
 <head>
 <meta charset="utf-8">
 <title>Maintenance Toolkit $Version - $SessionId</title>
@@ -613,15 +653,15 @@ footer{margin-top:28px;padding-top:18px;border-top:1px solid #bbb;text-align:cen
 <main>
 <h1>Maintenance Toolkit $Version</h1>
 <p>
-<b>Computer:</b> $env:COMPUTERNAME<br>
-<b>Sessione:</b> $SessionId<br>
-<b>Durata:</b> $(($End-$Start).ToString('hh\:mm\:ss'))<br>
-<b>Riavvio necessario:</b> $(if($Reboot){'SI'}else{'NO'})<br>
-<b>Riavvio automatico:</b> MAI
+<b>$(T "SESSION_COMPUTER"):</b> $env:COMPUTERNAME<br>
+<b>$(T "SESSION_LABEL"):</b> $SessionId<br>
+<b>$(T "SESSION_DURATION"):</b> $(($End-$Start).ToString('hh\:mm\:ss'))<br>
+<b>$(T "SESSION_REBOOT_REQUIRED"):</b> $(if($Reboot){T "YES"}else{T "NO"})<br>
+<b>$(T "SESSION_AUTO_REBOOT"):</b> $(T "NEVER")
 </p>
 <table>
 <thead>
-<tr><th>Modulo</th><th>Stato</th><th>Durata</th><th>Dettaglio</th></tr>
+<tr><th>$(T "TABLE_MODULE")</th><th>$(T "TABLE_STATUS")</th><th>$(T "TABLE_DURATION")</th><th>$(T "TABLE_DETAIL")</th></tr>
 </thead>
 <tbody>
 $($Rows -join "`n")
@@ -629,10 +669,10 @@ $($Rows -join "`n")
 </table>
 <footer>
 <strong>Maintenance Toolkit $Version</strong><br>
-Autore: Luca Miselli —
+$(T "INFO_AUTHOR"): Luca Miselli —
 <a href="https://www.kraugh.it">www.kraugh.it</a><br>
-Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.<br>
-Grazie per aver utilizzato Maintenance Toolkit.
+$(T "INFO_DEVELOPED_WITH") $(T "INFO_DUCK")<br>
+$(T "INFO_THANKS")
 </footer>
 </main>
 </body>
@@ -645,10 +685,10 @@ Grazie per aver utilizzato Maintenance Toolkit.
 
     Write-Host ""
     Write-Host "============================================================"
-    Write-Host "RIEPILOGO RAPIDO SESSIONE"
+    Write-Host (T "SESSION_QUICK_SUMMARY")
     Write-Host "============================================================"
     Write-Host ""
-    Write-Host "Eseguiti:"
+    Write-Host ("{0}:" -f (T "SESSION_EXECUTED"))
 
     foreach ($Result in $Results) {
         $Marker = switch ($Result.Status) {
@@ -665,19 +705,19 @@ Grazie per aver utilizzato Maintenance Toolkit.
     $NotExecuted = @($Catalog | Where-Object { $_.Name -notin $ExecutedNames })
 
     Write-Host ""
-    Write-Host "Non eseguiti:"
-    if ($NotExecuted.Count -eq 0) { Write-Host "  Nessuno" }
+    Write-Host ("{0}:" -f (T "SESSION_NOT_EXECUTED"))
+    if ($NotExecuted.Count -eq 0) { Write-Host ("  {0}" -f (T "SESSION_NONE")) }
     else { foreach ($Missing in $NotExecuted) { Write-Host "  [ ] $($Missing.Name)" } }
 
     Write-Host ""
-    Write-Host "Errori: $Errors"
-    Write-Host "Avvisi: $Warnings"
-    Write-Host "Riavvio richiesto: $(if($Reboot){'SI'}else{'NO'})"
-    Write-Host "Durata sessione: $(($End-$Start).ToString('hh\:mm\:ss'))"
+    Write-Host ("{0}: {1}" -f (T "SESSION_ERRORS"), $Errors)
+    Write-Host ("{0}: {1}" -f (T "SESSION_WARNINGS"), $Warnings)
+    Write-Host ("{0}: {1}" -f (T "SESSION_REBOOT_REQUIRED"), $(if($Reboot){T "YES"}else{T "NO"}))
+    Write-Host ("{0}: {1}" -f (T "SESSION_DURATION"), ($End-$Start).ToString('hh\:mm\:ss'))
     Write-Host "============================================================"
 
-    Write-Main "Riepilogo TXT: $Txt"
-    Write-Main "Riepilogo HTML: $Html"
+    Write-Main ("{0}: {1}" -f (T "SESSION_TXT_SUMMARY"), $Txt)
+    Write-Main ("{0}: {1}" -f (T "SESSION_HTML_SUMMARY"), $Html)
 
     $Retention = [int](Get-IniValue $Config "General" "LogRetentionDays" 90)
 
@@ -767,13 +807,13 @@ while ($true) {
 
     Write-Host ""
     Write-Host "============================================================"
-    Write-Host "[M] Torna al menu principale"
-    Write-Host "[Q] Esci"
+    Write-Host ("[M] {0}" -f (T "MENU_RETURN"))
+    Write-Host ("[Q] {0}" -f (T "MENU_EXIT"))
     Write-Host "============================================================"
     Write-Host ""
 
     while ($true) {
-        $NextAction = Read-Host "Selezione"
+        $NextAction = Read-Host (T "MENU_SELECTION")
 
         if ($NextAction -match '^[Mm]$') {
             break

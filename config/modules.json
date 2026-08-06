@@ -1,0 +1,20 @@
+{
+  "SchemaVersion": 1,
+  "Modules": [
+    {
+      "Key": "connectivity",
+      "Domain": "maintenance",
+      "LegacyScript": "modules/01_connectivity.ps1",
+      "Enabled": true,
+      "Automatic": true,
+      "NameKey": "MODULE_CONNECTIVITY"
+    },
+    {
+      "Key": "networkDiagnostics",
+      "Domain": "network",
+      "Enabled": false,
+      "Automatic": false,
+      "NameKey": "MODULE_NETWORK_DIAGNOSTICS"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "SchemaVersion": 1,
+  "Directory": "reports",
+  "AsciiSafeFileNames": true,
+  "RequiredHeaderFields": [
+    "Product",
+    "Version",
+    "Channel",
+    "MenuOption",
+    "ReportType",
+    "SpeedTest",
+    "Scope",
+    "RunId",
+    "Computer",
+    "User",
+    "AdministrativeState",
+    "Timestamp",
+    "Language"
+  ]
+}

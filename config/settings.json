@@ -1,0 +1,21 @@
+{
+  "Language": "auto",
+  "DefaultLanguage": "en-US",
+  "Compatibility": {
+    "LegacyIniEnabled": true
+  },
+  "Renderer": {
+    "Theme": "default"
+  },
+  "Paths": {
+    "Logs": "logs",
+    "Reports": "reports"
+  },
+  "NetworkDiagnostics": {
+    "Enabled": false,
+    "SpeedTest": {
+      "Enabled": false,
+      "Optional": true
+    }
+  }
+}

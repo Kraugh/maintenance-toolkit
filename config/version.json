@@ -1,0 +1,8 @@
+{
+  "Project": "Maintenance Toolkit",
+  "Version": "4.0.0-dev.7",
+  "Channel": "development",
+  "Baseline": "3.7.2",
+  "NetworkBaseline": "NDP 0.0.19-RC",
+  "Milestone": "Sprint 0 - explicit language override fix"
+}

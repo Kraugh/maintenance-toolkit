@@ -20,3 +20,7 @@ Desktop.ini
 .vscode/
 .idea/
 *.tmp
+logs/*
+!logs/README.md
+reports/*
+!reports/README.md
