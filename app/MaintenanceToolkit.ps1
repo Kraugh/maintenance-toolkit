@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.2
+# Maintenance Toolkit 4.0.0-dev.10
 #
 # Autore:
 #   Luca Miselli
@@ -19,11 +19,12 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.0-dev.7"
-$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ModulesDir = Join-Path $Root "modules"
+$Version = "4.0.0-dev.11"
+$AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$Root = Split-Path -Parent $AppDir
+$ModulesDir = Join-Path $AppDir "modules"
 $LogsDir = Join-Path $Root "logs"
-$IniPath = Join-Path $Root "MaintenanceToolkit.ini"
+$IniPath = Join-Path $Root "config\MaintenanceToolkit.ini"
 $UpdateManifestUrl = "https://www.kraugh.it/api/maintenance-toolkit/version.json"
 
 # I log sono separati per computer, così il toolkit può essere eseguito
@@ -43,7 +44,7 @@ $env:MT_INI = $IniPath
 $Config = Read-IniFile $IniPath
 
 # MT4 bilingual application shell.
-. (Join-Path $Root "app\core\Bootstrap.ps1")
+. (Join-Path $AppDir "core\Bootstrap.ps1")
 $MT4Settings = Import-MTSettings -ProjectRoot $Root
 
 if ($Language -ne "auto") {
@@ -56,6 +57,7 @@ $MT4Context = Initialize-MT4Foundation `
 $LanguageData = $MT4Context.Language
 $LanguageResolution = $MT4Context.LanguageResolution
 $CurrentLanguage = [string]$LanguageResolution.Language
+$env:MT_LANGUAGE = $CurrentLanguage
 
 function T {
     param(
@@ -241,7 +243,7 @@ function Invoke-MTSelfTest {
     foreach ($RequiredPath in @(
         $IniPath,
         (Join-Path $Root "Avvia_Manutenzione.bat"),
-        (Join-Path $Root "ABOUT.txt"),
+        (Join-Path $Root "docs\ABOUT.txt"),
         (Join-Path $ModulesDir "00_common.ps1")
     )) {
         if (Test-Path -LiteralPath $RequiredPath -PathType Leaf) {
@@ -263,8 +265,7 @@ function Invoke-MTSelfTest {
     }
 
     $PowerShellFiles = @(
-        Get-ChildItem -LiteralPath $Root -Filter "*.ps1" -File -ErrorAction SilentlyContinue
-        Get-ChildItem -LiteralPath $ModulesDir -Filter "*.ps1" -File -ErrorAction SilentlyContinue
+        Get-ChildItem -LiteralPath $AppDir -Filter "*.ps1" -File -Recurse -ErrorAction SilentlyContinue
     )
 
     foreach ($File in $PowerShellFiles) {

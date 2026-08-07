@@ -5,7 +5,7 @@
 $ErrorActionPreference = 'Stop'
 
 try {
-    . (Join-Path $ProjectRoot 'modules/00_common.ps1')
+    . (Join-Path $ProjectRoot 'app/modules/00_common.ps1')
 
     foreach ($CommandName in @(
         'Add-Log',

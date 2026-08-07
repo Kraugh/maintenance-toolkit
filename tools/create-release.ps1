@@ -28,24 +28,21 @@ try {
     New-Item -ItemType Directory -Path $PackageRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 
-    $Files = @(
-        "Avvia_Manutenzione.bat",
-        "MaintenanceToolkit.ps1",
-        "MaintenanceToolkit.ini",
-        "ABOUT.txt",
-        "LICENSE"
-    )
+    # User-facing package: the root contains only the launcher.
+    Copy-Item `
+        -LiteralPath (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
+        -Destination $PackageRoot `
+        -Force
 
-    foreach ($File in $Files) {
-        Copy-Item `
-            -LiteralPath (Join-Path $RepositoryRoot $File) `
-            -Destination $PackageRoot `
-            -Force
-    }
-
-    foreach ($Directory in @("modules", "tools", "docs", "Images")) {
+    foreach ($Directory in @(
+        "app",
+        "config",
+        "languages",
+        "external",
+        "rules",
+        "themes"
+    )) {
         $Source = Join-Path $RepositoryRoot $Directory
-
         if (Test-Path -LiteralPath $Source) {
             Copy-Item `
                 -LiteralPath $Source `
@@ -55,14 +52,42 @@ try {
         }
     }
 
-    $Readme = Get-Content -LiteralPath (Join-Path $RepositoryRoot "README.md") -Raw
-    $Changelog = Get-Content -LiteralPath (Join-Path $RepositoryRoot "CHANGELOG.md") -Raw
+    # Runtime documentation is kept under docs; developer-only project material,
+    # .github, release tooling and repository metadata are intentionally excluded.
+    $PackageDocs = Join-Path $PackageRoot "docs"
+    New-Item -ItemType Directory -Path $PackageDocs -Force | Out-Null
 
-    Convert-MarkdownToPlainText $Readme |
-        Set-Content -LiteralPath (Join-Path $PackageRoot "README.txt") -Encoding UTF8
+    foreach ($DocFile in @(
+        "README.md",
+        "CONTRIBUTING.md",
+        "LICENSE"
+    )) {
+        Copy-Item `
+            -LiteralPath (Join-Path $RepositoryRoot $DocFile) `
+            -Destination $PackageDocs `
+            -Force
+    }
 
-    Convert-MarkdownToPlainText $Changelog |
-        Set-Content -LiteralPath (Join-Path $PackageRoot "CHANGELOG.txt") -Encoding UTF8
+    foreach ($DocFile in @(
+        "ABOUT.txt",
+        "CHANGELOG.md"
+    )) {
+        Copy-Item `
+            -LiteralPath (Join-Path $RepositoryRoot "docs\$DocFile") `
+            -Destination $PackageDocs `
+            -Force
+    }
+
+    foreach ($DocLanguage in @("eng", "ita")) {
+        $Source = Join-Path $RepositoryRoot "docs\$DocLanguage"
+        if (Test-Path -LiteralPath $Source) {
+            Copy-Item `
+                -LiteralPath $Source `
+                -Destination $PackageDocs `
+                -Recurse `
+                -Force
+        }
+    }
 
     if (Test-Path -LiteralPath $ZipPath) {
         Remove-Item -LiteralPath $ZipPath -Force

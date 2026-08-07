@@ -55,7 +55,7 @@ Main architectural debt for MT4:
 
 - most user-visible text is hardcoded in Italian;
 - application orchestration, menu, self-test and report generation are
-  concentrated in `MaintenanceToolkit.ps1`;
+  concentrated in `app/MaintenanceToolkit.ps1`;
 - `modules/00_common.ps1` contains several unrelated services;
 - configuration is split between INI, constants and code;
 - modules communicate through environment variables and a JSON result file;
@@ -180,7 +180,7 @@ Legend:
 
 | Area | MT 3.7.2 | NDP 0.0.19-RC | MT4 decision |
 |---|---|---|---|
-| Entry point | `MaintenanceToolkit.ps1` | `app/Start.ps1` | **REFACTOR MT** into a thin bootstrap; **DROP** NDP standalone menu |
+| Entry point | `app/MaintenanceToolkit.ps1` | `app/Start.ps1` | **REFACTOR MT** into a thin bootstrap; **DROP** NDP standalone menu |
 | UAC launcher | `Avvia_Manutenzione.bat` | `.cmd` launchers | **KEEP MT**; NDP core never elevates |
 | Module catalog | hardcoded objects in main | hardcoded menu actions | **REFACTOR** into localized/configured module metadata |
 | Settings | INI + constants | structured JSON | **MERGE**, moving toward JSON while preserving 3.7.2 migration |

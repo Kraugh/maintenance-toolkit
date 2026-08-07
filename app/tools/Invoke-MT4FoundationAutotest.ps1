@@ -59,7 +59,7 @@ $Required = @(
     'app/core/LegacyIni.ps1',
     'app/core/Results.ps1',
     'app/core/ProcessRunner.ps1',
-    'modules/00_common.ps1',
+    'app/modules/00_common.ps1',
     'config/settings.json',
     'config/modules.json',
     'config/version.json',
@@ -85,7 +85,7 @@ Test-MT4Json (Join-Path $ProjectRoot 'themes/default.json')
 Get-ChildItem -LiteralPath (Join-Path $ProjectRoot 'app') -Filter *.ps1 -File -Recurse |
     ForEach-Object { Test-MT4PowerShellSyntax $_.FullName }
 
-Test-MT4PowerShellSyntax (Join-Path $ProjectRoot 'modules/00_common.ps1')
+Test-MT4PowerShellSyntax (Join-Path $ProjectRoot 'app/modules/00_common.ps1')
 
 try {
     $English = Get-Content `
@@ -156,11 +156,11 @@ catch {
 }
 
 try {
-    $CommonPath = Join-Path $ProjectRoot 'modules/00_common.ps1'
+    $CommonPath = Join-Path $ProjectRoot 'app/modules/00_common.ps1'
     $CommonText = Get-Content -LiteralPath $CommonPath -Raw -Encoding UTF8
 
     if ($CommonText -match '(?m)^function\s+') {
-        throw 'modules/00_common.ps1 still contains function implementations.'
+        throw 'app/modules/00_common.ps1 still contains function implementations.'
     }
 
     . $CommonPath
@@ -201,7 +201,7 @@ try {
         if (-not $Italian.PSObject.Properties[$Key]) { throw "Missing it-IT shell key: $Key" }
     }
 
-    $MainPath = Join-Path $ProjectRoot 'MaintenanceToolkit.ps1'
+    $MainPath = Join-Path $ProjectRoot 'app/MaintenanceToolkit.ps1'
     Test-MT4PowerShellSyntax $MainPath
 
     foreach ($RuntimeScript in @($MainPath) + @(
@@ -258,6 +258,210 @@ try {
 catch {
     Add-MT4AutotestError (
         'Language override validation failed: {0}' -f $_.Exception.Message
+    )
+}
+
+try {
+    $ExpectedProjectRoot = $ProjectRoot
+    . (Join-Path $ProjectRoot 'app/modules/00_common.ps1')
+
+    if ($ProjectRoot -ne $ExpectedProjectRoot) {
+        throw (
+            'Compatibility loader changed caller ProjectRoot from {0} to {1}.' -f
+            $ExpectedProjectRoot,
+            $ProjectRoot
+        )
+    }
+
+    if (
+        -not (Test-Path -LiteralPath (
+            Join-Path $ProjectRoot 'app/core/Localization.ps1'
+        ))
+    ) {
+        throw 'Compatibility loader resolved the wrong repository root.'
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Compatibility root isolation failed: {0}' -f $_.Exception.Message
+    )
+}
+
+try {
+    $PreviousLanguage = $env:MT_LANGUAGE
+
+    try {
+        $env:MT_LANGUAGE = 'en-US'
+        . (Join-Path $ProjectRoot 'app/modules/00_common.ps1')
+
+        $EnglishConnectivity = Get-MTRuntimeText `
+            'CONNECTIVITY_GATEWAY_OK' `
+            @('192.0.2.1')
+
+        if ($EnglishConnectivity -ne 'Gateway reachable: 192.0.2.1') {
+            throw "Runtime en-US module localization failed: $EnglishConnectivity"
+        }
+
+        $env:MT_LANGUAGE = 'it-IT'
+        Initialize-MTRuntimeLocalization `
+            -ProjectRoot $ProjectRoot `
+            -Language $env:MT_LANGUAGE |
+            Out-Null
+
+        $ItalianConnectivity = Get-MTRuntimeText `
+            'CONNECTIVITY_GATEWAY_OK' `
+            @('192.0.2.1')
+
+        if ($ItalianConnectivity -ne 'Gateway raggiungibile: 192.0.2.1') {
+            throw "Runtime it-IT module localization failed: $ItalianConnectivity"
+        }
+    }
+    finally {
+        $env:MT_LANGUAGE = $PreviousLanguage
+    }
+
+    foreach ($RelativeModule in @(
+        'app/modules/01_connectivity.ps1',
+        'app/modules/05_winget.ps1'
+    )) {
+        $MigratedModule = Join-Path $ProjectRoot $RelativeModule
+        Test-MT4PowerShellSyntax $MigratedModule
+
+        $ModuleText = Get-Content `
+            -LiteralPath $MigratedModule `
+            -Raw `
+            -Encoding UTF8
+
+        foreach ($Pattern in @(
+            '(?m)\bWrite-Main\s+"[^"]+',
+            '(?m)\bWrite-Ok\s+"[^"]+',
+            '(?m)\bWrite-WarnLog\s+"[^"]+',
+            '(?m)\bWrite-ErrorLog\s+"[^"]+',
+            '(?m)\bthrow\s+"[^"]+',
+            '(?m)-Label\s+"[^"]+'
+        )) {
+            if ($ModuleText -match $Pattern) {
+                throw (
+                    'Migrated module contains a hardcoded user-facing string: {0}' -f
+                    $RelativeModule
+                )
+            }
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Migrated module localization validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    $PreviousLanguage = $env:MT_LANGUAGE
+
+    try {
+        $env:MT_LANGUAGE = 'en-US'
+        Initialize-MTRuntimeLocalization `
+            -ProjectRoot $ProjectRoot `
+            -Language $env:MT_LANGUAGE |
+            Out-Null
+
+        $Cases = @(
+            @('PROCESS_LONG_START', @('Winget pass 1'), 'Winget pass 1 may take several minutes. Do not close the window.'),
+            @('PROCESS_LONG_RUNNING', @('Winget pass 1','00:01:00'), 'Winget pass 1 is still running. Elapsed time: 00:01:00'),
+            @('PROCESS_COMPLETED_DURATION', @('Winget pass 1','00:01:02',0), 'Winget pass 1 completed in 00:01:02. Exit code 0.'),
+            @('PROCESS_FAILED_DURATION', @('Winget pass 1','00:01:02',1), 'Winget pass 1 failed after 00:01:02. Exit code 1.'),
+            @('PROCESS_COMPLETED', @('Winget source update',0), 'Winget source update completed. Exit code 0.'),
+            @('PROCESS_FAILED', @('Winget source update',1), 'Winget source update failed. Exit code 1.')
+        )
+
+        foreach ($Case in $Cases) {
+            $Actual = Get-MTRuntimeText $Case[0] $Case[1]
+            if ($Actual -ne $Case[2]) {
+                throw "ProcessRunner en-US localization failed for $($Case[0]): $Actual"
+            }
+        }
+
+        $env:MT_LANGUAGE = 'it-IT'
+        Initialize-MTRuntimeLocalization `
+            -ProjectRoot $ProjectRoot `
+            -Language $env:MT_LANGUAGE |
+            Out-Null
+
+        if (
+            (Get-MTRuntimeText 'PROCESS_LONG_START' @('Winget passaggio 1')) -ne
+            'Winget passaggio 1 può richiedere diversi minuti. Non chiudere la finestra.'
+        ) {
+            throw 'ProcessRunner it-IT start localization failed.'
+        }
+    }
+    finally {
+        $env:MT_LANGUAGE = $PreviousLanguage
+    }
+
+    $ProcessRunnerPath = Join-Path $ProjectRoot 'app/core/ProcessRunner.ps1'
+    $ProcessRunnerText = Get-Content -LiteralPath $ProcessRunnerPath -Raw -Encoding UTF8
+
+    foreach ($ForbiddenText in @(
+        'può richiedere diversi minuti',
+        'ancora in esecuzione. Tempo trascorso',
+        '$Label completato',
+        '$Label fallito'
+    )) {
+        if ($ProcessRunnerText.Contains($ForbiddenText)) {
+            throw "Hardcoded ProcessRunner UI text remains: $ForbiddenText"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'ProcessRunner localization validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    $ExpectedRootFiles = @(
+        'Avvia_Manutenzione.bat',
+        'README.md',
+        'CONTRIBUTING.md',
+        'LICENSE',
+        '.gitignore'
+    )
+
+    foreach ($RootFile in $ExpectedRootFiles) {
+        if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot $RootFile) -PathType Leaf)) {
+            throw "Expected repository root file missing: $RootFile"
+        }
+    }
+
+    foreach ($ForbiddenRootFile in @(
+        'MaintenanceToolkit.ps1',
+        'MaintenanceToolkit.ini',
+        'ABOUT.txt',
+        'CHANGELOG.md'
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $ProjectRoot $ForbiddenRootFile)) {
+            throw "Root cleanup regression: $ForbiddenRootFile"
+        }
+    }
+
+    foreach ($RequiredRuntimePath in @(
+        'app/MaintenanceToolkit.ps1',
+        'app/modules/00_common.ps1',
+        'config/MaintenanceToolkit.ini',
+        'docs/ABOUT.txt',
+        'docs/CHANGELOG.md'
+    )) {
+        if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot $RequiredRuntimePath))) {
+            throw "Structured path missing: $RequiredRuntimePath"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Repository/runtime structure validation failed: {0}' -f
+        $_.Exception.Message
     )
 }
 

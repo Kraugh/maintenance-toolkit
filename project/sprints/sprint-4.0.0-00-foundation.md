@@ -90,3 +90,48 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [ ] Validate dev.7 on Windows PowerShell 5.1.
 - [ ] Run Connectivity once with `-Language en-US`.
 - [ ] Commit the successful bilingual shell checkpoint.
+
+
+## Development increment 8 — first localized maintenance modules
+
+- [x] Publish the resolved shell language through `MT_LANGUAGE`.
+- [x] Add runtime localization context for maintenance modules.
+- [x] Add Localization to the compatibility loader.
+- [x] Fully localize Connectivity user-facing text and result details.
+- [x] Fully localize Winget user-facing text, heartbeat labels and result details.
+- [x] Keep Connectivity and Winget operational logic unchanged.
+- [x] Add runtime EN/IT localization smoke tests.
+- [x] Add a hardcoded-string policy check for migrated modules.
+- [ ] Validate Connectivity in EN and IT on Windows 11.
+- [ ] Validate Winget in EN and IT without changing native Winget output.
+- [ ] Continue module-by-module localization.
+
+## Development increment 9 — localized ProcessRunner feedback
+
+- [x] Localize long-operation start text.
+- [x] Localize periodic heartbeat / elapsed-time text.
+- [x] Localize process completion and failure text, with and without duration.
+- [x] Keep process execution, elevation behaviour, timing and exit-code logic unchanged.
+- [x] Add EN/IT ProcessRunner localization checks to AUTOTEST.
+- [ ] Validate Winget in `en-US` on Windows 11.
+
+## Development increment 10 — runtime and distribution structure cleanup
+
+- [x] Keep `Avvia_Manutenzione.bat` as the user-facing launcher.
+- [x] Move the PowerShell entry point under `app/`.
+- [x] Move legacy maintenance modules under `app/modules/`.
+- [x] Move `MaintenanceToolkit.ini` under `config/`.
+- [x] Move ABOUT and CHANGELOG material under `docs/`.
+- [x] Preserve GitHub-standard `README.md`, `CONTRIBUTING.md` and `LICENSE` in the repository root.
+- [x] Make the release package root contain only `Avvia_Manutenzione.bat`.
+- [x] Exclude `.github`, `project`, developer tools and repository metadata from the user release package.
+- [x] Add structure regression checks to MT4 AUTOTEST.
+- [ ] Validate launcher, EN/IT shell and representative modules on Windows 11.
+
+## Development increment 11 — structure compatibility root fix
+
+- [x] Correct repository-root resolution in `app/modules/00_common.ps1`.
+- [x] Prevent the dot-sourced compatibility loader from overwriting a caller's `$ProjectRoot`.
+- [x] Add an AUTOTEST regression guard for caller-scope root isolation.
+- [ ] Re-run Foundation AUTOTEST on Windows 11.
+- [ ] Launch MT from the root BAT and test EN/IT.

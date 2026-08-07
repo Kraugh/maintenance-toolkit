@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 3.7.2 - Modulo Winget
+# Maintenance Toolkit 4.0 - Winget module
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -19,20 +19,22 @@ function Invoke-WingetUpgradePass {
         [string[]]$Arguments
     )
 
-    $RawLog = Join-Path $env:MT_SESSION_DIR ("winget_passaggio_{0}.txt" -f $Pass)
+    $RawLog = Join-Path $env:MT_SESSION_DIR (
+        Get-MTRuntimeText "WINGET_PASS_FILE" @($Pass)
+    )
 
-    Write-Main "Winget: avvio passaggio $Pass."
+    Write-Main (Get-MTRuntimeText "WINGET_PASS_START" @($Pass))
     Write-Main ""
-    Write-Main "Winget sta installando gli aggiornamenti disponibili."
-    Write-Main "Questa operazione può richiedere diversi minuti, soprattutto sui computer non aggiornati da tempo."
-    Write-Main "Durante l'installazione potrebbero comparire finestre dei singoli programmi: è un comportamento normale."
-    Write-Main "Maintenance Toolkit riprenderà automaticamente al termine."
+    Write-Main (Get-MTRuntimeText "WINGET_INSTALLING")
+    Write-Main (Get-MTRuntimeText "WINGET_MAY_TAKE_TIME")
+    Write-Main (Get-MTRuntimeText "WINGET_WINDOWS_NOTICE")
+    Write-Main (Get-MTRuntimeText "WINGET_RESUME_NOTICE")
     Write-Main ""
 
     $Run = Invoke-LoggedProcessWithHeartbeat `
         -FilePath $WingetPath `
         -ArgumentList $Arguments `
-        -Label "Winget passaggio $Pass" `
+        -Label (Get-MTRuntimeText "WINGET_PASS_LABEL" @($Pass)) `
         -Module $Module `
         -SuccessCodes @(0) `
         -HeartbeatSeconds 60 `
@@ -54,31 +56,33 @@ try {
     $Winget = Get-WingetCommand
 
     if (-not $Winget) {
-        throw "winget.exe non trovato nel PATH."
+        throw (Get-MTRuntimeText "WINGET_NOT_FOUND")
     }
 
     $BeforePath = Join-Path $env:MT_SESSION_DIR "winget_prima.txt"
     $AfterPath = Join-Path $env:MT_SESSION_DIR "winget_dopo.txt"
 
-    Write-Main "Winget: acquisizione aggiornamenti disponibili."
+    Write-Main (Get-MTRuntimeText "WINGET_GET_AVAILABLE")
 
     & $Winget.Source upgrade `
         --accept-source-agreements `
         --disable-interactivity 2>&1 |
         Set-Content -LiteralPath $BeforePath -Encoding UTF8
 
-    Write-Main "Winget: aggiornamento sorgenti."
+    Write-Main (Get-MTRuntimeText "WINGET_UPDATE_SOURCES")
 
     $SourceResult = Invoke-LoggedProcess `
         -FilePath $Winget.Source `
         -ArgumentList @("source", "update", "--disable-interactivity") `
-        -Label "Winget source update" `
+        -Label (Get-MTRuntimeText "WINGET_SOURCE_LABEL") `
         -Module $Module `
         -OutputEncoding "UTF8" `
         -CopyOutputToMainLog $false
 
     if ($SourceResult -ne 0) {
-        Write-WarnLog "Winget source update ha restituito $SourceResult; proseguo comunque." $Module
+        Write-WarnLog (
+            Get-MTRuntimeText "WINGET_SOURCE_WARN" @($SourceResult)
+        ) $Module
     }
 
     $Arguments = @(
@@ -113,16 +117,19 @@ try {
             12
         )
 
-        Write-WarnLog `
-            "Il primo passaggio Winget ha restituito $FirstResult. Attendo $WaitSeconds secondi e riprovo, nel caso Winget abbia aggiornato sé stesso." `
-            $Module
+        Write-WarnLog (
+            Get-MTRuntimeText "WINGET_FIRST_PASS_RETRY" @(
+                $FirstResult,
+                $WaitSeconds
+            )
+        ) $Module
 
         Start-Sleep -Seconds $WaitSeconds
 
         $Winget = Get-WingetCommand
 
         if (-not $Winget) {
-            throw "winget.exe non disponibile dopo il primo passaggio."
+            throw (Get-MTRuntimeText "WINGET_NOT_AVAILABLE_AFTER_FIRST")
         }
 
         $SecondPassUsed = $true
@@ -139,40 +146,47 @@ try {
 
     if ($FinalResult -eq 0) {
         $Detail = if ($SecondPassUsed) {
-            "Completato al secondo passaggio dopo aggiornamento di Winget/App Installer"
+            Get-MTRuntimeText "WINGET_DETAIL_SECOND_PASS"
         }
         else {
-            "Completato al primo passaggio"
+            Get-MTRuntimeText "WINGET_DETAIL_FIRST_PASS"
         }
 
-        Write-Ok "Winget completato correttamente." $Module
-        Set-ModuleResult "Aggiornamenti Winget" "OK" $Detail
+        Write-Ok (Get-MTRuntimeText "WINGET_COMPLETED") $Module
+        Set-ModuleResult (Get-MTRuntimeText "MODULE_WINGET") "OK" $Detail
         exit 0
     }
 
     $FinalHex = "0x{0:X8}" -f ($FinalResult -band 0xffffffff)
 
     if ($FinalHex -eq "0x8A15002C") {
-        $Detail = (
-            "Winget ha completato l'operazione con uno o più aggiornamenti non riusciti. " +
-            "Altri pacchetti potrebbero essere stati aggiornati correttamente. " +
-            "Consultare winget_passaggio_1.txt e winget_passaggio_2.txt. " +
-            "Primo codice: $FirstResult; codice finale: $FinalResult ($FinalHex)"
+        $Detail = Get-MTRuntimeText "WINGET_PARTIAL_DETAIL" @(
+            $FirstResult,
+            $FinalResult,
+            $FinalHex
         )
 
-        Write-WarnLog "Winget ha terminato con uno o più aggiornamenti non completati." $Module
-        Set-ModuleResult "Aggiornamenti Winget" "WARN" $Detail
+        Write-WarnLog (Get-MTRuntimeText "WINGET_PARTIAL_WARN") $Module
+        Set-ModuleResult (Get-MTRuntimeText "MODULE_WINGET") "WARN" $Detail
         exit 20
     }
 
-    $Detail = "Winget non completato. Primo codice: $FirstResult; codice finale: $FinalResult ($FinalHex)"
+    $Detail = Get-MTRuntimeText "WINGET_FAILED_DETAIL" @(
+        $FirstResult,
+        $FinalResult,
+        $FinalHex
+    )
+
     Write-ErrorLog $Detail $Module
-    Set-ModuleResult "Aggiornamenti Winget" "ERROR" $Detail
+    Set-ModuleResult (Get-MTRuntimeText "MODULE_WINGET") "ERROR" $Detail
     exit 1
 }
 catch {
     Write-ErrorLog $_.Exception.Message $Module
     Write-ErrorLog $_.InvocationInfo.PositionMessage $Module
-    Set-ModuleResult "Aggiornamenti Winget" "ERROR" $_.Exception.Message
+    Set-ModuleResult `
+        (Get-MTRuntimeText "MODULE_WINGET") `
+        "ERROR" `
+        $_.Exception.Message
     exit 1
 }

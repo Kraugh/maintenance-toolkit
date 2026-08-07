@@ -71,3 +71,59 @@ function Get-MTText {
     if ($Arguments.Count -gt 0) { return ($text -f $Arguments) }
     return $text
 }
+
+###############################################################################
+# Runtime localization context for migrated MT4 modules
+###############################################################################
+
+$script:MTRuntimeLanguageData = $null
+$script:MTRuntimeLanguageResolution = $null
+$script:MTRuntimeLanguageProjectRoot = $null
+
+function Initialize-MTRuntimeLocalization {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$ProjectRoot,
+        [string]$Language = $env:MT_LANGUAGE,
+        [string]$DefaultLanguage = 'en-US'
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Language)) {
+        $Language = 'auto'
+    }
+
+    $Settings = [pscustomobject]@{
+        Language = $Language
+        DefaultLanguage = $DefaultLanguage
+    }
+
+    $Imported = Import-MTLanguage `
+        -ProjectRoot $ProjectRoot `
+        -Settings $Settings
+
+    $script:MTRuntimeLanguageData = $Imported.Data
+    $script:MTRuntimeLanguageResolution = $Imported.Resolution
+    $script:MTRuntimeLanguageProjectRoot = $ProjectRoot
+
+    return $Imported.Resolution
+}
+
+function Get-MTRuntimeText {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$Key,
+        [object[]]$Arguments = @(),
+        [string]$Fallback = $null
+    )
+
+    if ($null -eq $script:MTRuntimeLanguageData) {
+        throw 'MT runtime localization has not been initialized.'
+    }
+
+    return Get-MTText `
+        -LanguageData $script:MTRuntimeLanguageData `
+        -Key $Key `
+        -Arguments $Arguments `
+        -Fallback $Fallback
+}
+

@@ -1,4 +1,4 @@
-# Maintenance Toolkit 3.7.2
+# Maintenance Toolkit 4.0
 
 Maintenance Toolkit is a free and open-source utility for maintaining,
 diagnosing and collecting information from Microsoft Windows systems.
@@ -37,7 +37,7 @@ Developed with the indispensable help of a very patient Rubber Duck.
 3. Accept the administrative elevation request.
 4. Select one or more modules from the menu.
 
-> Do not run individual files from the `modules` directory directly.
+> Do not run individual files from the `app/modules` directory directly.
 
 ## Conservative defaults
 
@@ -84,8 +84,8 @@ The main menu provides:
 Command-line examples:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -SelfTest
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -CheckUpdates
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MaintenanceToolkit.ps1 -SelfTest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MaintenanceToolkit.ps1 -CheckUpdates
 ```
 
 The update check is optional: network errors do not prevent Toolkit use.

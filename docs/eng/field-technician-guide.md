@@ -201,7 +201,7 @@ Below are the most common issues that may prevent the Maintenance Toolkit from w
 
 Check that you have fully extracted the contents of the ZIP archive and that you are running `Avvia_Manutenzione.bat`.
 
-Do not run `MaintenanceToolkit.ps1` directly, nor any of the scripts in the `modules` folder.
+Do not run `app/MaintenanceToolkit.ps1` directly, nor any of the scripts in the `modules` folder.
 
 ---
 

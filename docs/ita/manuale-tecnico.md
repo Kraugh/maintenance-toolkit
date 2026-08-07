@@ -201,7 +201,7 @@ Di seguito sono riportate le situazioni più comuni che possono impedire il corr
 
 Verificare di avere estratto completamente il contenuto dell'archivio ZIP e di eseguire `Avvia_Manutenzione.bat`.
 
-Non avviare direttamente `MaintenanceToolkit.ps1` né gli script presenti nella cartella `modules`.
+Non avviare direttamente `app/MaintenanceToolkit.ps1` né gli script presenti nella cartella `modules`.
 
 ---
 

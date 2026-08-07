@@ -415,3 +415,77 @@ disk.
 
 This contract also prepares MT4 for future command-line or test overrides
 without mutating persistent configuration.
+
+
+---
+
+## 2026-08-07 — Runtime localization contract for maintenance modules
+
+### Decision
+
+The MT4 shell publishes its resolved language in `MT_LANGUAGE`.
+
+Migrated maintenance modules obtain user-facing text through
+`Get-MTRuntimeText`; they do not depend on the shell-local `T` helper.
+
+`modules/00_common.ps1` temporarily loads and initializes the shared
+Localization service so legacy and migrated modules can coexist.
+
+### Rule for migrated modules
+
+After a maintenance module is marked migrated, user-facing sentences must not
+be hardcoded in that module. They belong in `languages/en-US.json` and
+`languages/it-IT.json`.
+
+Native program output is not translated or rewritten. For example, Winget may
+still display output in the operating system/application language; MT-owned
+messages around that output follow the selected MT language.
+
+---
+
+## 2026-08-07 — Common process feedback is localized in ProcessRunner
+
+### Decision
+
+All MT-owned long-operation and process completion/failure messages are
+localized in `app/core/ProcessRunner.ps1`.
+
+### Reason
+
+These strings are core UI shared by Winget, DISM, SFC and other process-based
+modules. They must not be translated independently by each module.
+
+---
+
+## 2026-08-07 — Separate repository layout from end-user distribution layout
+
+### Decision
+
+The Git repository remains contributor-friendly and keeps the conventional
+`README.md`, `CONTRIBUTING.md` and `LICENSE` files in its root.
+
+The generated end-user ZIP has a stricter contract: its root contains only
+`Avvia_Manutenzione.bat`. Runtime code lives under `app`, configuration under
+`config`, localization under `languages`, and user documentation under `docs`.
+
+### Reason
+
+A GitHub visitor and a technician extracting a release archive have different
+needs. The repository must remain understandable to contributors, while the
+release package must make the correct launch action unambiguous.
+
+---
+
+## 2026-08-07 — Dot-sourced compatibility loaders must not own generic caller variables
+
+### Decision
+
+`app/modules/00_common.ps1` uses compatibility-specific variable names and
+resolves the repository root two levels above `app/modules`.
+
+### Reason
+
+Because the loader is dot-sourced, a generic `$ProjectRoot` assignment mutates
+the caller scope. Dev.10 therefore changed the AUTOTEST project root from the
+repository root to `app`, producing duplicated paths such as `app/app/tools`
+and failed `app/config` / `app/languages` lookups.

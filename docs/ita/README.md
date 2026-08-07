@@ -85,8 +85,8 @@ Dal menu principale sono disponibili:
 Da riga di comando:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -SelfTest
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\MaintenanceToolkit.ps1 -CheckUpdates
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MaintenanceToolkit.ps1 -SelfTest
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MaintenanceToolkit.ps1 -CheckUpdates
 ```
 
 Il controllo aggiornamenti è accessorio: un errore di rete non impedisce l'utilizzo del Toolkit.

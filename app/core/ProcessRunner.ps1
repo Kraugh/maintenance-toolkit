@@ -207,7 +207,9 @@ function Invoke-LoggedProcessWithHeartbeat {
 
     try {
         Add-Log "INFO" "Comando: $FilePath $($ArgumentList -join ' ')" $Module
-        Write-Host "$Label può richiedere diversi minuti. Non chiudere la finestra." -ForegroundColor Yellow
+        Write-Host (
+            Get-MTRuntimeText "PROCESS_LONG_START" @($Label)
+        ) -ForegroundColor Yellow
 
         # cmd.exe performs redirection directly to files. This keeps stdout and
         # stderr available for live progress polling without PowerShell event
@@ -261,9 +263,10 @@ function Invoke-LoggedProcessWithHeartbeat {
                 ($Now - $LastLoggedHeartbeat).TotalSeconds -ge $HeartbeatSeconds
             ) {
                 Add-Log "INFO" (
-                    "{0} ancora in esecuzione. Tempo trascorso: {1}" -f
-                    $Label,
-                    $Elapsed.ToString("hh\:mm\:ss")
+                    Get-MTRuntimeText "PROCESS_LONG_RUNNING" @(
+                        $Label,
+                        $Elapsed.ToString("hh\:mm\:ss")
+                    )
                 ) $Module
 
                 $LastLoggedHeartbeat = $Now
@@ -315,10 +318,22 @@ function Invoke-LoggedProcessWithHeartbeat {
         $Duration = ((Get-Date) - $Started).ToString("hh\:mm\:ss")
 
         if ($ExitCode -in $SuccessCodes) {
-            Write-Ok "$Label completato in $Duration. Exit code $ExitCode." $Module
+            Write-Ok (
+                Get-MTRuntimeText "PROCESS_COMPLETED_DURATION" @(
+                    $Label,
+                    $Duration,
+                    $ExitCode
+                )
+            ) $Module
         }
         else {
-            Write-ErrorLog "$Label fallito dopo $Duration. Exit code $ExitCode." $Module
+            Write-ErrorLog (
+                Get-MTRuntimeText "PROCESS_FAILED_DURATION" @(
+                    $Label,
+                    $Duration,
+                    $ExitCode
+                )
+            ) $Module
         }
 
         return [pscustomobject]@{
@@ -382,10 +397,20 @@ function Invoke-LoggedProcess {
         }
 
         if ($Process.ExitCode -in $SuccessCodes) {
-            Write-Ok "$Label completato. Exit code $($Process.ExitCode)." $Module
+            Write-Ok (
+                Get-MTRuntimeText "PROCESS_COMPLETED" @(
+                    $Label,
+                    $Process.ExitCode
+                )
+            ) $Module
         }
         else {
-            Write-ErrorLog "$Label fallito. Exit code $($Process.ExitCode)." $Module
+            Write-ErrorLog (
+                Get-MTRuntimeText "PROCESS_FAILED" @(
+                    $Label,
+                    $Process.ExitCode
+                )
+            ) $Module
         }
 
         return $Process.ExitCode

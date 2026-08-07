@@ -4,7 +4,7 @@
     {
       "Key": "connectivity",
       "Domain": "maintenance",
-      "LegacyScript": "modules/01_connectivity.ps1",
+      "LegacyScript": "app/modules/01_connectivity.ps1",
       "Enabled": true,
       "Automatic": true,
       "NameKey": "MODULE_CONNECTIVITY"

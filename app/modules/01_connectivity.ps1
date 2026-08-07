@@ -10,11 +10,11 @@ try {
     ).NextHop
 
     if ($Gateway -and (Test-Connection $Gateway -Count 1 -Quiet)) {
-        Write-Ok "Gateway raggiungibile: $Gateway" $Module
+        Write-Ok (Get-MTRuntimeText "CONNECTIVITY_GATEWAY_OK" @($Gateway)) $Module
     }
     else {
         $Errors++
-        Write-ErrorLog "Gateway non raggiungibile: $Gateway" $Module
+        Write-ErrorLog (Get-MTRuntimeText "CONNECTIVITY_GATEWAY_FAIL" @($Gateway)) $Module
     }
 }
 catch {
@@ -24,29 +24,26 @@ catch {
 
 try {
     Resolve-DnsName www.microsoft.com -ErrorAction Stop | Out-Null
-    Write-Ok "Risoluzione DNS funzionante." $Module
+    Write-Ok (Get-MTRuntimeText "CONNECTIVITY_DNS_OK") $Module
 }
 catch {
     $Errors++
-    Write-ErrorLog "DNS non funzionante: $($_.Exception.Message)" $Module
+    Write-ErrorLog (
+        Get-MTRuntimeText "CONNECTIVITY_DNS_FAIL" @($_.Exception.Message)
+    ) $Module
 }
 
 $TestHost = "www.microsoft.com"
 $TestPort = 443
 $TimeoutMilliseconds = 5000
 
-$ConnectivityMessage = (
-    "Verifica connettività HTTPS verso {0}:{1}. " +
-    "Nessun dato viene trasmesso: viene aperta soltanto una connessione TCP di prova."
-) -f $TestHost, $TestPort
-
-Write-Main $ConnectivityMessage
+Write-Main (
+    Get-MTRuntimeText "CONNECTIVITY_HTTPS_TEST" @($TestHost, $TestPort)
+)
 
 try {
     Add-Log "INFO" (
-        "Verifica TCP esplicita verso {0}:{1}, usata esclusivamente per controllare la connettività HTTPS." -f
-        $TestHost,
-        $TestPort
+        Get-MTRuntimeText "CONNECTIVITY_TCP_LOG" @($TestHost, $TestPort)
     ) $Module
 
     $Client = New-Object System.Net.Sockets.TcpClient
@@ -59,11 +56,15 @@ try {
             $Client.Connected
         ) {
             $Client.EndConnect($Connect)
-            Write-Ok ("HTTPS raggiungibile: {0}:{1}." -f $TestHost, $TestPort) $Module
+            Write-Ok (
+                Get-MTRuntimeText "CONNECTIVITY_HTTPS_OK" @($TestHost, $TestPort)
+            ) $Module
         }
         else {
             $Errors++
-            Write-ErrorLog ("HTTPS non raggiungibile: {0}:{1}." -f $TestHost, $TestPort) $Module
+            Write-ErrorLog (
+                Get-MTRuntimeText "CONNECTIVITY_HTTPS_FAIL" @($TestHost, $TestPort)
+            ) $Module
         }
     }
     finally {
@@ -73,17 +74,24 @@ try {
 catch {
     $Errors++
     Write-ErrorLog (
-        "Errore durante il test HTTPS verso {0}:{1} - {2}" -f `
+        Get-MTRuntimeText "CONNECTIVITY_HTTPS_ERROR" @(
             $TestHost,
             $TestPort,
             $_.Exception.Message
+        )
     ) $Module
 }
 
 if ($Errors -gt 0) {
-    Set-ModuleResult "Controllo connettivita" "ERROR" "$Errors controlli falliti"
+    Set-ModuleResult `
+        (Get-MTRuntimeText "MODULE_CONNECTIVITY") `
+        "ERROR" `
+        (Get-MTRuntimeText "CONNECTIVITY_RESULT_ERROR" @($Errors))
     exit 1
 }
 
-Set-ModuleResult "Controllo connettivita" "OK" "Gateway, DNS e HTTPS funzionanti"
+Set-ModuleResult `
+    (Get-MTRuntimeText "MODULE_CONNECTIVITY") `
+    "OK" `
+    (Get-MTRuntimeText "CONNECTIVITY_RESULT_OK")
 exit 0
