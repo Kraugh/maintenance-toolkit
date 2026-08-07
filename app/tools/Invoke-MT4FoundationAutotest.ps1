@@ -2598,13 +2598,89 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if ([string]$VersionManifest.Version -ne '4.0.0-dev.26') {
-        throw "Unexpected dev.26 manifest version: $($VersionManifest.Version)"
+    $MainScriptPath = Join-Path $ProjectRoot 'app/MaintenanceToolkit.ps1'
+    $MainScriptSource = Get-Content `
+        -LiteralPath $MainScriptPath `
+        -Raw `
+        -Encoding UTF8
+
+    $RuntimeVersionMatch = [regex]::Match(
+        $MainScriptSource,
+        '\$Version\s*=\s*"([^"]+)"'
+    )
+
+    if (-not $RuntimeVersionMatch.Success) {
+        throw 'Unable to read runtime version from app/MaintenanceToolkit.ps1.'
+    }
+
+    $RuntimeVersion = [string]$RuntimeVersionMatch.Groups[1].Value
+
+    if ([string]$VersionManifest.Version -ne $RuntimeVersion) {
+        throw (
+            "Version mismatch: config/version.json='{0}', runtime='{1}'." -f @(
+                [string]$VersionManifest.Version,
+                $RuntimeVersion
+            )
+        )
+    }
+
+    if ($RuntimeVersion -notmatch '^4\.0\.0-(dev\.[0-9]+[a-z]?|rc\.[0-9]+)$') {
+        throw "Unexpected MT4 pre-release version format: $RuntimeVersion"
     }
 }
 catch {
     Add-MT4AutotestError (
         'RC1 preparation validation failed: {0}' -f $_.Exception.Message
+    )
+}
+
+try {
+    $BomCandidates = @(
+        Get-ChildItem `
+            -LiteralPath (Join-Path $ProjectRoot 'app') `
+            -File `
+            -Recurse `
+            -Force |
+        Where-Object {
+            $_.Name.EndsWith('.ps1', [System.StringComparison]::OrdinalIgnoreCase) -or
+            $_.Name.EndsWith('.ps1.disabled', [System.StringComparison]::OrdinalIgnoreCase)
+        }
+    )
+
+    foreach ($File in $BomCandidates) {
+        $Bytes = [System.IO.File]::ReadAllBytes($File.FullName)
+
+        $HasUtf8Bom = (
+            $Bytes.Length -ge 3 -and
+            $Bytes[0] -eq 0xEF -and
+            $Bytes[1] -eq 0xBB -and
+            $Bytes[2] -eq 0xBF
+        )
+
+        if (-not $HasUtf8Bom) {
+            throw "UTF-8 BOM required for Windows PowerShell 5.1: $($File.FullName)"
+        }
+    }
+
+    $NormalizerSource = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'tools/normalize-eol.ps1') `
+        -Raw `
+        -Encoding UTF8
+
+    foreach ($RequiredToken in @(
+        '[byte[]](0xEF, 0xBB, 0xBF)',
+        '[System.Array]::Copy',
+        '$PayloadBytes'
+    )) {
+        if ($NormalizerSource -notmatch [regex]::Escape($RequiredToken)) {
+            throw "Normalizer BOM token missing: $RequiredToken"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Windows PowerShell 5.1 BOM preservation validation failed: {0}' -f
+        $_.Exception.Message
     )
 }
 

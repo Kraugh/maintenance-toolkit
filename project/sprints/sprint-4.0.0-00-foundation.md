@@ -477,3 +477,24 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [ ] Complete Technical Report validation.
 - [ ] Promote the next complete passing build to 4.0.0-rc.1.
 
+
+
+## Development increment 26a — Windows PowerShell 5.1 BOM preservation fix
+
+- [x] Fix `normalize-eol.ps1` so PowerShell files receive an actual UTF-8 BOM.
+- [x] Preserve LF line endings while explicitly prepending EF BB BF.
+- [x] Cover `*.ps1` and `*.ps1.disabled`.
+- [x] Add AUTOTEST coverage for BOM presence across the application tree.
+- [ ] Validate normalizer on Windows 10 / Windows PowerShell 5.1.
+- [ ] Re-run Foundation AUTOTEST after normalization.
+- [ ] Continue RC1 gate only after both pass.
+
+
+## Development increment 26b — pre-release version validation fix
+
+- [x] Remove hardcoded `4.0.0-dev.26` expectation from RC1 AUTOTEST.
+- [x] Compare `config/version.json` directly with the runtime `$Version`.
+- [x] Accept MT4 development and RC version formats.
+- [x] Preserve the Windows PowerShell 5.1 BOM fix from dev.26a.
+- [ ] Re-run Foundation AUTOTEST on Windows 10.
+- [ ] Continue RC1 gate only after 0/0.

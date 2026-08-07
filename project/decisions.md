@@ -1007,3 +1007,41 @@ release-blocking defect. RC promotion is controlled by
 
 The release packager now refuses version mismatches and validates the minimum
 runtime/documentation payload before compression.
+
+
+---
+
+## 2026-08-07 — UTF8Encoding(true).GetBytes does not prepend a BOM
+
+### Decision
+
+The EOL normalizer now prepends the UTF-8 BOM bytes `EF BB BF` explicitly for
+PowerShell source files.
+
+### Reason
+
+`System.Text.UTF8Encoding($true)` controls the encoder preamble, but calling
+`GetBytes()` returns only the encoded payload. The previous normalizer therefore
+removed BOMs from PowerShell files on disk, which breaks reliable non-ASCII
+parsing/localization under Windows PowerShell 5.1.
+
+Dev.26a is a release-blocking compatibility fix; no functional feature changes
+are included.
+
+
+---
+
+## 2026-08-07 — RC preparation tests validate consistency, not a fixed dev number
+
+### Decision
+
+The RC1 preparation AUTOTEST no longer hardcodes a specific development
+increment. It extracts `$Version` from `app/MaintenanceToolkit.ps1` and compares
+it with `config/version.json`, while validating the MT4 pre-release version
+format.
+
+### Reason
+
+A release-gate test that expects `4.0.0-dev.26` becomes invalid as soon as a
+release-blocking fix requires `dev.26a`, `dev.26b` or the eventual `rc.1`.
+The invariant is version consistency, not a particular development suffix.

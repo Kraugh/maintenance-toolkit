@@ -99,9 +99,33 @@ foreach ($File in $Files) {
         ($Utf8BomExtensions -contains $Extension) -or
         $IsDisabledPowerShell
     )
-    $Encoding = New-Object System.Text.UTF8Encoding($NeedsBom)
 
-    $NewBytes = $Encoding.GetBytes($Normalized)
+    $Encoding = New-Object System.Text.UTF8Encoding($false)
+    $PayloadBytes = $Encoding.GetBytes($Normalized)
+
+    if ($NeedsBom) {
+        $Preamble = [byte[]](0xEF, 0xBB, 0xBF)
+        $NewBytes = New-Object byte[] ($Preamble.Length + $PayloadBytes.Length)
+
+        [System.Array]::Copy(
+            $Preamble,
+            0,
+            $NewBytes,
+            0,
+            $Preamble.Length
+        )
+
+        [System.Array]::Copy(
+            $PayloadBytes,
+            0,
+            $NewBytes,
+            $Preamble.Length,
+            $PayloadBytes.Length
+        )
+    }
+    else {
+        $NewBytes = $PayloadBytes
+    }
 
     if (
         $Bytes.Length -ne $NewBytes.Length -or
