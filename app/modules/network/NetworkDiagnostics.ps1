@@ -496,6 +496,101 @@ function Invoke-MTNetworkQuickDiagnosis {
         }
     }
 
+    if (
+        $null -ne $Health -and
+        $null -ne $Health.VPN
+    ) {
+        Write-Host ""
+        Write-Host (
+            Get-MTNetworkText $LanguageData "NETWORK_VPN_HEALTH"
+        ) -ForegroundColor Cyan
+        Write-Host ("-" * 72)
+
+        if ([int]$Health.VPN.ActiveVPNCount -eq 0) {
+            Write-MTNetworkStatus `
+                -Level "INFO" `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_PROFILE") `
+                -Value (Get-MTNetworkText $LanguageData "NETWORK_VPN_NONE")
+        }
+        else {
+            foreach ($VPN in @($Health.VPN.Profiles)) {
+                Write-MTNetworkStatus `
+                    -Level "OK" `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_PROFILE") `
+                    -Value ("{0} - {1}" -f $VPN.Name, $VPN.Description)
+
+                Write-MTNetworkStatus `
+                    -Level "INFO" `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_MODE") `
+                    -Value ([string]$VPN.Mode)
+
+                $TunnelIPs = @($VPN.TunnelIPv4 | ForEach-Object IPAddress)
+                Write-MTNetworkStatus `
+                    -Level $(if ($TunnelIPs.Count -gt 0) { "OK" } else { "WARN" }) `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_TUNNEL_IP") `
+                    -Value $(if ($TunnelIPs.Count -gt 0) {
+                        $TunnelIPs -join ", "
+                    } else {
+                        Get-MTNetworkText $LanguageData "NETWORK_VPN_NO_VALUE"
+                    })
+
+                Write-MTNetworkStatus `
+                    -Level $(if ([int]$VPN.DNSServerCount -gt 0) { "INFO" } else { "WARN" }) `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_DNS") `
+                    -Value $(if ([int]$VPN.DNSServerCount -gt 0) {
+                        @($VPN.DNSServers) -join ", "
+                    } else {
+                        Get-MTNetworkText $LanguageData "NETWORK_VPN_NO_VALUE"
+                    })
+
+                Write-MTNetworkStatus `
+                    -Level "INFO" `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_ROUTES") `
+                    -Value ([string]$VPN.RouteCount)
+
+                Write-MTNetworkStatus `
+                    -Level "INFO" `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_SPECIFIC_ROUTES") `
+                    -Value ([string]$VPN.SpecificRouteCount)
+
+                Write-MTNetworkStatus `
+                    -Level "INFO" `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_DEFAULT_ROUTES") `
+                    -Value ([string]$VPN.DefaultRouteCount)
+
+                Write-MTNetworkStatus `
+                    -Level $(if ([int]$VPN.DuplicateRouteDestinationCount -gt 0) {
+                        "WARN"
+                    } else {
+                        "OK"
+                    }) `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_DUPLICATE_ROUTES") `
+                    -Value ([string]$VPN.DuplicateRouteDestinationCount)
+
+                if ([int]$VPN.PublicDNSServerCount -gt 0) {
+                    Write-MTNetworkStatus `
+                        -Level "INFO" `
+                        -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_PUBLIC_DNS") `
+                        -Value (@($VPN.PublicDNSServers) -join ", ")
+                }
+
+                if ($null -ne $VPN.MTU) {
+                    Write-MTNetworkStatus `
+                        -Level "INFO" `
+                        -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_MTU") `
+                        -Value ([string]$VPN.MTU)
+                }
+
+                if ($null -ne $VPN.InterfaceMetric) {
+                    Write-MTNetworkStatus `
+                        -Level "INFO" `
+                        -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_METRIC") `
+                        -Value ([string]$VPN.InterfaceMetric)
+                }
+            }
+        }
+    }
+
     if ($null -ne $RuleEvaluation) {
         Write-Host ""
         Write-Host (

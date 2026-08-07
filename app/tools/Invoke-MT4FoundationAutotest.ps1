@@ -63,6 +63,7 @@ $Required = @(
     'app/core/Privileges.ps1',
     'app/modules/00_common.ps1',
     'app/modules/network/NetworkFoundation.ps1',
+    'app/modules/network/VPNDiagnostics.ps1',
     'app/modules/network/NetworkHealth.ps1',
     'app/modules/network/SpeedTest.ps1',
     'app/modules/network/NetworkDiagnostics.ps1',
@@ -532,9 +533,9 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if (@($NetworkRules.Rules).Count -ne 16) {
+    if (@($NetworkRules.Rules).Count -ne 20) {
         throw (
-            'Expected 16 Network Diagnostics rules, found {0}.' -f
+            'Expected 20 Network Diagnostics rules, found {0}.' -f
             @($NetworkRules.Rules).Count
         )
     }
@@ -542,7 +543,8 @@ try {
     foreach ($ExpectedRule in @(
         'NET001','NET002','NET003','NET004','NET005','NET006','NET007',
         'NET008','NET009','NET010',
-        'VPN001','VPN002','TOP001','TOP002','VPN003','VPN004'
+        'VPN001','VPN002','TOP001','TOP002','VPN003','VPN004',
+        'VPN005','VPN006','VPN007','VPN008'
     )) {
         if (-not (@($NetworkRules.Rules.Id) -contains $ExpectedRule)) {
             throw "Baseline NDP rule missing: $ExpectedRule"
@@ -1341,6 +1343,17 @@ try {
             BestRouteCount = 1
             BestRoutes = @()
         }
+        VPN = [pscustomobject]@{
+            ActiveVPNCount = 0
+            Profiles = @()
+            ProfilesWithoutTunnelIPv4 = @()
+            ProfilesWithoutDNS = @()
+            ProfilesWithDuplicateRoutes = @()
+            ProfilesWithPublicDNS = @()
+            SplitTunnelCount = 0
+            FullTunnelCount = 0
+            NoRouteCount = 0
+        }
     }
 
     $RulesConfiguration = Get-Content `
@@ -1424,6 +1437,17 @@ try {
             BestMetric = 25
             BestRouteCount = 1
             BestRoutes = @()
+        }
+        VPN = [pscustomobject]@{
+            ActiveVPNCount = 0
+            Profiles = @()
+            ProfilesWithoutTunnelIPv4 = @()
+            ProfilesWithoutDNS = @()
+            ProfilesWithDuplicateRoutes = @()
+            ProfilesWithPublicDNS = @()
+            SplitTunnelCount = 0
+            FullTunnelCount = 0
+            NoRouteCount = 0
         }
     }
 
@@ -1580,6 +1604,17 @@ try {
             BestMetric = 25
             BestRouteCount = 1
             BestRoutes = @()
+        }
+        VPN = [pscustomobject]@{
+            ActiveVPNCount = 0
+            Profiles = @()
+            ProfilesWithoutTunnelIPv4 = @()
+            ProfilesWithoutDNS = @()
+            ProfilesWithDuplicateRoutes = @()
+            ProfilesWithPublicDNS = @()
+            SplitTunnelCount = 0
+            FullTunnelCount = 0
+            NoRouteCount = 0
         }
     }
 
@@ -1773,6 +1808,17 @@ try {
             BestRouteCount = 1
             BestRoutes = @($Route1)
         }
+        VPN = [pscustomobject]@{
+            ActiveVPNCount = 0
+            Profiles = @()
+            ProfilesWithoutTunnelIPv4 = @()
+            ProfilesWithoutDNS = @()
+            ProfilesWithDuplicateRoutes = @()
+            ProfilesWithPublicDNS = @()
+            SplitTunnelCount = 0
+            FullTunnelCount = 0
+            NoRouteCount = 0
+        }
     }
 
     $LowMtuHealth = $HealthyHealth.PSObject.Copy()
@@ -1892,6 +1938,348 @@ try {
 catch {
     Add-MT4AutotestError (
         'Repository EOL policy validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    . (Join-Path $ProjectRoot 'app/modules/network/VPNDiagnostics.ps1')
+
+    $VPNAdapter = [pscustomobject]@{
+        InterfaceIndex = 44
+        Name = 'OpenVPN'
+        Description = 'OpenVPN Data Channel Offload'
+        Status = 'Up'
+        IsVPN = $true
+        IsVirtual = $true
+        HardwareInterface = $false
+    }
+
+    $VPNRoute = [pscustomobject]@{
+        DestinationPrefix = '10.20.0.0/16'
+        NextHop = '0.0.0.0'
+        InterfaceIndex = 44
+        InterfaceAlias = 'OpenVPN'
+        TotalMetric = 5
+    }
+
+    $VPNTopology = [pscustomobject]@{
+        ActiveVPNAdapters = @($VPNAdapter)
+        IPv4Addresses = @(
+            [pscustomobject]@{
+                InterfaceIndex = 44
+                InterfaceAlias = 'OpenVPN'
+                IPAddress = '10.8.0.2'
+                PrefixLength = 24
+            }
+        )
+        DNS = @(
+            [pscustomobject]@{
+                InterfaceIndex = 44
+                InterfaceAlias = 'OpenVPN'
+                Servers = @('10.8.0.1')
+            }
+        )
+        VPNRoutes = @($VPNRoute)
+    }
+
+    $VPNContext = Get-MTNetworkVpnContext -Topology $VPNTopology
+
+    if ([int]$VPNContext.ActiveVPNCount -ne 1) {
+        throw 'VPN context did not detect the active adapter.'
+    }
+
+    if ([string]$VPNContext.Profiles[0].Mode -ne 'SplitTunnel') {
+        throw 'VPN context did not classify split tunnel.'
+    }
+
+    if ([int]$VPNContext.Profiles[0].TunnelIPv4Count -ne 1) {
+        throw 'VPN tunnel IPv4 collection failed.'
+    }
+
+    if ([int]$VPNContext.Profiles[0].DNSServerCount -ne 1) {
+        throw 'VPN DNS collection failed.'
+    }
+
+    $RulesConfiguration = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'rules/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    $RuleTopology = [pscustomobject]@{
+        Summary = [pscustomobject]@{
+            DefaultRouteCount = 1
+            ActiveVPNCount = 1
+            VPNRouteCount = 1
+            VPNSpecificRouteCount = 1
+            RoutingModeCandidate = 'SplitTunnelCandidate'
+        }
+        EffectivePath = [pscustomobject]@{
+            DefaultRoute = [pscustomobject]@{
+                InterfaceIndex = 12
+            }
+            LogicalAdapter = [pscustomobject]@{
+                IsVirtual = $false
+            }
+            PhysicalBackendCandidates = @()
+            PhysicalBackendSource = 'LogicalAdapter'
+        }
+        DefaultRoutes = @(
+            [pscustomobject]@{
+                DestinationPrefix = '0.0.0.0/0'
+                InterfaceIndex = 12
+                TotalMetric = 25
+            }
+        )
+        ActiveVPNAdapters = @($VPNAdapter)
+        VPNRoutes = @($VPNRoute)
+    }
+
+    $MissingVPNProfile = [pscustomobject]@{
+        InterfaceIndex = 44
+        Name = 'OpenVPN'
+        Description = 'Fixture'
+        TunnelIPv4 = @()
+        TunnelIPv4Count = 0
+        DNSServers = @()
+        DNSServerCount = 0
+        Routes = @($VPNRoute)
+        RouteCount = 1
+        SpecificRoutes = @($VPNRoute)
+        SpecificRouteCount = 1
+        DefaultRoutes = @()
+        DefaultRouteCount = 0
+        DuplicateRouteDestinations = @()
+        DuplicateRouteDestinationCount = 0
+        PublicDNSServers = @()
+        PublicDNSServerCount = 0
+        Mode = 'SplitTunnel'
+    }
+
+    $RuleHealth = [pscustomobject]@{
+        GatewayProbe = [pscustomobject]@{
+            Attempted = $true
+            Reachable = $true
+        }
+        ActiveApipaCount = 0
+        ActiveApipaAddresses = @()
+        DNS = [pscustomobject]@{
+            ServerCount = 1
+            DuplicateCount = 0
+        }
+        DHCP = [pscustomobject]@{
+            Known = $true
+            Enabled = $true
+            UsableIPv4Count = 1
+        }
+        EffectiveInterface = [pscustomobject]@{
+            Known = $true
+            IsVPN = $false
+            IsVirtual = $false
+            HardwareInterface = $true
+            MTU = 1500
+            LinkSpeedMbps = 1000
+        }
+        DefaultRouteCompetition = [pscustomobject]@{
+            BestRouteCount = 1
+        }
+        VPN = [pscustomobject]@{
+            ActiveVPNCount = 1
+            Profiles = @($MissingVPNProfile)
+            ProfilesWithoutTunnelIPv4 = @($MissingVPNProfile)
+            ProfilesWithoutDNS = @($MissingVPNProfile)
+            ProfilesWithDuplicateRoutes = @()
+            ProfilesWithPublicDNS = @()
+            SplitTunnelCount = 1
+            FullTunnelCount = 0
+            NoRouteCount = 0
+        }
+    }
+
+    $VPNRuleResult = Invoke-MTNetworkRules `
+        -Topology $RuleTopology `
+        -Health $RuleHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    foreach ($Expected in @('VPN005','VPN006')) {
+        $Result = @(
+            $VPNRuleResult.Results |
+            Where-Object Id -eq $Expected
+        ) | Select-Object -First 1
+
+        if ($null -eq $Result -or -not $Result.Triggered) {
+            throw "VPN diagnostic rule fixture failed: $Expected"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Advanced VPN Diagnostics batch 1 validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    . (Join-Path $ProjectRoot 'app/modules/network/VPNDiagnostics.ps1')
+
+    if (-not (Test-MTNetworkPrivateIPv4 -Address '10.0.0.53')) {
+        throw 'Private IPv4 classifier failed for RFC1918 address.'
+    }
+
+    if (Test-MTNetworkPrivateIPv4 -Address '8.8.8.8') {
+        throw 'Private IPv4 classifier incorrectly classified public DNS.'
+    }
+
+    $VPNAdapter = [pscustomobject]@{
+        InterfaceIndex = 44
+        Name = 'Fixture VPN'
+        Description = 'Fixture VPN adapter'
+        Status = 'Up'
+        IsVPN = $true
+        IsVirtual = $true
+        HardwareInterface = $false
+    }
+
+    $DuplicateRoutes = @(
+        [pscustomobject]@{
+            DestinationPrefix = '10.20.0.0/16'
+            NextHop = '0.0.0.0'
+            InterfaceIndex = 44
+            InterfaceAlias = 'Fixture VPN'
+            TotalMetric = 5
+        },
+        [pscustomobject]@{
+            DestinationPrefix = '10.20.0.0/16'
+            NextHop = '0.0.0.0'
+            InterfaceIndex = 44
+            InterfaceAlias = 'Fixture VPN'
+            TotalMetric = 15
+        }
+    )
+
+    $Topology = [pscustomobject]@{
+        ActiveVPNAdapters = @($VPNAdapter)
+        IPv4Addresses = @(
+            [pscustomobject]@{
+                InterfaceIndex = 44
+                InterfaceAlias = 'Fixture VPN'
+                IPAddress = '10.8.0.2'
+                PrefixLength = 24
+            }
+        )
+        DNS = @(
+            [pscustomobject]@{
+                InterfaceIndex = 44
+                InterfaceAlias = 'Fixture VPN'
+                Servers = @('10.8.0.1','8.8.8.8')
+            }
+        )
+        VPNRoutes = $DuplicateRoutes
+    }
+
+    $Context = Get-MTNetworkVpnContext -Topology $Topology
+    $Profile = $Context.Profiles[0]
+
+    if ([int]$Profile.DuplicateRouteDestinationCount -ne 1) {
+        throw 'VPN duplicate-route destination detection failed.'
+    }
+
+    if (
+        [int]$Profile.PublicDNSServerCount -ne 1 -or
+        [string]$Profile.PublicDNSServers[0] -ne '8.8.8.8'
+    ) {
+        throw 'VPN public-DNS detection failed.'
+    }
+
+    if (@($Context.ProfilesWithDuplicateRoutes).Count -ne 1) {
+        throw 'VPN duplicate-route context summary failed.'
+    }
+
+    if (@($Context.ProfilesWithPublicDNS).Count -ne 1) {
+        throw 'VPN public-DNS context summary failed.'
+    }
+
+    $RulesConfiguration = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'rules/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    $RuleTopology = [pscustomobject]@{
+        Summary = [pscustomobject]@{
+            DefaultRouteCount = 1
+            ActiveVPNCount = 1
+            VPNRouteCount = 2
+            VPNSpecificRouteCount = 2
+            RoutingModeCandidate = 'SplitTunnelCandidate'
+        }
+        EffectivePath = [pscustomobject]@{
+            DefaultRoute = [pscustomobject]@{ InterfaceIndex = 12 }
+            LogicalAdapter = [pscustomobject]@{ IsVirtual = $false }
+            PhysicalBackendCandidates = @()
+            PhysicalBackendSource = 'LogicalAdapter'
+        }
+        DefaultRoutes = @(
+            [pscustomobject]@{
+                DestinationPrefix = '0.0.0.0/0'
+                InterfaceIndex = 12
+                TotalMetric = 25
+            }
+        )
+        ActiveVPNAdapters = @($VPNAdapter)
+        VPNRoutes = $DuplicateRoutes
+    }
+
+    $RuleHealth = [pscustomobject]@{
+        GatewayProbe = [pscustomobject]@{
+            Attempted = $true
+            Reachable = $true
+        }
+        ActiveApipaCount = 0
+        ActiveApipaAddresses = @()
+        DNS = [pscustomobject]@{
+            ServerCount = 1
+            DuplicateCount = 0
+        }
+        DHCP = [pscustomobject]@{
+            Known = $true
+            Enabled = $true
+            UsableIPv4Count = 1
+        }
+        EffectiveInterface = [pscustomobject]@{
+            Known = $true
+            IsVPN = $false
+            IsVirtual = $false
+            HardwareInterface = $true
+            MTU = 1500
+            LinkSpeedMbps = 1000
+        }
+        DefaultRouteCompetition = [pscustomobject]@{
+            BestRouteCount = 1
+        }
+        VPN = $Context
+    }
+
+    $Result = Invoke-MTNetworkRules `
+        -Topology $RuleTopology `
+        -Health $RuleHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    foreach ($Expected in @('VPN007','VPN008')) {
+        $RuleResult = @(
+            $Result.Results |
+            Where-Object Id -eq $Expected
+        ) | Select-Object -First 1
+
+        if ($null -eq $RuleResult -or -not $RuleResult.Triggered) {
+            throw "VPN diagnostics batch-2 rule fixture failed: $Expected"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Advanced VPN Diagnostics batch 2 validation failed: {0}' -f
         $_.Exception.Message
     )
 }

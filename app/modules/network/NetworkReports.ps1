@@ -579,16 +579,86 @@ function Invoke-MTNetworkTechnicalReport {
             -Key (Get-MTText $LanguageData "NETWORK_ACTIVE_VPN_COUNT") `
             -Value $Topology.Summary.ActiveVPNCount
 
-        foreach ($VPN in @($Topology.ActiveVPNAdapters)) {
-            [void]$Lines.Add(
-                (Format-MTNetworkReportText `
-                    -Template "[{0}] {1} | {2}" `
-                    -Arguments @(
-                        $VPN.InterfaceIndex,
-                        $VPN.Name,
-                        $VPN.Description
-                    ))
-            )
+        if (
+            $null -ne $Health -and
+            $null -ne $Health.VPN
+        ) {
+            foreach ($VPN in @($Health.VPN.Profiles)) {
+                [void]$Lines.Add(
+                    (Format-MTNetworkReportText `
+                        -Template "[{0}] {1} | {2}" `
+                        -Arguments @(
+                            $VPN.InterfaceIndex,
+                            $VPN.Name,
+                            $VPN.Description
+                        ))
+                )
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_MODE") `
+                    -Value $VPN.Mode
+
+                $TunnelIPs = @($VPN.TunnelIPv4 | ForEach-Object IPAddress)
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_TUNNEL_IP") `
+                    -Value $(if ($TunnelIPs.Count -gt 0) {
+                        $TunnelIPs -join ", "
+                    } else {
+                        Get-MTText $LanguageData "NETWORK_VPN_NO_VALUE"
+                    })
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_DNS") `
+                    -Value $(if ([int]$VPN.DNSServerCount -gt 0) {
+                        @($VPN.DNSServers) -join ", "
+                    } else {
+                        Get-MTText $LanguageData "NETWORK_VPN_NO_VALUE"
+                    })
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_ROUTES") `
+                    -Value $VPN.RouteCount
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_SPECIFIC_ROUTES") `
+                    -Value $VPN.SpecificRouteCount
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_DEFAULT_ROUTES") `
+                    -Value $VPN.DefaultRouteCount
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_DUPLICATE_ROUTES") `
+                    -Value $VPN.DuplicateRouteDestinationCount
+
+                if ([int]$VPN.PublicDNSServerCount -gt 0) {
+                    Add-MTNetworkReportKeyValue `
+                        -Lines $Lines `
+                        -Key (Get-MTText $LanguageData "NETWORK_VPN_PUBLIC_DNS") `
+                        -Value (@($VPN.PublicDNSServers) -join ", ")
+                }
+
+                if ($null -ne $VPN.MTU) {
+                    Add-MTNetworkReportKeyValue `
+                        -Lines $Lines `
+                        -Key (Get-MTText $LanguageData "NETWORK_VPN_MTU") `
+                        -Value $VPN.MTU
+                }
+
+                if ($null -ne $VPN.InterfaceMetric) {
+                    Add-MTNetworkReportKeyValue `
+                        -Lines $Lines `
+                        -Key (Get-MTText $LanguageData "NETWORK_VPN_METRIC") `
+                        -Value $VPN.InterfaceMetric
+                }
+            }
         }
 
         if ($null -ne $Health) {

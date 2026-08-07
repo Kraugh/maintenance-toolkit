@@ -412,6 +412,8 @@ function Get-MTNetworkHealthContext {
     $RouteCompetition = Get-MTNetworkDefaultRouteCompetitionState `
         -Topology $Topology
 
+    $VpnState = Get-MTNetworkVpnContext -Topology $Topology
+
     return [pscustomobject]@{
         CollectedAt = (Get-Date).ToString('o')
         EffectiveInterfaceIndex = $EffectiveInterfaceIndex
@@ -422,6 +424,7 @@ function Get-MTNetworkHealthContext {
         DHCP = $DhcpState
         EffectiveInterface = $InterfaceState
         DefaultRouteCompetition = $RouteCompetition
+        VPN = $VpnState
     }
 }
 
@@ -575,6 +578,78 @@ function Invoke-MTNetworkExtendedRules {
                     'NET010_TITLE' `
                     'NET010_MESSAGE' `
                     $Interface
+            }
+
+            'ActiveVpnWithoutTunnelIPv4' {
+                $Triggered = (
+                    $null -ne $Health.VPN -and
+                    @($Health.VPN.ProfilesWithoutTunnelIPv4).Count -gt 0
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'VPN005_TITLE' `
+                    'VPN005_MESSAGE' `
+                    ([pscustomobject]@{
+                        Count = @($Health.VPN.ProfilesWithoutTunnelIPv4).Count
+                        Profiles = @($Health.VPN.ProfilesWithoutTunnelIPv4)
+                    })
+            }
+
+            'ActiveVpnWithoutDns' {
+                $Triggered = (
+                    $null -ne $Health.VPN -and
+                    @($Health.VPN.ProfilesWithoutDNS).Count -gt 0
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'VPN006_TITLE' `
+                    'VPN006_MESSAGE' `
+                    ([pscustomobject]@{
+                        Count = @($Health.VPN.ProfilesWithoutDNS).Count
+                        Profiles = @($Health.VPN.ProfilesWithoutDNS)
+                    })
+            }
+
+            'ActiveVpnWithDuplicateRouteDestinations' {
+                $Triggered = (
+                    $null -ne $Health.VPN -and
+                    @($Health.VPN.ProfilesWithDuplicateRoutes).Count -gt 0
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'VPN007_TITLE' `
+                    'VPN007_MESSAGE' `
+                    ([pscustomobject]@{
+                        Count = @($Health.VPN.ProfilesWithDuplicateRoutes).Count
+                        Profiles = @($Health.VPN.ProfilesWithDuplicateRoutes)
+                    })
+            }
+
+            'ActiveVpnWithPublicDns' {
+                $Triggered = (
+                    $null -ne $Health.VPN -and
+                    @($Health.VPN.ProfilesWithPublicDNS).Count -gt 0
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'VPN008_TITLE' `
+                    'VPN008_MESSAGE' `
+                    ([pscustomobject]@{
+                        Count = @($Health.VPN.ProfilesWithPublicDNS).Count
+                        Profiles = @($Health.VPN.ProfilesWithPublicDNS)
+                    })
             }
         }
 

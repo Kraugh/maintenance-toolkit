@@ -852,3 +852,63 @@ Health property can fail before the intended rule assertion is reached.
 
 This is a test-fixture compatibility issue; dev.20 batch-3 runtime behaviour is
 unchanged.
+
+
+---
+
+## 2026-08-07 — Advanced VPN Diagnostics starts with deterministic tunnel state
+
+### Decision
+
+The first VPN diagnostics batch reports only evidence already available from
+Windows: active VPN adapter, tunnel IPv4, assigned DNS, routes, MTU, metric and
+routing mode.
+
+VPN005 warns when an active VPN has no usable tunnel IPv4. VPN006 is
+informational rather than an error when no DNS is assigned.
+
+### Reason
+
+Not every VPN is expected to push DNS, while an active adapter without a usable
+tunnel address is substantially more suspicious. Vendor-specific assumptions
+are deferred to later rule packs.
+
+
+---
+
+## 2026-08-07 — Synthetic Health fixtures use the complete enabled-rule contract
+
+### Decision
+
+Every synthetic `Health` object used by Rules Engine tests carries neutral
+values for all fields read by the complete enabled rule set.
+
+### Reason
+
+`Invoke-MTNetworkRules` evaluates all enabled rules, not only the rule under
+test. Under StrictMode, missing evidence properties such as `VPN` or
+`ActiveApipaAddresses` cause fixture failures even when the corresponding rule
+is expected to remain clear.
+
+Dev.21a changes AUTOTEST fixtures only; runtime VPN diagnostics are unchanged.
+
+
+---
+
+## 2026-08-07 — VPN route duplication is a warning; public VPN DNS is informational
+
+### Decision
+
+VPN007 warns only when the same destination prefix appears more than once on
+the same active VPN interface.
+
+VPN008 is informational when an active VPN receives public DNS servers.
+
+### Reason
+
+Duplicate routes can create ambiguous or metric-dependent routing behaviour and
+deserve operator attention.
+
+Public DNS on a VPN is not inherently wrong: consumer VPNs and some corporate
+deployments intentionally use public resolvers. MT therefore reports the
+evidence without treating it as a fault.

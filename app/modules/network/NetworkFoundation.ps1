@@ -10,6 +10,7 @@ foreach ($MTNetworkEngineFile in @(
     'RoutingAnalyzer.ps1',
     'TopologyEngine.ps1',
     'RulesEngine.ps1',
+    'VPNDiagnostics.ps1',
     'NetworkHealth.ps1'
 )) {
     $MTNetworkEnginePath = Join-Path $MTNetworkRoot $MTNetworkEngineFile
@@ -33,6 +34,7 @@ function Import-MTNetworkDiagnosticsFoundation {
         'Get-NDTopology',
         'Export-NDTopology',
         'Invoke-NDRules',
+        'Get-MTNetworkVpnContext',
         'Get-MTNetworkHealthContext',
         'Invoke-MTNetworkRules'
     )) {
@@ -49,6 +51,7 @@ function Import-MTNetworkDiagnosticsFoundation {
             'Get-NDTopology',
             'Export-NDTopology',
             'Invoke-NDRules',
+            'Get-MTNetworkVpnContext',
             'Get-MTNetworkHealthContext',
             'Invoke-MTNetworkRules'
         )

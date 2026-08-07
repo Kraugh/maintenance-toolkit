@@ -369,3 +369,44 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Preserve NET008/NET009/NET010 as clear in older healthy fixtures.
 - [ ] Re-run Foundation AUTOTEST.
 - [ ] Continue with Quick Diagnosis and Git EOL tests.
+
+
+## Development increment 21 — Advanced VPN Diagnostics batch 1
+
+- [x] Add per-active-adapter VPN diagnostic context.
+- [x] Collect tunnel IPv4 addresses.
+- [x] Collect VPN-assigned DNS servers.
+- [x] Collect per-VPN route count.
+- [x] Classify each VPN adapter as FullTunnel, SplitTunnel or NoRoutes.
+- [x] Collect VPN MTU and interface metric when Windows exposes them.
+- [x] Add VPN005: active VPN without usable tunnel IPv4.
+- [x] Add VPN006: active VPN without DNS (informational).
+- [x] Add VPN diagnostics section to Quick Diagnosis.
+- [x] Enrich Technical Report VPN section.
+- [x] Add synthetic AUTOTEST coverage for VPN context and VPN005/VPN006.
+- [ ] Validate no-VPN case on Windows.
+- [ ] Validate with a real connected VPN.
+
+
+## Development increment 21a — VPN fixture compatibility fix
+
+- [x] Add neutral VPN context to Network Health batch-3 fixtures.
+- [x] Add the complete APIPA context to the VPN diagnostic rule fixture.
+- [x] Keep dev.21 runtime VPN diagnostics unchanged.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Validate no-VPN Quick Diagnosis on the home PC.
+
+
+## Development increment 22 — Advanced VPN Diagnostics batch 2
+
+- [x] Detect duplicate destination prefixes on each active VPN.
+- [x] Preserve route evidence and counts per duplicated prefix.
+- [x] Classify VPN DNS addresses as private/local or public.
+- [x] Add VPN007: duplicate VPN route destinations (Warning).
+- [x] Add VPN008: public DNS assigned to active VPN (Info).
+- [x] Show specific/default/duplicate route counts in Quick Diagnosis.
+- [x] Show public VPN DNS when present.
+- [x] Enrich Technical Report with the same evidence.
+- [x] Add deterministic AUTOTEST coverage for route duplication and public DNS.
+- [ ] Validate no-VPN case on a physical Windows PC.
+- [ ] Validate with a real connected VPN when available.
