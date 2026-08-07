@@ -25,5 +25,5 @@ logs/*
 reports/*
 !reports/README.md
 
-# Generated release packages
-dist/
+# Optional local external tools
+external/speedtest.exe

@@ -299,3 +299,14 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Add an explicit source-order check for virtual-before-physical fallback.
 - [ ] Re-run Foundation AUTOTEST.
 - [ ] Run `create-release.ps1` and inspect the generated ZIP.
+
+
+## Development increment 17 — local external-tool hygiene
+
+- [x] Ignore `external/speedtest.exe` in Git.
+- [x] Keep `external/README.md` versioned.
+- [x] Preserve the dev.16a release-builder exclusion of the complete `external/` directory.
+- [x] Add an AUTOTEST guard for the local SpeedTest ignore rule.
+- [ ] Run Foundation AUTOTEST.
+- [ ] Restore local `external/speedtest.exe` after replacing the development tree.
+- [ ] Verify `git status` remains clean with the optional binary present.

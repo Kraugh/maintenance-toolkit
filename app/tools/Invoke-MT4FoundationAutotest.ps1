@@ -1221,6 +1221,27 @@ catch {
 }
 
 try {
+    $GitIgnorePath = Join-Path $ProjectRoot '.gitignore'
+    $GitIgnoreText = Get-Content `
+        -LiteralPath $GitIgnorePath `
+        -Raw `
+        -Encoding UTF8
+
+    if (
+        $GitIgnoreText -notmatch
+        '(?m)^\s*external/speedtest\.exe\s*$'
+    ) {
+        throw 'Optional local speedtest.exe is not protected by .gitignore.'
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Local external-tool hygiene validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
     $LegacySmoke = Join-Path `
         $ProjectRoot `
         'app/tools/Test-MT4LegacyCompatibility.ps1'

@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0-dev.16a",
+  "Version": "4.0.0-dev.17",
   "Channel": "development",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "Phase 4 - presentation AUTOTEST regex fix"
+  "Milestone": "Phase 4 - local external tool hygiene"
 }
