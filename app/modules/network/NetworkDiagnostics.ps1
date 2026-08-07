@@ -449,6 +449,51 @@ function Invoke-MTNetworkQuickDiagnosis {
                 -Label (Get-MTNetworkText $LanguageData "NETWORK_DHCP_SERVER") `
                 -Value ([string]$Health.DHCP.Server)
         }
+
+        if (
+            $null -ne $Health.EffectiveInterface -and
+            [bool]$Health.EffectiveInterface.Known
+        ) {
+            Write-MTNetworkStatus `
+                -Level $(if (
+                    -not [bool]$Health.EffectiveInterface.IsVPN -and
+                    $null -ne $Health.EffectiveInterface.MTU -and
+                    [int]$Health.EffectiveInterface.MTU -lt 1280
+                ) { "WARN" } else { "INFO" }) `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_EFFECTIVE_MTU") `
+                -Value ([string]$Health.EffectiveInterface.MTU)
+
+            Write-MTNetworkStatus `
+                -Level "INFO" `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_EFFECTIVE_METRIC") `
+                -Value ([string]$Health.EffectiveInterface.InterfaceMetric)
+
+            if (
+                -not [string]::IsNullOrWhiteSpace(
+                    [string]$Health.EffectiveInterface.LinkSpeed
+                )
+            ) {
+                Write-MTNetworkStatus `
+                    -Level $(if (
+                        -not [bool]$Health.EffectiveInterface.IsVPN -and
+                        -not [bool]$Health.EffectiveInterface.IsVirtual -and
+                        [bool]$Health.EffectiveInterface.HardwareInterface -and
+                        $null -ne $Health.EffectiveInterface.LinkSpeedMbps -and
+                        [double]$Health.EffectiveInterface.LinkSpeedMbps -le 10
+                    ) { "WARN" } else { "INFO" }) `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_EFFECTIVE_LINK_SPEED") `
+                    -Value ([string]$Health.EffectiveInterface.LinkSpeed)
+            }
+        }
+
+        if ($null -ne $Health.DefaultRouteCompetition) {
+            Write-MTNetworkStatus `
+                -Level $(if (
+                    [int]$Health.DefaultRouteCompetition.BestRouteCount -gt 1
+                ) { "WARN" } else { "OK" }) `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_BEST_DEFAULT_ROUTE_COUNT") `
+                -Value ([string]$Health.DefaultRouteCompetition.BestRouteCount)
+        }
     }
 
     if ($null -ne $RuleEvaluation) {

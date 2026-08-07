@@ -1,6 +1,6 @@
 {
-  "SchemaVersion": "1.2",
-  "Origin": "NDP 0.0.19-RC + MT4 health extensions batch 1-2",
+  "SchemaVersion": "1.3",
+  "Origin": "NDP 0.0.19-RC + MT4 health extensions batch 1-3",
   "Rules": [
     {
       "Id": "NET001",
@@ -79,6 +79,24 @@
       "Severity": "Warning",
       "Enabled": true,
       "Condition": "DhcpDisabledWithoutUsableIPv4"
+    },
+    {
+      "Id": "NET008",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "LowMtuOnEffectiveNonVpnInterface"
+    },
+    {
+      "Id": "NET009",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "EqualCostCompetingDefaultRoutes"
+    },
+    {
+      "Id": "NET010",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "LowLinkSpeedOnEffectivePhysicalInterface"
     }
   ]
 }

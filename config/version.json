@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0-dev.19",
+  "Version": "4.0.0-dev.20a",
   "Channel": "development",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "Phase 4 - Network Health Rules batch 2 (DNS/DHCP)"
+  "Milestone": "Phase 4 - Network Health batch 3 fixture compatibility fix"
 }

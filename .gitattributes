@@ -1,0 +1,8 @@
+# Maintenance Toolkit line-ending policy
+# Keep repository text deterministic across Windows/Linux/macOS.
+
+* text=auto eol=lf
+
+# Native Windows launchers use CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf

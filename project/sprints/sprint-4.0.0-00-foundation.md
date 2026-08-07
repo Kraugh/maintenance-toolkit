@@ -340,3 +340,32 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Keep DNS/DHCP collection failures non-fatal and report DHCP as Unknown.
 - [x] Add deterministic healthy/failing AUTOTEST fixtures for NET005/NET006/NET007.
 - [ ] Validate batch 2 on Windows 11 VM.
+
+
+## Development increment 20 — Network Health Rules batch 3 + EOL policy
+
+- [x] Add repository `.gitattributes`.
+- [x] Normalize repository text to LF.
+- [x] Keep native Windows BAT/CMD launchers on CRLF.
+- [x] Collect effective-interface MTU and interface metric.
+- [x] Parse effective adapter link speed.
+- [x] Detect unusually low MTU below 1280 on non-VPN effective interfaces (NET008).
+- [x] Detect equal-cost competing best default routes (NET009).
+- [x] Detect <=10 Mbps link speed on effective physical non-virtual interfaces (NET010).
+- [x] Show MTU, metric, link speed and best-route count in Quick Diagnosis.
+- [x] Include the same evidence in Technical Report.
+- [x] Add healthy/failing AUTOTEST fixtures for NET008/NET009/NET010.
+- [x] Add AUTOTEST coverage for `.gitattributes`.
+- [ ] Run Foundation AUTOTEST.
+- [ ] Run Quick Diagnosis on Windows 11.
+- [ ] Verify `git add -A` no longer produces LF/CRLF warning spam.
+
+
+## Development increment 20a — batch fixture compatibility fix
+
+- [x] Keep Network Health batch-3 runtime logic unchanged.
+- [x] Extend batch-1 synthetic health fixtures with neutral batch-3 fields.
+- [x] Extend batch-2 synthetic health fixtures with neutral batch-3 fields.
+- [x] Preserve NET008/NET009/NET010 as clear in older healthy fixtures.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Continue with Quick Diagnosis and Git EOL tests.

@@ -251,5 +251,15 @@
   "NETWORK_DHCP_ENABLED": "Abilitato",
   "NETWORK_DHCP_DISABLED": "Disabilitato",
   "NETWORK_DHCP_UNKNOWN": "Sconosciuto",
-  "NETWORK_DHCP_SERVER": "Server DHCP"
+  "NETWORK_DHCP_SERVER": "Server DHCP",
+  "NET008_TITLE": "MTU insolitamente basso sull’interfaccia effettiva",
+  "NET008_MESSAGE": "L’interfaccia IPv4 effettiva non VPN ha un MTU inferiore a 1280 byte. Potrebbe indicare una configurazione insolita o problematica dell’interfaccia.",
+  "NET009_TITLE": "Route predefinite concorrenti a pari costo",
+  "NET009_MESSAGE": "Più route predefinite condividono la metrica totale più bassa. Windows può scegliere tra percorsi con la stessa priorità.",
+  "NET010_TITLE": "Velocità di link bassa sull’interfaccia fisica effettiva",
+  "NET010_MESSAGE": "L’interfaccia fisica attiva usata dalla route effettiva riporta una velocità di link pari o inferiore a 10 Mbps. Verificare cablaggio, negoziazione e configurazione della porta switch.",
+  "NETWORK_EFFECTIVE_MTU": "MTU interfaccia effettiva",
+  "NETWORK_EFFECTIVE_METRIC": "Metrica interfaccia effettiva",
+  "NETWORK_EFFECTIVE_LINK_SPEED": "Velocità link effettiva",
+  "NETWORK_BEST_DEFAULT_ROUTE_COUNT": "Route predefinite a metrica migliore"
 }

@@ -251,5 +251,15 @@
   "NETWORK_DHCP_ENABLED": "Enabled",
   "NETWORK_DHCP_DISABLED": "Disabled",
   "NETWORK_DHCP_UNKNOWN": "Unknown",
-  "NETWORK_DHCP_SERVER": "DHCP server"
+  "NETWORK_DHCP_SERVER": "DHCP server",
+  "NET008_TITLE": "Unusually low MTU on effective interface",
+  "NET008_MESSAGE": "The effective non-VPN IPv4 interface has an MTU below 1280 bytes. This may indicate an unusual or problematic interface configuration.",
+  "NET009_TITLE": "Equal-cost competing default routes",
+  "NET009_MESSAGE": "More than one default route shares the lowest total metric. Windows may choose between equally preferred paths.",
+  "NET010_TITLE": "Low link speed on effective physical interface",
+  "NET010_MESSAGE": "The active physical interface used by the effective route reports a link speed of 10 Mbps or less. Verify cabling, negotiation and switch-port configuration.",
+  "NETWORK_EFFECTIVE_MTU": "Effective interface MTU",
+  "NETWORK_EFFECTIVE_METRIC": "Effective interface metric",
+  "NETWORK_EFFECTIVE_LINK_SPEED": "Effective link speed",
+  "NETWORK_BEST_DEFAULT_ROUTE_COUNT": "Best-metric default routes"
 }

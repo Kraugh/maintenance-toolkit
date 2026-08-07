@@ -662,6 +662,33 @@ function Invoke-MTNetworkTechnicalReport {
                     -Key (Get-MTText $LanguageData "NETWORK_DHCP_SERVER") `
                     -Value ([string]$Health.DHCP.Server)
             }
+
+            if (
+                $null -ne $Health.EffectiveInterface -and
+                [bool]$Health.EffectiveInterface.Known
+            ) {
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_EFFECTIVE_MTU") `
+                    -Value $Health.EffectiveInterface.MTU
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_EFFECTIVE_METRIC") `
+                    -Value $Health.EffectiveInterface.InterfaceMetric
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_EFFECTIVE_LINK_SPEED") `
+                    -Value $Health.EffectiveInterface.LinkSpeed
+            }
+
+            if ($null -ne $Health.DefaultRouteCompetition) {
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_BEST_DEFAULT_ROUTE_COUNT") `
+                    -Value $Health.DefaultRouteCompetition.BestRouteCount
+            }
         }
 
         if ($null -ne $RuleEvaluation) {

@@ -438,7 +438,8 @@ try {
         'README.md',
         'CONTRIBUTING.md',
         'LICENSE',
-        '.gitignore'
+        '.gitignore',
+        '.gitattributes'
     )
 
     foreach ($RootFile in $ExpectedRootFiles) {
@@ -531,15 +532,16 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if (@($NetworkRules.Rules).Count -ne 13) {
+    if (@($NetworkRules.Rules).Count -ne 16) {
         throw (
-            'Expected 13 Network Diagnostics rules, found {0}.' -f
+            'Expected 16 Network Diagnostics rules, found {0}.' -f
             @($NetworkRules.Rules).Count
         )
     }
 
     foreach ($ExpectedRule in @(
         'NET001','NET002','NET003','NET004','NET005','NET006','NET007',
+        'NET008','NET009','NET010',
         'VPN001','VPN002','TOP001','TOP002','VPN003','VPN004'
     )) {
         if (-not (@($NetworkRules.Rules.Id) -contains $ExpectedRule)) {
@@ -1323,6 +1325,22 @@ try {
                 }
             )
         }
+        EffectiveInterface = [pscustomobject]@{
+            Known = $true
+            IsVPN = $false
+            IsVirtual = $false
+            HardwareInterface = $true
+            MTU = 1500
+            InterfaceMetric = 25
+            LinkSpeed = '1 Gbps'
+            LinkSpeedMbps = 1000
+        }
+        DefaultRouteCompetition = [pscustomobject]@{
+            DefaultRouteCount = 1
+            BestMetric = 25
+            BestRouteCount = 1
+            BestRoutes = @()
+        }
     }
 
     $RulesConfiguration = Get-Content `
@@ -1390,6 +1408,22 @@ try {
             Server = '192.0.2.1'
             UsableIPv4Count = 1
             UsableIPv4Addresses = @()
+        }
+        EffectiveInterface = [pscustomobject]@{
+            Known = $true
+            IsVPN = $false
+            IsVirtual = $false
+            HardwareInterface = $true
+            MTU = 1500
+            InterfaceMetric = 25
+            LinkSpeed = '1 Gbps'
+            LinkSpeedMbps = 1000
+        }
+        DefaultRouteCompetition = [pscustomobject]@{
+            DefaultRouteCount = 1
+            BestMetric = 25
+            BestRouteCount = 1
+            BestRoutes = @()
         }
     }
 
@@ -1531,6 +1565,22 @@ try {
             UsableIPv4Count = 1
             UsableIPv4Addresses = @()
         }
+        EffectiveInterface = [pscustomobject]@{
+            Known = $true
+            IsVPN = $false
+            IsVirtual = $false
+            HardwareInterface = $true
+            MTU = 1500
+            InterfaceMetric = 25
+            LinkSpeed = '1 Gbps'
+            LinkSpeedMbps = 1000
+        }
+        DefaultRouteCompetition = [pscustomobject]@{
+            DefaultRouteCount = 1
+            BestMetric = 25
+            BestRouteCount = 1
+            BestRoutes = @()
+        }
     }
 
     $NoDnsHealth = $BaseHealth.PSObject.Copy()
@@ -1627,6 +1677,221 @@ try {
 catch {
     Add-MT4AutotestError (
         'Network Health rules batch 2 validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    . (Join-Path $ProjectRoot 'app/modules/network/NetworkHealth.ps1')
+
+    if ((ConvertTo-MTNetworkLinkSpeedMbps -LinkSpeed '1 Gbps') -ne 1000) {
+        throw 'Link-speed parser failed for 1 Gbps.'
+    }
+
+    if ((ConvertTo-MTNetworkLinkSpeedMbps -LinkSpeed '10 Mbps') -ne 10) {
+        throw 'Link-speed parser failed for 10 Mbps.'
+    }
+
+    $RulesConfiguration = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'rules/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    $FixtureAdapter = [pscustomobject]@{
+        InterfaceIndex = 12
+        Name = 'Ethernet'
+        Description = 'Fixture physical adapter'
+        Status = 'Up'
+        LinkSpeed = '1 Gbps'
+        IsVPN = $false
+        IsVirtual = $false
+        HardwareInterface = $true
+    }
+
+    $Route1 = [pscustomobject]@{
+        DestinationPrefix = '0.0.0.0/0'
+        NextHop = '192.0.2.1'
+        InterfaceIndex = 12
+        InterfaceAlias = 'Ethernet'
+        RouteMetric = 0
+        InterfaceMetric = 25
+        TotalMetric = 25
+    }
+
+    $BaseTopology = [pscustomobject]@{
+        Summary = [pscustomobject]@{
+            DefaultRouteCount = 1
+            ActiveVPNCount = 0
+            VPNRouteCount = 0
+            VPNSpecificRouteCount = 0
+            RoutingModeCandidate = 'NoVPN'
+        }
+        EffectivePath = [pscustomobject]@{
+            DefaultRoute = $Route1
+            LogicalAdapter = $FixtureAdapter
+            PhysicalBackendCandidates = @($FixtureAdapter)
+            PhysicalBackendSource = 'LogicalAdapter'
+        }
+        Adapters = @($FixtureAdapter)
+        IPv4Addresses = @()
+        DNS = @()
+        DefaultRoutes = @($Route1)
+        ActiveVPNAdapters = @()
+        VPNRoutes = @()
+    }
+
+    $HealthyHealth = [pscustomobject]@{
+        GatewayProbe = [pscustomobject]@{
+            Attempted = $true
+            Reachable = $true
+        }
+        ActiveApipaCount = 0
+        ActiveApipaAddresses = @()
+        DNS = [pscustomobject]@{
+            ServerCount = 1
+            DuplicateCount = 0
+        }
+        DHCP = [pscustomobject]@{
+            Known = $true
+            Enabled = $true
+            UsableIPv4Count = 1
+        }
+        EffectiveInterface = [pscustomobject]@{
+            Known = $true
+            IsVPN = $false
+            IsVirtual = $false
+            HardwareInterface = $true
+            MTU = 1500
+            InterfaceMetric = 25
+            LinkSpeed = '1 Gbps'
+            LinkSpeedMbps = 1000
+        }
+        DefaultRouteCompetition = [pscustomobject]@{
+            DefaultRouteCount = 1
+            BestMetric = 25
+            BestRouteCount = 1
+            BestRoutes = @($Route1)
+        }
+    }
+
+    $LowMtuHealth = $HealthyHealth.PSObject.Copy()
+    $LowMtuHealth.EffectiveInterface = $HealthyHealth.EffectiveInterface.PSObject.Copy()
+    $LowMtuHealth.EffectiveInterface.MTU = 1200
+
+    $LowMtuResult = Invoke-MTNetworkRules `
+        -Topology $BaseTopology `
+        -Health $LowMtuHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET008 = @(
+        $LowMtuResult.Results |
+        Where-Object Id -eq 'NET008'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET008 -or -not $NET008.Triggered) {
+        throw 'NET008 low-MTU fixture failed.'
+    }
+
+    $Route2 = [pscustomobject]@{
+        DestinationPrefix = '0.0.0.0/0'
+        NextHop = '198.51.100.1'
+        InterfaceIndex = 13
+        InterfaceAlias = 'Ethernet 2'
+        RouteMetric = 0
+        InterfaceMetric = 25
+        TotalMetric = 25
+    }
+
+    $EqualCostTopology = $BaseTopology.PSObject.Copy()
+    $EqualCostTopology.Summary = $BaseTopology.Summary.PSObject.Copy()
+    $EqualCostTopology.Summary.DefaultRouteCount = 2
+    $EqualCostTopology.DefaultRoutes = @($Route1, $Route2)
+
+    $EqualCostHealth = $HealthyHealth.PSObject.Copy()
+    $EqualCostHealth.DefaultRouteCompetition = [pscustomobject]@{
+        DefaultRouteCount = 2
+        BestMetric = 25
+        BestRouteCount = 2
+        BestRoutes = @($Route1, $Route2)
+    }
+
+    $EqualCostResult = Invoke-MTNetworkRules `
+        -Topology $EqualCostTopology `
+        -Health $EqualCostHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET009 = @(
+        $EqualCostResult.Results |
+        Where-Object Id -eq 'NET009'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET009 -or -not $NET009.Triggered) {
+        throw 'NET009 equal-cost default-route fixture failed.'
+    }
+
+    $LowSpeedHealth = $HealthyHealth.PSObject.Copy()
+    $LowSpeedHealth.EffectiveInterface = $HealthyHealth.EffectiveInterface.PSObject.Copy()
+    $LowSpeedHealth.EffectiveInterface.LinkSpeed = '10 Mbps'
+    $LowSpeedHealth.EffectiveInterface.LinkSpeedMbps = 10
+
+    $LowSpeedResult = Invoke-MTNetworkRules `
+        -Topology $BaseTopology `
+        -Health $LowSpeedHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET010 = @(
+        $LowSpeedResult.Results |
+        Where-Object Id -eq 'NET010'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET010 -or -not $NET010.Triggered) {
+        throw 'NET010 low-link-speed fixture failed.'
+    }
+
+    $HealthyResult = Invoke-MTNetworkRules `
+        -Topology $BaseTopology `
+        -Health $HealthyHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    foreach ($ExpectedClear in @('NET008','NET009','NET010')) {
+        $Result = @(
+            $HealthyResult.Results |
+            Where-Object Id -eq $ExpectedClear
+        ) | Select-Object -First 1
+
+        if ($null -eq $Result -or $Result.Triggered) {
+            throw "Batch-3 rule unexpectedly triggered in healthy fixture: $ExpectedClear"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Network Health rules batch 3 validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    $AttributesPath = Join-Path $ProjectRoot '.gitattributes'
+    $AttributesText = Get-Content `
+        -LiteralPath $AttributesPath `
+        -Raw `
+        -Encoding UTF8
+
+    foreach ($RequiredLine in @(
+        '* text=auto eol=lf',
+        '*.bat text eol=crlf',
+        '*.cmd text eol=crlf'
+    )) {
+        if (-not ($AttributesText -match [regex]::Escape($RequiredLine))) {
+            throw "Missing .gitattributes EOL rule: $RequiredLine"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Repository EOL policy validation failed: {0}' -f
         $_.Exception.Message
     )
 }

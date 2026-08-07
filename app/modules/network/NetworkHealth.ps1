@@ -194,6 +194,158 @@ function Get-MTNetworkDhcpHealthState {
     return [pscustomobject]$State
 }
 
+function ConvertTo-MTNetworkLinkSpeedMbps {
+    [CmdletBinding()]
+    param(
+        [AllowNull()][string]$LinkSpeed
+    )
+
+    if ([string]::IsNullOrWhiteSpace($LinkSpeed)) {
+        return $null
+    }
+
+    $Text = $LinkSpeed.Trim()
+
+    if ($Text -match '^\s*([0-9]+(?:[\.,][0-9]+)?)\s*(Gbps|Mbps|Kbps|bps)\s*$') {
+        $NumberText = $Matches[1].Replace(',', '.')
+        $Value = [double]::Parse(
+            $NumberText,
+            [System.Globalization.CultureInfo]::InvariantCulture
+        )
+
+        switch ($Matches[2]) {
+            'Gbps' { return [math]::Round($Value * 1000, 2) }
+            'Mbps' { return [math]::Round($Value, 2) }
+            'Kbps' { return [math]::Round($Value / 1000, 4) }
+            'bps'  { return [math]::Round($Value / 1000000, 6) }
+        }
+    }
+
+    return $null
+}
+
+function Get-MTNetworkEffectiveInterfaceHealthState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][object]$Topology,
+        [AllowNull()][Nullable[int]]$InterfaceIndex
+    )
+
+    $State = [ordered]@{
+        InterfaceIndex = $InterfaceIndex
+        Known = $false
+        Name = $null
+        Description = $null
+        IsVPN = $false
+        IsVirtual = $false
+        HardwareInterface = $false
+        LinkSpeed = $null
+        LinkSpeedMbps = $null
+        MTU = $null
+        InterfaceMetric = $null
+        AutomaticMetric = $null
+        ConnectionState = $null
+        Source = 'Unavailable'
+        Detail = $null
+    }
+
+    if ($null -eq $InterfaceIndex) {
+        return [pscustomobject]$State
+    }
+
+    $Adapter = @(
+        $Topology.Adapters |
+        Where-Object {
+            [int]$_.InterfaceIndex -eq [int]$InterfaceIndex
+        }
+    ) | Select-Object -First 1
+
+    if ($null -ne $Adapter) {
+        $State.Name = [string]$Adapter.Name
+        $State.Description = [string]$Adapter.Description
+        $State.IsVPN = [bool]$Adapter.IsVPN
+        $State.IsVirtual = [bool]$Adapter.IsVirtual
+        $State.HardwareInterface = [bool]$Adapter.HardwareInterface
+        $State.LinkSpeed = [string]$Adapter.LinkSpeed
+        $State.LinkSpeedMbps = ConvertTo-MTNetworkLinkSpeedMbps `
+            -LinkSpeed ([string]$Adapter.LinkSpeed)
+    }
+
+    try {
+        $IPInterface = Get-NetIPInterface `
+            -AddressFamily IPv4 `
+            -InterfaceIndex ([int]$InterfaceIndex) `
+            -ErrorAction Stop |
+            Select-Object -First 1
+
+        if ($null -ne $IPInterface) {
+            $State.Known = $true
+            $State.MTU = [int]$IPInterface.NlMtu
+            $State.InterfaceMetric = [int]$IPInterface.InterfaceMetric
+            $State.AutomaticMetric = [string]$IPInterface.AutomaticMetric
+            $State.ConnectionState = [string]$IPInterface.ConnectionState
+            $State.Source = 'Get-NetIPInterface'
+        }
+        else {
+            $State.Detail = 'No matching Get-NetIPInterface result.'
+        }
+    }
+    catch {
+        $State.Detail = $_.Exception.Message
+    }
+
+    return [pscustomobject]$State
+}
+
+function Get-MTNetworkDefaultRouteCompetitionState {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][object]$Topology
+    )
+
+    $Routes = @($Topology.DefaultRoutes)
+
+    if ($Routes.Count -eq 0) {
+        return [pscustomobject]@{
+            DefaultRouteCount = 0
+            BestMetric = $null
+            BestRouteCount = 0
+            BestRoutes = @()
+        }
+    }
+
+    $UsableMetrics = @(
+        $Routes |
+        Where-Object { $null -ne $_.TotalMetric } |
+        ForEach-Object { [int]$_.TotalMetric }
+    )
+
+    if ($UsableMetrics.Count -eq 0) {
+        return [pscustomobject]@{
+            DefaultRouteCount = $Routes.Count
+            BestMetric = $null
+            BestRouteCount = 0
+            BestRoutes = @()
+        }
+    }
+
+    $BestMetric = ($UsableMetrics | Measure-Object -Minimum).Minimum
+    $BestRoutes = @(
+        $Routes |
+        Where-Object {
+            $null -ne $_.TotalMetric -and
+            [int]$_.TotalMetric -eq [int]$BestMetric
+        }
+    )
+
+    return [pscustomobject]@{
+        DefaultRouteCount = $Routes.Count
+        BestMetric = [int]$BestMetric
+        BestRouteCount = $BestRoutes.Count
+        BestRoutes = $BestRoutes
+    }
+}
+
 function Get-MTNetworkHealthContext {
     [CmdletBinding()]
     param(
@@ -253,6 +405,13 @@ function Get-MTNetworkHealthContext {
         -Topology $Topology `
         -InterfaceIndex $EffectiveInterfaceIndex
 
+    $InterfaceState = Get-MTNetworkEffectiveInterfaceHealthState `
+        -Topology $Topology `
+        -InterfaceIndex $EffectiveInterfaceIndex
+
+    $RouteCompetition = Get-MTNetworkDefaultRouteCompetitionState `
+        -Topology $Topology
+
     return [pscustomobject]@{
         CollectedAt = (Get-Date).ToString('o')
         EffectiveInterfaceIndex = $EffectiveInterfaceIndex
@@ -261,6 +420,8 @@ function Get-MTNetworkHealthContext {
         ActiveApipaAddresses = $ApipaAddresses
         DNS = $DnsState
         DHCP = $DhcpState
+        EffectiveInterface = $InterfaceState
+        DefaultRouteCompetition = $RouteCompetition
     }
 }
 
@@ -359,6 +520,61 @@ function Invoke-MTNetworkExtendedRules {
                     'NET007_TITLE' `
                     'NET007_MESSAGE' `
                     $Health.DHCP
+            }
+
+            'LowMtuOnEffectiveNonVpnInterface' {
+                $Interface = $Health.EffectiveInterface
+                $Triggered = (
+                    $null -ne $Interface -and
+                    [bool]$Interface.Known -and
+                    -not [bool]$Interface.IsVPN -and
+                    $null -ne $Interface.MTU -and
+                    [int]$Interface.MTU -lt 1280
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'NET008_TITLE' `
+                    'NET008_MESSAGE' `
+                    $Interface
+            }
+
+            'EqualCostCompetingDefaultRoutes' {
+                $Competition = $Health.DefaultRouteCompetition
+                $Triggered = (
+                    $null -ne $Competition -and
+                    [int]$Competition.BestRouteCount -gt 1
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'NET009_TITLE' `
+                    'NET009_MESSAGE' `
+                    $Competition
+            }
+
+            'LowLinkSpeedOnEffectivePhysicalInterface' {
+                $Interface = $Health.EffectiveInterface
+                $Triggered = (
+                    $null -ne $Interface -and
+                    -not [bool]$Interface.IsVPN -and
+                    -not [bool]$Interface.IsVirtual -and
+                    [bool]$Interface.HardwareInterface -and
+                    $null -ne $Interface.LinkSpeedMbps -and
+                    [double]$Interface.LinkSpeedMbps -le 10
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'NET010_TITLE' `
+                    'NET010_MESSAGE' `
+                    $Interface
             }
         }
 

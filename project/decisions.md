@@ -799,3 +799,56 @@ disabled and no usable non-APIPA IPv4 address exists.
 
 CIM/WMI collection failure is not itself a network fault: DHCP state becomes
 Unknown and the rule stays clear.
+
+
+---
+
+## 2026-08-07 — Repository EOL policy is explicit and versioned
+
+### Decision
+
+Maintenance Toolkit stores normal text files as LF through `.gitattributes`.
+Native Windows `.bat` and `.cmd` launchers are stored as CRLF.
+
+### Reason
+
+Developer machines may use `core.autocrlf=true`. Without a repository policy,
+replacing the development tree from generated ZIP files caused Git to emit
+line-ending conversion warnings for nearly every source file. The repository
+must define its own deterministic EOL contract instead of depending on local
+Git configuration.
+
+---
+
+## 2026-08-07 — Network Health batch 3 remains conservative
+
+### Decision
+
+NET008 warns only for MTU below 1280 on the effective non-VPN IPv4 interface.
+NET009 warns only when multiple default routes share the same best total metric.
+NET010 warns only when the effective adapter is physical, non-virtual, non-VPN
+and reports 10 Mbps or less.
+
+### Reason
+
+MT4 Health rules should identify suspicious evidence without flagging common
+VPN and virtualization configurations as faults.
+
+
+---
+
+## 2026-08-07 — Health AUTOTEST fixtures track the complete Health context contract
+
+### Decision
+
+Synthetic `Health` fixtures used by earlier Network Health batches include
+neutral values for fields introduced by later batches.
+
+### Reason
+
+`Invoke-MTNetworkRules` evaluates the complete enabled rule set. Under
+`Set-StrictMode -Version Latest`, an older fixture that omits a newly introduced
+Health property can fail before the intended rule assertion is reached.
+
+This is a test-fixture compatibility issue; dev.20 batch-3 runtime behaviour is
+unchanged.
