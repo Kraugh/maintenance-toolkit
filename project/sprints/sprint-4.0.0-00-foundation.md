@@ -310,3 +310,19 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [ ] Run Foundation AUTOTEST.
 - [ ] Restore local `external/speedtest.exe` after replacing the development tree.
 - [ ] Verify `git status` remains clean with the optional binary present.
+
+
+## Development increment 18 — Network Health Rules, batch 1
+
+- [x] Preserve the eight NDP 0.0.19-RC baseline rules unchanged.
+- [x] Add an MT-native health collector and rule-extension layer.
+- [x] NET001: missing default route (existing baseline rule, regression-tested).
+- [x] NET002: multiple default routes (existing baseline rule, regression-tested).
+- [x] NET003: default gateway did not answer an ICMP probe.
+- [x] NET004: APIPA address on an active non-VPN interface.
+- [x] Keep gateway ICMP failure conservative: warning, not proof that the router is down.
+- [x] Show Network Health in Quick Diagnosis.
+- [x] Include Network Health in Technical Report.
+- [x] Add deterministic synthetic AUTOTEST fixtures for all four batch-1 rules.
+- [ ] Validate on Windows 11 / PowerShell 5.1.
+- [ ] Test a real APIPA condition when a suitable test adapter is available.

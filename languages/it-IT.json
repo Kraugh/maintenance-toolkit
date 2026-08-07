@@ -227,5 +227,15 @@
   "PACKET_LOSS": "Packet loss",
   "SPEEDTEST_SERVER": "Server",
   "SPEEDTEST_RESULT_URL": "Risultato Ookla",
-  "NETWORK_SPEEDTEST_SAVED": "Dati SpeedTest salvati"
+  "NETWORK_SPEEDTEST_SAVED": "Dati SpeedTest salvati",
+  "NET003_TITLE": "Il gateway predefinito non risponde a ICMP",
+  "NET003_MESSAGE": "Il gateway predefinito configurato non ha risposto al test ICMP. Il gateway potrebbe non essere raggiungibile oppure potrebbe bloccare intenzionalmente le richieste echo.",
+  "NET004_TITLE": "Indirizzo APIPA su interfaccia attiva",
+  "NET004_MESSAGE": "Un’interfaccia attiva non VPN utilizza un indirizzo 169.254.x.x. In genere indica che la configurazione DHCP non è stata ottenuta.",
+  "NETWORK_HEALTH_SUMMARY": "STATO RETE",
+  "NETWORK_GATEWAY_ICMP": "ICMP gateway predefinito",
+  "NETWORK_GATEWAY_ICMP_OK": "Risposta ricevuta in {0} ms",
+  "NETWORK_GATEWAY_ICMP_NO_REPLY": "Nessuna risposta ICMP ricevuta",
+  "NETWORK_GATEWAY_ICMP_NOT_TESTED": "Non testato: nessun gateway predefinito utilizzabile",
+  "NETWORK_APIPA_COUNT": "Indirizzi APIPA attivi"
 }

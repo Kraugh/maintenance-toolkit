@@ -9,7 +9,8 @@ $MTNetworkRoot = $PSScriptRoot
 foreach ($MTNetworkEngineFile in @(
     'RoutingAnalyzer.ps1',
     'TopologyEngine.ps1',
-    'RulesEngine.ps1'
+    'RulesEngine.ps1',
+    'NetworkHealth.ps1'
 )) {
     $MTNetworkEnginePath = Join-Path $MTNetworkRoot $MTNetworkEngineFile
 
@@ -31,7 +32,9 @@ function Import-MTNetworkDiagnosticsFoundation {
         'Get-NDRoutingAnalysis',
         'Get-NDTopology',
         'Export-NDTopology',
-        'Invoke-NDRules'
+        'Invoke-NDRules',
+        'Get-MTNetworkHealthContext',
+        'Invoke-MTNetworkRules'
     )) {
         if (-not (Get-Command $CommandName -ErrorAction SilentlyContinue)) {
             throw "Network Diagnostics engine command missing: $CommandName"
@@ -45,7 +48,9 @@ function Import-MTNetworkDiagnosticsFoundation {
             'Get-NDRoutingAnalysis',
             'Get-NDTopology',
             'Export-NDTopology',
-            'Invoke-NDRules'
+            'Invoke-NDRules',
+            'Get-MTNetworkHealthContext',
+            'Invoke-MTNetworkRules'
         )
     }
 }

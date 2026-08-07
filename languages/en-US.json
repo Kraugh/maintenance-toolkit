@@ -227,5 +227,15 @@
   "PACKET_LOSS": "Packet loss",
   "SPEEDTEST_SERVER": "Server",
   "SPEEDTEST_RESULT_URL": "Ookla result",
-  "NETWORK_SPEEDTEST_SAVED": "SpeedTest data saved"
+  "NETWORK_SPEEDTEST_SAVED": "SpeedTest data saved",
+  "NET003_TITLE": "Default gateway did not answer ICMP",
+  "NET003_MESSAGE": "The configured default gateway did not answer the ICMP probe. The gateway may be unreachable or may intentionally block ICMP echo.",
+  "NET004_TITLE": "APIPA address on active interface",
+  "NET004_MESSAGE": "An active non-VPN interface has a 169.254.x.x address. This commonly indicates that DHCP configuration was not obtained.",
+  "NETWORK_HEALTH_SUMMARY": "NETWORK HEALTH",
+  "NETWORK_GATEWAY_ICMP": "Default gateway ICMP",
+  "NETWORK_GATEWAY_ICMP_OK": "Reply received in {0} ms",
+  "NETWORK_GATEWAY_ICMP_NO_REPLY": "No ICMP reply received",
+  "NETWORK_GATEWAY_ICMP_NOT_TESTED": "Not tested: no usable default gateway",
+  "NETWORK_APIPA_COUNT": "Active APIPA addresses"
 }

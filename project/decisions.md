@@ -758,3 +758,21 @@ non-regex ordering check.
 PowerShell/.NET regex `.` does not match newline by default. Dev.16 correctly
 implemented the virtual-first report presentation, but its test falsely failed
 because the assertion expected `.*?` to cross line boundaries.
+
+
+---
+
+## 2026-08-07 — MT health rules extend, rather than rewrite, the NDP baseline
+
+### Decision
+
+The original NDP 0.0.19-RC `RulesEngine.ps1` remains unchanged. MT-specific
+health collection and new rules are implemented in `NetworkHealth.ps1`, and
+`Invoke-MTNetworkRules` combines baseline and MT extension results.
+
+### Reason
+
+This preserves the regression oracle while allowing MT4 to expand diagnostic
+coverage. Gateway ICMP non-response is deliberately a Warning: lack of echo
+reply is evidence, not proof that the gateway is unavailable, because network
+devices may intentionally block ICMP.

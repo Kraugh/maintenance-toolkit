@@ -63,6 +63,7 @@ $Required = @(
     'app/core/Privileges.ps1',
     'app/modules/00_common.ps1',
     'app/modules/network/NetworkFoundation.ps1',
+    'app/modules/network/NetworkHealth.ps1',
     'app/modules/network/SpeedTest.ps1',
     'app/modules/network/NetworkDiagnostics.ps1',
     'app/modules/network/NetworkReports.ps1',
@@ -509,6 +510,8 @@ try {
         'Get-NDTopology',
         'Export-NDTopology',
         'Invoke-NDRules',
+        'Get-MTNetworkHealthContext',
+        'Invoke-MTNetworkRules',
         'Start-MTProfiler',
         'Start-MTProfilerStep',
         'Stop-MTProfilerStep',
@@ -528,15 +531,15 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if (@($NetworkRules.Rules).Count -ne 8) {
+    if (@($NetworkRules.Rules).Count -ne 10) {
         throw (
-            'Expected 8 baseline NDP rules, found {0}.' -f
+            'Expected 10 Network Diagnostics rules, found {0}.' -f
             @($NetworkRules.Rules).Count
         )
     }
 
     foreach ($ExpectedRule in @(
-        'NET001','NET002','VPN001','VPN002',
+        'NET001','NET002','NET003','NET004','VPN001','VPN002',
         'TOP001','TOP002','VPN003','VPN004'
     )) {
         if (-not (@($NetworkRules.Rules.Id) -contains $ExpectedRule)) {
@@ -1237,6 +1240,168 @@ try {
 catch {
     Add-MT4AutotestError (
         'Local external-tool hygiene validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    . (Join-Path $ProjectRoot 'app/modules/network/NetworkHealth.ps1')
+
+    $FixtureAdapter = [pscustomobject]@{
+        InterfaceIndex = 12
+        Name = 'Ethernet'
+        Description = 'Fixture adapter'
+        Status = 'Up'
+        IsVPN = $false
+        IsVirtual = $false
+    }
+
+    $FixtureDefaultRoute = [pscustomobject]@{
+        DestinationPrefix = '0.0.0.0/0'
+        NextHop = '192.0.2.1'
+        InterfaceIndex = 12
+        InterfaceAlias = 'Ethernet'
+        TotalMetric = 25
+    }
+
+    $BaseFixture = [pscustomobject]@{
+        Summary = [pscustomobject]@{
+            DefaultRouteCount = 1
+            ActiveVPNCount = 0
+            VPNRouteCount = 0
+            VPNSpecificRouteCount = 0
+            RoutingModeCandidate = 'NoVPN'
+        }
+        EffectivePath = [pscustomobject]@{
+            DefaultRoute = $FixtureDefaultRoute
+            LogicalAdapter = $FixtureAdapter
+            PhysicalBackendCandidates = @($FixtureAdapter)
+            PhysicalBackendSource = 'LogicalAdapter'
+        }
+        Adapters = @($FixtureAdapter)
+        IPv4Addresses = @()
+        DefaultRoutes = @($FixtureDefaultRoute)
+        ActiveVPNAdapters = @()
+        VPNRoutes = @()
+    }
+
+    $HealthFixture = [pscustomobject]@{
+        GatewayProbe = [pscustomobject]@{
+            Attempted = $true
+            Gateway = '192.0.2.1'
+            Reachable = $false
+            RoundtripTimeMs = $null
+            Status = 'TimedOut'
+            Detail = $null
+        }
+        ActiveApipaCount = 1
+        ActiveApipaAddresses = @(
+            [pscustomobject]@{
+                InterfaceIndex = 12
+                IPAddress = '169.254.10.20'
+                PrefixLength = 16
+            }
+        )
+    }
+
+    $RulesConfiguration = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'rules/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    $HealthRuleResult = Invoke-MTNetworkRules `
+        -Topology $BaseFixture `
+        -Health $HealthFixture `
+        -RulesConfiguration $RulesConfiguration
+
+    foreach ($ExpectedTriggered in @('NET003','NET004')) {
+        $Result = @(
+            $HealthRuleResult.Results |
+            Where-Object Id -eq $ExpectedTriggered
+        ) | Select-Object -First 1
+
+        if ($null -eq $Result -or -not $Result.Triggered) {
+            throw "Health rule did not trigger in fixture: $ExpectedTriggered"
+        }
+    }
+
+    foreach ($ExpectedClear in @('NET001','NET002')) {
+        $Result = @(
+            $HealthRuleResult.Results |
+            Where-Object Id -eq $ExpectedClear
+        ) | Select-Object -First 1
+
+        if ($null -eq $Result -or $Result.Triggered) {
+            throw "Health rule unexpectedly triggered in fixture: $ExpectedClear"
+        }
+    }
+
+    $NoRouteFixture = $BaseFixture.PSObject.Copy()
+    $NoRouteFixture.Summary = $BaseFixture.Summary.PSObject.Copy()
+    $NoRouteFixture.Summary.DefaultRouteCount = 0
+    $NoRouteFixture.EffectivePath = $BaseFixture.EffectivePath.PSObject.Copy()
+    $NoRouteFixture.EffectivePath.DefaultRoute = $null
+    $NoRouteFixture.DefaultRoutes = @()
+
+    $NoRouteHealth = [pscustomobject]@{
+        GatewayProbe = [pscustomobject]@{
+            Attempted = $false
+            Gateway = $null
+            Reachable = $null
+            RoundtripTimeMs = $null
+            Status = 'NotTested'
+            Detail = $null
+        }
+        ActiveApipaCount = 0
+        ActiveApipaAddresses = @()
+    }
+
+    $NoRouteResult = Invoke-MTNetworkRules `
+        -Topology $NoRouteFixture `
+        -Health $NoRouteHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET001 = @(
+        $NoRouteResult.Results |
+        Where-Object Id -eq 'NET001'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET001 -or -not $NET001.Triggered) {
+        throw 'NET001 missing-default-route fixture failed.'
+    }
+
+    $MultipleRouteFixture = $BaseFixture.PSObject.Copy()
+    $MultipleRouteFixture.Summary = $BaseFixture.Summary.PSObject.Copy()
+    $MultipleRouteFixture.Summary.DefaultRouteCount = 2
+    $MultipleRouteFixture.DefaultRoutes = @(
+        $FixtureDefaultRoute,
+        [pscustomobject]@{
+            DestinationPrefix = '0.0.0.0/0'
+            NextHop = '198.51.100.1'
+            InterfaceIndex = 13
+            InterfaceAlias = 'Ethernet 2'
+            TotalMetric = 40
+        }
+    )
+
+    $MultipleResult = Invoke-MTNetworkRules `
+        -Topology $MultipleRouteFixture `
+        -Health $NoRouteHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET002 = @(
+        $MultipleResult.Results |
+        Where-Object Id -eq 'NET002'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET002 -or -not $NET002.Triggered) {
+        throw 'NET002 multiple-default-routes fixture failed.'
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Network Health rules batch 1 validation failed: {0}' -f
         $_.Exception.Message
     )
 }

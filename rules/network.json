@@ -1,6 +1,6 @@
 {
-  "SchemaVersion": "1.0",
-  "Origin": "NDP 0.0.19-RC",
+  "SchemaVersion": "1.1",
+  "Origin": "NDP 0.0.19-RC + MT4 health extensions",
   "Rules": [
     {
       "Id": "NET001",
@@ -49,6 +49,18 @@
       "Severity": "Success",
       "Enabled": true,
       "Condition": "FullTunnelCandidate"
+    },
+    {
+      "Id": "NET003",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "GatewayNoIcmpResponse"
+    },
+    {
+      "Id": "NET004",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "ActiveAdapterWithAPIPA"
     }
   ]
 }

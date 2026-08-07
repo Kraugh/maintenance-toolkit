@@ -213,6 +213,7 @@ function Invoke-MTNetworkQuickDiagnosis {
     $Topology = $null
     $Routing = $null
     $RuleEvaluation = $null
+    $Health = $null
 
     try {
         $Step = Start-MTProfilerStep -Name "Topology"
@@ -250,9 +251,29 @@ function Invoke-MTNetworkQuickDiagnosis {
 
     if ($null -ne $Topology) {
         try {
+            $Step = Start-MTProfilerStep -Name "Health"
+            $Health = Get-MTNetworkHealthContext -Topology $Topology
+            $null = Stop-MTProfilerStep -Step $Step -Status "OK"
+        }
+        catch {
+            $null = Stop-MTProfilerStep `
+                -Step $Step `
+                -Status "ERROR" `
+                -Details $_.Exception.Message
+
+            Write-MTNetworkStatus `
+                -Level "ERROR" `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_HEALTH_SUMMARY") `
+                -Value $_.Exception.Message
+        }
+    }
+
+    if ($null -ne $Topology -and $null -ne $Health) {
+        try {
             $Step = Start-MTProfilerStep -Name "Rules"
-            $RuleEvaluation = Invoke-NDRules `
+            $RuleEvaluation = Invoke-MTNetworkRules `
                 -Topology $Topology `
+                -Health $Health `
                 -RulesConfiguration $RulesConfiguration
             $null = Stop-MTProfilerStep -Step $Step -Status "OK"
         }
@@ -345,6 +366,48 @@ function Invoke-MTNetworkQuickDiagnosis {
             -Value ([string]$Topology.Summary.RouteCount)
     }
 
+    if ($null -ne $Health) {
+        Write-Host ""
+        Write-Host (
+            Get-MTNetworkText $LanguageData "NETWORK_HEALTH_SUMMARY"
+        ) -ForegroundColor Cyan
+        Write-Host ("-" * 72)
+
+        $GatewayProbe = $Health.GatewayProbe
+        $GatewayLevel = if (-not $GatewayProbe.Attempted) {
+            "INFO"
+        }
+        elseif ($GatewayProbe.Reachable) {
+            "OK"
+        }
+        else {
+            "WARN"
+        }
+
+        $GatewayValue = if (-not $GatewayProbe.Attempted) {
+            Get-MTNetworkText $LanguageData "NETWORK_GATEWAY_ICMP_NOT_TESTED"
+        }
+        elseif ($GatewayProbe.Reachable) {
+            Get-MTNetworkText `
+                -LanguageData $LanguageData `
+                -Key "NETWORK_GATEWAY_ICMP_OK" `
+                -Arguments @($GatewayProbe.RoundtripTimeMs)
+        }
+        else {
+            Get-MTNetworkText $LanguageData "NETWORK_GATEWAY_ICMP_NO_REPLY"
+        }
+
+        Write-MTNetworkStatus `
+            -Level $GatewayLevel `
+            -Label (Get-MTNetworkText $LanguageData "NETWORK_GATEWAY_ICMP") `
+            -Value $GatewayValue
+
+        Write-MTNetworkStatus `
+            -Level $(if ([int]$Health.ActiveApipaCount -gt 0) { "WARN" } else { "OK" }) `
+            -Label (Get-MTNetworkText $LanguageData "NETWORK_APIPA_COUNT") `
+            -Value ([string]$Health.ActiveApipaCount)
+    }
+
     if ($null -ne $RuleEvaluation) {
         Write-Host ""
         Write-Host (
@@ -431,6 +494,7 @@ function Invoke-MTNetworkQuickDiagnosis {
         Topology = $Topology
         Routing = $Routing
         Rules = $RuleEvaluation
+        Health = $Health
         Profile = $FinalProfile
         SpeedTest = $SpeedTestResult
         Succeeded = ($null -ne $Topology)

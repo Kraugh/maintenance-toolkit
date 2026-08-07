@@ -333,6 +333,7 @@ function Invoke-MTNetworkTechnicalReport {
     $Topology = $null
     $Routing = $null
     $RuleEvaluation = $null
+    $Health = $null
 
     try {
         $Step = Start-MTProfilerStep -Name "Topology"
@@ -373,9 +374,22 @@ function Invoke-MTNetworkTechnicalReport {
 
     if ($null -ne $Topology) {
         try {
+            $Step = Start-MTProfilerStep -Name "Health"
+            $Health = Get-MTNetworkHealthContext -Topology $Topology
+            $null = Stop-MTProfilerStep -Step $Step -Status "OK"
+        }
+        catch {
+            $null = Stop-MTProfilerStep `
+                -Step $Step `
+                -Status "ERROR" `
+                -Details $_.Exception.Message
+        }
+
+        try {
             $Step = Start-MTProfilerStep -Name "Rules"
-            $RuleEvaluation = Invoke-NDRules `
+            $RuleEvaluation = Invoke-MTNetworkRules `
                 -Topology $Topology `
+                -Health $Health `
                 -RulesConfiguration $RulesConfiguration
             $null = Stop-MTProfilerStep -Step $Step -Status "OK"
         }
@@ -575,6 +589,36 @@ function Invoke-MTNetworkTechnicalReport {
                         $VPN.Description
                     ))
             )
+        }
+
+        if ($null -ne $Health) {
+            Add-MTNetworkReportSection `
+                -Lines $Lines `
+                -Title (Get-MTText $LanguageData "NETWORK_HEALTH_SUMMARY")
+
+            $GatewayProbe = $Health.GatewayProbe
+            $GatewayText = if (-not $GatewayProbe.Attempted) {
+                Get-MTText $LanguageData "NETWORK_GATEWAY_ICMP_NOT_TESTED"
+            }
+            elseif ($GatewayProbe.Reachable) {
+                Get-MTText `
+                    -LanguageData $LanguageData `
+                    -Key "NETWORK_GATEWAY_ICMP_OK" `
+                    -Arguments @($GatewayProbe.RoundtripTimeMs)
+            }
+            else {
+                Get-MTText $LanguageData "NETWORK_GATEWAY_ICMP_NO_REPLY"
+            }
+
+            Add-MTNetworkReportKeyValue `
+                -Lines $Lines `
+                -Key (Get-MTText $LanguageData "NETWORK_GATEWAY_ICMP") `
+                -Value $GatewayText
+
+            Add-MTNetworkReportKeyValue `
+                -Lines $Lines `
+                -Key (Get-MTText $LanguageData "NETWORK_APIPA_COUNT") `
+                -Value $Health.ActiveApipaCount
         }
 
         if ($null -ne $RuleEvaluation) {
