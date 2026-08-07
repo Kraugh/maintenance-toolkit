@@ -596,6 +596,18 @@ function Invoke-MTNetworkTechnicalReport {
 
                 Add-MTNetworkReportKeyValue `
                     -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_VPN_TECHNOLOGY") `
+                    -Value $VPN.Technology
+
+                if ([bool]$VPN.TechnologyMatched) {
+                    Add-MTNetworkReportKeyValue `
+                        -Lines $Lines `
+                        -Key (Get-MTText $LanguageData "NETWORK_VPN_VENDOR") `
+                        -Value $VPN.Vendor
+                }
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
                     -Key (Get-MTText $LanguageData "NETWORK_VPN_MODE") `
                     -Value $VPN.Mode
 

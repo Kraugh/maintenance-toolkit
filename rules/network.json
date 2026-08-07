@@ -1,6 +1,6 @@
 {
-  "SchemaVersion": "1.5",
-  "Origin": "NDP 0.0.19-RC + MT4 health extensions + VPN diagnostics batch 1-2",
+  "SchemaVersion": "1.6",
+  "Origin": "NDP 0.0.19-RC + MT4 health extensions + VPN diagnostics batch 1-3",
   "Rules": [
     {
       "Id": "NET001",
@@ -121,6 +121,12 @@
       "Severity": "Info",
       "Enabled": true,
       "Condition": "ActiveVpnWithPublicDns"
+    },
+    {
+      "Id": "VPN009",
+      "Severity": "Info",
+      "Enabled": true,
+      "Condition": "ActiveVpnUnknownTechnology"
     }
   ]
 }

@@ -912,3 +912,56 @@ deserve operator attention.
 Public DNS on a VPN is not inherently wrong: consumer VPNs and some corporate
 deployments intentionally use public resolvers. MT therefore reports the
 evidence without treating it as a fault.
+
+
+---
+
+## 2026-08-07 — VPN technology classification is evidence-based and non-fatal
+
+### Decision
+
+MT4 classifies VPN technology only from adapter name and description using a
+small deterministic signature set.
+
+Unknown technology is informational (`VPN009`), not an error.
+
+### Reason
+
+Adapter naming is useful for common products but cannot prove protocol details
+in every environment. MT should show what it can identify without inventing
+vendor/protocol certainty.
+
+---
+
+## 2026-08-07 — Development snapshots obey `.gitattributes`
+
+### Decision
+
+Development ZIP snapshots are normalized to LF for normal text and CRLF for
+BAT/CMD launchers before distribution. `tools/normalize-eol.ps1` provides the
+same operation locally.
+
+### Reason
+
+Replacing the entire working tree from a ZIP is an intentional development
+workflow. Snapshot line endings therefore need to match the repository contract
+or every `git add -A` emits conversion warnings even when content is unchanged.
+
+
+---
+
+## 2026-08-07 — EOL normalizer resolves its path after parameter binding
+
+### Decision
+
+`tools/normalize-eol.ps1` accepts an optional `-ProjectRoot`. When omitted, the
+script derives the repository root from `$MyInvocation.MyCommand.Path` after the
+`param()` block.
+
+Extensionless `LICENSE` and `*.ps1.disabled` are explicit text edge cases.
+
+### Reason
+
+On Windows PowerShell 5.1, relying on `$PSScriptRoot` inside a parameter default
+proved unreliable in this execution path. File classification based only on the
+last extension also missed repository text files without a normal extension.

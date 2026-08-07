@@ -410,3 +410,32 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Add deterministic AUTOTEST coverage for route duplication and public DNS.
 - [ ] Validate no-VPN case on a physical Windows PC.
 - [ ] Validate with a real connected VPN when available.
+
+
+## Development increment 23 — VPN identification + deterministic EOL snapshots
+
+- [x] Identify common VPN technologies from adapter name/description.
+- [x] Recognize OpenVPN / OpenVPN DCO.
+- [x] Recognize Fortinet/FortiClient.
+- [x] Recognize Zyxel SecuExtender.
+- [x] Recognize WireGuard and Tailscale.
+- [x] Recognize Cisco AnyConnect and Palo Alto GlobalProtect.
+- [x] Recognize generic Windows native VPN adapters.
+- [x] Add VPN009 informational finding for unknown VPN technology.
+- [x] Show VPN technology/vendor in Quick Diagnosis and Technical Report.
+- [x] Add `tools/normalize-eol.ps1`.
+- [x] Normalize development snapshot line endings to `.gitattributes`.
+- [x] Add AUTOTEST coverage for VPN classification and EOL helper.
+- [ ] Verify `git add -A` no longer emits the historical EOL warning wall.
+
+
+## Development increment 23a — EOL normalizer edge-case fix
+
+- [x] Resolve repository root after parameter binding instead of using `$PSScriptRoot` as a parameter default.
+- [x] Support direct execution under Windows PowerShell 5.1.
+- [x] Normalize extensionless `LICENSE`.
+- [x] Normalize `*.ps1.disabled` as PowerShell text with UTF-8 BOM + LF.
+- [x] Add AUTOTEST coverage for both EOL edge cases.
+- [ ] Run Foundation AUTOTEST.
+- [ ] Run `tools/normalize-eol.ps1` directly.
+- [ ] Verify `git add -A` emits zero line-ending warnings.

@@ -651,6 +651,24 @@ function Invoke-MTNetworkExtendedRules {
                         Profiles = @($Health.VPN.ProfilesWithPublicDNS)
                     })
             }
+
+            'ActiveVpnUnknownTechnology' {
+                $Triggered = (
+                    $null -ne $Health.VPN -and
+                    @($Health.VPN.ProfilesWithUnknownTechnology).Count -gt 0
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'VPN009_TITLE' `
+                    'VPN009_MESSAGE' `
+                    ([pscustomobject]@{
+                        Count = @($Health.VPN.ProfilesWithUnknownTechnology).Count
+                        Profiles = @($Health.VPN.ProfilesWithUnknownTechnology)
+                    })
+            }
         }
 
         if ($null -ne $Result) {

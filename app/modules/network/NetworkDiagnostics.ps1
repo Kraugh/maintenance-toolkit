@@ -520,6 +520,18 @@ function Invoke-MTNetworkQuickDiagnosis {
                     -Value ("{0} - {1}" -f $VPN.Name, $VPN.Description)
 
                 Write-MTNetworkStatus `
+                    -Level $(if ([bool]$VPN.TechnologyMatched) { "INFO" } else { "WARN" }) `
+                    -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_TECHNOLOGY") `
+                    -Value ([string]$VPN.Technology)
+
+                if ([bool]$VPN.TechnologyMatched) {
+                    Write-MTNetworkStatus `
+                        -Level "INFO" `
+                        -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_VENDOR") `
+                        -Value ([string]$VPN.Vendor)
+                }
+
+                Write-MTNetworkStatus `
                     -Level "INFO" `
                     -Label (Get-MTNetworkText $LanguageData "NETWORK_VPN_MODE") `
                     -Value ([string]$VPN.Mode)

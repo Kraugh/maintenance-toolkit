@@ -42,6 +42,63 @@ function Test-MTNetworkPrivateIPv4 {
     return $false
 }
 
+function Get-MTNetworkVpnTechnology {
+    [CmdletBinding()]
+    param(
+        [AllowNull()][string]$Name,
+        [AllowNull()][string]$Description
+    )
+
+    $Text = ("{0} {1}" -f $Name, $Description).Trim()
+
+    $Technology = 'Unknown'
+    $Vendor = 'Unknown'
+
+    if ($Text -match '(?i)openvpn.*dco|data channel offload') {
+        $Technology = 'OpenVPN DCO'
+        $Vendor = 'OpenVPN'
+    }
+    elseif ($Text -match '(?i)openvpn|tap-windows|wintun') {
+        $Technology = 'OpenVPN'
+        $Vendor = 'OpenVPN'
+    }
+    elseif ($Text -match '(?i)fortinet|forticlient') {
+        $Technology = 'Fortinet VPN'
+        $Vendor = 'Fortinet'
+    }
+    elseif ($Text -match '(?i)zyxel|secuextender') {
+        $Technology = 'Zyxel SecuExtender'
+        $Vendor = 'Zyxel'
+    }
+    elseif ($Text -match '(?i)wireguard') {
+        $Technology = 'WireGuard'
+        $Vendor = 'WireGuard'
+    }
+    elseif ($Text -match '(?i)tailscale') {
+        $Technology = 'Tailscale'
+        $Vendor = 'Tailscale'
+    }
+    elseif ($Text -match '(?i)anyconnect|cisco secure client') {
+        $Technology = 'Cisco AnyConnect'
+        $Vendor = 'Cisco'
+    }
+    elseif ($Text -match '(?i)globalprotect|palo alto') {
+        $Technology = 'GlobalProtect'
+        $Vendor = 'Palo Alto Networks'
+    }
+    elseif ($Text -match '(?i)sstp|ikev2|l2tp|pptp|ras|wan miniport') {
+        $Technology = 'Windows Native VPN'
+        $Vendor = 'Microsoft'
+    }
+
+    return [pscustomobject]@{
+        Technology = $Technology
+        Vendor = $Vendor
+        Matched = ($Technology -ne 'Unknown')
+        SourceText = $Text
+    }
+}
+
 function Get-MTNetworkVpnContext {
     [CmdletBinding()]
     param(
@@ -127,6 +184,10 @@ function Get-MTNetworkVpnContext {
                 }
             )
 
+            $Technology = Get-MTNetworkVpnTechnology `
+                -Name ([string]$Adapter.Name) `
+                -Description ([string]$Adapter.Description)
+
             $IPInterface = $null
             $InterfaceDetail = $null
 
@@ -146,6 +207,9 @@ function Get-MTNetworkVpnContext {
                 Name = [string]$Adapter.Name
                 Description = [string]$Adapter.Description
                 Status = [string]$Adapter.Status
+                Technology = [string]$Technology.Technology
+                Vendor = [string]$Technology.Vendor
+                TechnologyMatched = [bool]$Technology.Matched
                 Mode = $Mode
                 TunnelIPv4 = @($Addresses)
                 TunnelIPv4Count = $Addresses.Count
@@ -197,6 +261,12 @@ function Get-MTNetworkVpnContext {
         ProfilesWithPublicDNS = @(
             $Profiles |
             Where-Object PublicDNSServerCount -gt 0
+        )
+        ProfilesWithUnknownTechnology = @(
+            $Profiles |
+            Where-Object {
+                -not [bool]$_.TechnologyMatched
+            }
         )
         SplitTunnelCount = @(
             $Profiles |

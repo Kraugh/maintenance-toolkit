@@ -283,5 +283,9 @@
   "NETWORK_VPN_SPECIFIC_ROUTES": "Route VPN specifiche",
   "NETWORK_VPN_DEFAULT_ROUTES": "Route predefinite VPN",
   "NETWORK_VPN_DUPLICATE_ROUTES": "Destinazioni VPN duplicate",
-  "NETWORK_VPN_PUBLIC_DNS": "DNS pubblici VPN"
+  "NETWORK_VPN_PUBLIC_DNS": "DNS pubblici VPN",
+  "VPN009_TITLE": "Tecnologia VPN non identificata",
+  "VPN009_MESSAGE": "È stato rilevato un adattatore VPN attivo, ma non è stato possibile identificarne la tecnologia dal nome o dalla descrizione dell’adattatore.",
+  "NETWORK_VPN_TECHNOLOGY": "Tecnologia VPN",
+  "NETWORK_VPN_VENDOR": "Produttore VPN"
 }

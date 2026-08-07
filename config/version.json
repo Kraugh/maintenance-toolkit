@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0-dev.22",
+  "Version": "4.0.0-dev.23a",
   "Channel": "development",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "Phase 5 - Advanced VPN Diagnostics batch 2 (routes/DNS)"
+  "Milestone": "Phase 5 - EOL normalizer path and edge-case fix"
 }

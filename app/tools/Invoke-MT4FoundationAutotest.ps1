@@ -533,9 +533,9 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if (@($NetworkRules.Rules).Count -ne 20) {
+    if (@($NetworkRules.Rules).Count -ne 21) {
         throw (
-            'Expected 20 Network Diagnostics rules, found {0}.' -f
+            'Expected 21 Network Diagnostics rules, found {0}.' -f
             @($NetworkRules.Rules).Count
         )
     }
@@ -544,7 +544,7 @@ try {
         'NET001','NET002','NET003','NET004','NET005','NET006','NET007',
         'NET008','NET009','NET010',
         'VPN001','VPN002','TOP001','TOP002','VPN003','VPN004',
-        'VPN005','VPN006','VPN007','VPN008'
+        'VPN005','VPN006','VPN007','VPN008','VPN009'
     )) {
         if (-not (@($NetworkRules.Rules.Id) -contains $ExpectedRule)) {
             throw "Baseline NDP rule missing: $ExpectedRule"
@@ -1350,6 +1350,7 @@ try {
             ProfilesWithoutDNS = @()
             ProfilesWithDuplicateRoutes = @()
             ProfilesWithPublicDNS = @()
+            ProfilesWithUnknownTechnology = @()
             SplitTunnelCount = 0
             FullTunnelCount = 0
             NoRouteCount = 0
@@ -1445,6 +1446,7 @@ try {
             ProfilesWithoutDNS = @()
             ProfilesWithDuplicateRoutes = @()
             ProfilesWithPublicDNS = @()
+            ProfilesWithUnknownTechnology = @()
             SplitTunnelCount = 0
             FullTunnelCount = 0
             NoRouteCount = 0
@@ -1612,6 +1614,7 @@ try {
             ProfilesWithoutDNS = @()
             ProfilesWithDuplicateRoutes = @()
             ProfilesWithPublicDNS = @()
+            ProfilesWithUnknownTechnology = @()
             SplitTunnelCount = 0
             FullTunnelCount = 0
             NoRouteCount = 0
@@ -1815,6 +1818,7 @@ try {
             ProfilesWithoutDNS = @()
             ProfilesWithDuplicateRoutes = @()
             ProfilesWithPublicDNS = @()
+            ProfilesWithUnknownTechnology = @()
             SplitTunnelCount = 0
             FullTunnelCount = 0
             NoRouteCount = 0
@@ -1914,6 +1918,56 @@ try {
 catch {
     Add-MT4AutotestError (
         'Network Health rules batch 3 validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    $NormalizeEolPath = Join-Path $ProjectRoot 'tools/normalize-eol.ps1'
+    Test-MT4PowerShellSyntax $NormalizeEolPath
+
+    $NormalizeText = Get-Content `
+        -LiteralPath $NormalizeEolPath `
+        -Raw `
+        -Encoding UTF8
+
+    foreach ($RequiredToken in @(
+        "'.bat','.cmd'",
+        "'.gitignore','.gitattributes','license'",
+        "EndsWith('.ps1.disabled')",
+        '$MyInvocation.MyCommand.Path',
+        'UTF8Encoding',
+        'Files changed'
+    )) {
+        if (-not $NormalizeText.Contains($RequiredToken)) {
+            throw "EOL normalization helper token missing: $RequiredToken"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'EOL normalization helper validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    foreach ($RelativePath in @(
+        'LICENSE',
+        'app/modules/12_siw.ps1.disabled'
+    )) {
+        $Path = Join-Path $ProjectRoot $RelativePath
+        $Bytes = [System.IO.File]::ReadAllBytes($Path)
+        $Text = [System.Text.Encoding]::UTF8.GetString($Bytes)
+
+        if ($Text.Contains("`r`n")) {
+            throw "CRLF remains in repository LF file: $RelativePath"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'EOL edge-case validation failed: {0}' -f
         $_.Exception.Message
     )
 }
@@ -2040,6 +2094,9 @@ try {
         InterfaceIndex = 44
         Name = 'OpenVPN'
         Description = 'Fixture'
+        Technology = 'OpenVPN'
+        Vendor = 'OpenVPN'
+        TechnologyMatched = $true
         TunnelIPv4 = @()
         TunnelIPv4Count = 0
         DNSServers = @()
@@ -2091,6 +2148,7 @@ try {
             ProfilesWithoutDNS = @($MissingVPNProfile)
             ProfilesWithDuplicateRoutes = @()
             ProfilesWithPublicDNS = @()
+            ProfilesWithUnknownTechnology = @()
             SplitTunnelCount = 1
             FullTunnelCount = 0
             NoRouteCount = 0
@@ -2280,6 +2338,51 @@ try {
 catch {
     Add-MT4AutotestError (
         'Advanced VPN Diagnostics batch 2 validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    . (Join-Path $ProjectRoot 'app/modules/network/VPNDiagnostics.ps1')
+
+    $Cases = @(
+        @('OpenVPN Data Channel Offload','OpenVPN DCO','OpenVPN DCO','OpenVPN'),
+        @('FortiClient VPN','Fortinet SSL VPN','Fortinet VPN','Fortinet'),
+        @('SecuExtender','Zyxel VPN','Zyxel SecuExtender','Zyxel'),
+        @('WireGuard Tunnel','WireGuard','WireGuard','WireGuard'),
+        @('WAN Miniport (IKEv2)','Microsoft','Windows Native VPN','Microsoft')
+    )
+
+    foreach ($Case in $Cases) {
+        $Result = Get-MTNetworkVpnTechnology `
+            -Name $Case[0] `
+            -Description $Case[1]
+
+        if (
+            [string]$Result.Technology -ne [string]$Case[2] -or
+            [string]$Result.Vendor -ne [string]$Case[3] -or
+            -not [bool]$Result.Matched
+        ) {
+            throw (
+                'VPN technology classifier failed for {0}: {1}/{2}' -f
+                $Case[0],
+                $Result.Technology,
+                $Result.Vendor
+            )
+        }
+    }
+
+    $Unknown = Get-MTNetworkVpnTechnology `
+        -Name 'Mystery Tunnel' `
+        -Description 'Vendor-specific encrypted interface'
+
+    if ([bool]$Unknown.Matched -or $Unknown.Technology -ne 'Unknown') {
+        throw 'Unknown VPN technology fixture failed.'
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Advanced VPN Diagnostics batch 3 validation failed: {0}' -f
         $_.Exception.Message
     )
 }
