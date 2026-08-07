@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0-dev.18",
+  "Version": "4.0.0-dev.19",
   "Channel": "development",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "Phase 4 - Network Health Rules batch 1"
+  "Milestone": "Phase 4 - Network Health Rules batch 2 (DNS/DHCP)"
 }

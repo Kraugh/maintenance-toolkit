@@ -406,6 +406,49 @@ function Invoke-MTNetworkQuickDiagnosis {
             -Level $(if ([int]$Health.ActiveApipaCount -gt 0) { "WARN" } else { "OK" }) `
             -Label (Get-MTNetworkText $LanguageData "NETWORK_APIPA_COUNT") `
             -Value ([string]$Health.ActiveApipaCount)
+
+        $DnsValue = if ([int]$Health.DNS.ServerCount -gt 0) {
+            @($Health.DNS.Servers) -join ", "
+        }
+        else {
+            Get-MTNetworkText $LanguageData "NETWORK_DNS_NONE"
+        }
+
+        Write-MTNetworkStatus `
+            -Level $(if ([int]$Health.DNS.ServerCount -eq 0) { "WARN" } else { "OK" }) `
+            -Label (Get-MTNetworkText $LanguageData "NETWORK_DNS_SERVERS") `
+            -Value $DnsValue
+
+        Write-MTNetworkStatus `
+            -Level $(if ([int]$Health.DNS.DuplicateCount -gt 0) { "WARN" } else { "OK" }) `
+            -Label (Get-MTNetworkText $LanguageData "NETWORK_DNS_DUPLICATE_COUNT") `
+            -Value ([string]$Health.DNS.DuplicateCount)
+
+        $DhcpText = if (-not [bool]$Health.DHCP.Known) {
+            Get-MTNetworkText $LanguageData "NETWORK_DHCP_UNKNOWN"
+        }
+        elseif ([bool]$Health.DHCP.Enabled) {
+            Get-MTNetworkText $LanguageData "NETWORK_DHCP_ENABLED"
+        }
+        else {
+            Get-MTNetworkText $LanguageData "NETWORK_DHCP_DISABLED"
+        }
+
+        Write-MTNetworkStatus `
+            -Level $(if ([bool]$Health.DHCP.Known) { "INFO" } else { "WARN" }) `
+            -Label (Get-MTNetworkText $LanguageData "NETWORK_DHCP_STATE") `
+            -Value $DhcpText
+
+        if (
+            [bool]$Health.DHCP.Known -and
+            [bool]$Health.DHCP.Enabled -and
+            -not [string]::IsNullOrWhiteSpace([string]$Health.DHCP.Server)
+        ) {
+            Write-MTNetworkStatus `
+                -Level "INFO" `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_DHCP_SERVER") `
+                -Value ([string]$Health.DHCP.Server)
+        }
     }
 
     if ($null -ne $RuleEvaluation) {

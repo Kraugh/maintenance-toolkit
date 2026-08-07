@@ -619,6 +619,49 @@ function Invoke-MTNetworkTechnicalReport {
                 -Lines $Lines `
                 -Key (Get-MTText $LanguageData "NETWORK_APIPA_COUNT") `
                 -Value $Health.ActiveApipaCount
+
+            $DnsText = if ([int]$Health.DNS.ServerCount -gt 0) {
+                @($Health.DNS.Servers) -join ", "
+            }
+            else {
+                Get-MTText $LanguageData "NETWORK_DNS_NONE"
+            }
+
+            Add-MTNetworkReportKeyValue `
+                -Lines $Lines `
+                -Key (Get-MTText $LanguageData "NETWORK_DNS_SERVERS") `
+                -Value $DnsText
+
+            Add-MTNetworkReportKeyValue `
+                -Lines $Lines `
+                -Key (Get-MTText $LanguageData "NETWORK_DNS_DUPLICATE_COUNT") `
+                -Value $Health.DNS.DuplicateCount
+
+            $DhcpText = if (-not [bool]$Health.DHCP.Known) {
+                Get-MTText $LanguageData "NETWORK_DHCP_UNKNOWN"
+            }
+            elseif ([bool]$Health.DHCP.Enabled) {
+                Get-MTText $LanguageData "NETWORK_DHCP_ENABLED"
+            }
+            else {
+                Get-MTText $LanguageData "NETWORK_DHCP_DISABLED"
+            }
+
+            Add-MTNetworkReportKeyValue `
+                -Lines $Lines `
+                -Key (Get-MTText $LanguageData "NETWORK_DHCP_STATE") `
+                -Value $DhcpText
+
+            if (
+                [bool]$Health.DHCP.Known -and
+                [bool]$Health.DHCP.Enabled -and
+                -not [string]::IsNullOrWhiteSpace([string]$Health.DHCP.Server)
+            ) {
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_DHCP_SERVER") `
+                    -Value ([string]$Health.DHCP.Server)
+            }
         }
 
         if ($null -ne $RuleEvaluation) {

@@ -237,5 +237,19 @@
   "NETWORK_GATEWAY_ICMP_OK": "Risposta ricevuta in {0} ms",
   "NETWORK_GATEWAY_ICMP_NO_REPLY": "Nessuna risposta ICMP ricevuta",
   "NETWORK_GATEWAY_ICMP_NOT_TESTED": "Non testato: nessun gateway predefinito utilizzabile",
-  "NETWORK_APIPA_COUNT": "Indirizzi APIPA attivi"
+  "NETWORK_APIPA_COUNT": "Indirizzi APIPA attivi",
+  "NET005_TITLE": "Nessun server DNS sull’interfaccia effettiva",
+  "NET005_MESSAGE": "L’interfaccia utilizzata dalla route effettiva non ha server DNS configurati. La risoluzione dei nomi potrebbe non funzionare anche in presenza di connettività IP.",
+  "NET006_TITLE": "Server DNS duplicati",
+  "NET006_MESSAGE": "L’interfaccia effettiva contiene voci DNS duplicate. In genere è innocuo, ma indica una configurazione ridondante.",
+  "NET007_TITLE": "DHCP disabilitato senza indirizzo IPv4 utilizzabile",
+  "NET007_MESSAGE": "DHCP è disabilitato sull’interfaccia effettiva e non è stato rilevato alcun indirizzo IPv4 utilizzabile diverso da APIPA. Verificare la configurazione IP statica.",
+  "NETWORK_DNS_SERVERS": "Server DNS (interfaccia effettiva)",
+  "NETWORK_DNS_NONE": "Nessuno configurato",
+  "NETWORK_DNS_DUPLICATE_COUNT": "Voci DNS duplicate",
+  "NETWORK_DHCP_STATE": "DHCP",
+  "NETWORK_DHCP_ENABLED": "Abilitato",
+  "NETWORK_DHCP_DISABLED": "Disabilitato",
+  "NETWORK_DHCP_UNKNOWN": "Sconosciuto",
+  "NETWORK_DHCP_SERVER": "Server DHCP"
 }

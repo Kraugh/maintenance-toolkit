@@ -776,3 +776,26 @@ This preserves the regression oracle while allowing MT4 to expand diagnostic
 coverage. Gateway ICMP non-response is deliberately a Warning: lack of echo
 reply is evidence, not proof that the gateway is unavailable, because network
 devices may intentionally block ICMP.
+
+
+---
+
+## 2026-08-07 — Health batch 2 evaluates DNS/DHCP on the effective interface
+
+### Decision
+
+DNS and DHCP health are evaluated against the interface selected by the
+effective/default route rather than across every Windows adapter.
+
+### Reason
+
+Windows systems contain many disconnected miniports, VPN adapters and virtual
+interfaces. Treating all of them as health-critical would create false
+positives.
+
+NET005/NET006 therefore inspect DNS only on the effective interface. NET007
+uses the same effective interface and triggers only when DHCP is known to be
+disabled and no usable non-APIPA IPv4 address exists.
+
+CIM/WMI collection failure is not itself a network fault: DHCP state becomes
+Unknown and the rule stays clear.

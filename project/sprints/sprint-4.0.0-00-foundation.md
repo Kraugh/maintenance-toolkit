@@ -326,3 +326,17 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Add deterministic synthetic AUTOTEST fixtures for all four batch-1 rules.
 - [ ] Validate on Windows 11 / PowerShell 5.1.
 - [ ] Test a real APIPA condition when a suitable test adapter is available.
+
+
+## Development increment 19 — Network Health Rules batch 2 (DNS/DHCP)
+
+- [x] Collect DNS state for the effective network interface.
+- [x] Detect missing DNS servers on the effective interface (NET005).
+- [x] Detect duplicate DNS entries (NET006).
+- [x] Collect DHCP enabled/server state from Win32_NetworkAdapterConfiguration.
+- [x] Detect DHCP disabled with no usable IPv4 address (NET007).
+- [x] Show DNS and DHCP state in Quick Diagnosis.
+- [x] Include DNS and DHCP state in Technical Report.
+- [x] Keep DNS/DHCP collection failures non-fatal and report DHCP as Unknown.
+- [x] Add deterministic healthy/failing AUTOTEST fixtures for NET005/NET006/NET007.
+- [ ] Validate batch 2 on Windows 11 VM.

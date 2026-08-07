@@ -1,6 +1,6 @@
 {
-  "SchemaVersion": "1.1",
-  "Origin": "NDP 0.0.19-RC + MT4 health extensions",
+  "SchemaVersion": "1.2",
+  "Origin": "NDP 0.0.19-RC + MT4 health extensions batch 1-2",
   "Rules": [
     {
       "Id": "NET001",
@@ -61,6 +61,24 @@
       "Severity": "Warning",
       "Enabled": true,
       "Condition": "ActiveAdapterWithAPIPA"
+    },
+    {
+      "Id": "NET005",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "NoDnsServersOnEffectiveInterface"
+    },
+    {
+      "Id": "NET006",
+      "Severity": "Info",
+      "Enabled": true,
+      "Condition": "DuplicateDnsServersOnEffectiveInterface"
+    },
+    {
+      "Id": "NET007",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "DhcpDisabledWithoutUsableIPv4"
     }
   ]
 }

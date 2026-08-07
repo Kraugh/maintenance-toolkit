@@ -531,16 +531,16 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if (@($NetworkRules.Rules).Count -ne 10) {
+    if (@($NetworkRules.Rules).Count -ne 13) {
         throw (
-            'Expected 10 Network Diagnostics rules, found {0}.' -f
+            'Expected 13 Network Diagnostics rules, found {0}.' -f
             @($NetworkRules.Rules).Count
         )
     }
 
     foreach ($ExpectedRule in @(
-        'NET001','NET002','NET003','NET004','VPN001','VPN002',
-        'TOP001','TOP002','VPN003','VPN004'
+        'NET001','NET002','NET003','NET004','NET005','NET006','NET007',
+        'VPN001','VPN002','TOP001','TOP002','VPN003','VPN004'
     )) {
         if (-not (@($NetworkRules.Rules.Id) -contains $ExpectedRule)) {
             throw "Baseline NDP rule missing: $ExpectedRule"
@@ -1302,6 +1302,27 @@ try {
                 PrefixLength = 16
             }
         )
+        DNS = [pscustomobject]@{
+            InterfaceIndex = 12
+            Servers = @('192.0.2.53')
+            ServerCount = 1
+            DuplicateCount = 0
+            Duplicates = @()
+        }
+        DHCP = [pscustomobject]@{
+            InterfaceIndex = 12
+            Known = $true
+            Enabled = $true
+            Server = '192.0.2.1'
+            UsableIPv4Count = 1
+            UsableIPv4Addresses = @(
+                [pscustomobject]@{
+                    IPAddress = '192.0.2.50'
+                    PrefixLength = 24
+                    PrefixOrigin = 'Dhcp'
+                }
+            )
+        }
     }
 
     $RulesConfiguration = Get-Content `
@@ -1355,6 +1376,21 @@ try {
         }
         ActiveApipaCount = 0
         ActiveApipaAddresses = @()
+        DNS = [pscustomobject]@{
+            InterfaceIndex = 12
+            Servers = @('192.0.2.53')
+            ServerCount = 1
+            DuplicateCount = 0
+            Duplicates = @()
+        }
+        DHCP = [pscustomobject]@{
+            InterfaceIndex = 12
+            Known = $true
+            Enabled = $true
+            Server = '192.0.2.1'
+            UsableIPv4Count = 1
+            UsableIPv4Addresses = @()
+        }
     }
 
     $NoRouteResult = Invoke-MTNetworkRules `
@@ -1402,6 +1438,195 @@ try {
 catch {
     Add-MT4AutotestError (
         'Network Health rules batch 1 validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    . (Join-Path $ProjectRoot 'app/modules/network/NetworkHealth.ps1')
+
+    $RulesConfiguration = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'rules/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    $FixtureAdapter = [pscustomobject]@{
+        InterfaceIndex = 12
+        Name = 'Ethernet'
+        Description = 'Fixture adapter'
+        Status = 'Up'
+        IsVPN = $false
+        IsVirtual = $false
+        HardwareInterface = $true
+    }
+
+    $FixtureDefaultRoute = [pscustomobject]@{
+        DestinationPrefix = '0.0.0.0/0'
+        NextHop = '192.0.2.1'
+        InterfaceIndex = 12
+        InterfaceAlias = 'Ethernet'
+        TotalMetric = 25
+    }
+
+    $TopologyFixture = [pscustomobject]@{
+        Summary = [pscustomobject]@{
+            DefaultRouteCount = 1
+            ActiveVPNCount = 0
+            VPNRouteCount = 0
+            VPNSpecificRouteCount = 0
+            RoutingModeCandidate = 'NoVPN'
+        }
+        EffectivePath = [pscustomobject]@{
+            DefaultRoute = $FixtureDefaultRoute
+            LogicalAdapter = $FixtureAdapter
+            PhysicalBackendCandidates = @($FixtureAdapter)
+            PhysicalBackendSource = 'LogicalAdapter'
+        }
+        Adapters = @($FixtureAdapter)
+        IPv4Addresses = @(
+            [pscustomobject]@{
+                InterfaceIndex = 12
+                InterfaceAlias = 'Ethernet'
+                IPAddress = '192.0.2.50'
+                PrefixLength = 24
+                PrefixOrigin = 'Dhcp'
+            }
+        )
+        DNS = @(
+            [pscustomobject]@{
+                InterfaceIndex = 12
+                InterfaceAlias = 'Ethernet'
+                Servers = @('192.0.2.53')
+            }
+        )
+        DefaultRoutes = @($FixtureDefaultRoute)
+        ActiveVPNAdapters = @()
+        VPNRoutes = @()
+    }
+
+    $BaseHealth = [pscustomobject]@{
+        GatewayProbe = [pscustomobject]@{
+            Attempted = $true
+            Gateway = '192.0.2.1'
+            Reachable = $true
+            RoundtripTimeMs = 1
+            Status = 'Success'
+            Detail = $null
+        }
+        ActiveApipaCount = 0
+        ActiveApipaAddresses = @()
+        DNS = [pscustomobject]@{
+            InterfaceIndex = 12
+            Servers = @('192.0.2.53')
+            ServerCount = 1
+            DuplicateCount = 0
+            Duplicates = @()
+        }
+        DHCP = [pscustomobject]@{
+            InterfaceIndex = 12
+            Known = $true
+            Enabled = $true
+            Server = '192.0.2.1'
+            UsableIPv4Count = 1
+            UsableIPv4Addresses = @()
+        }
+    }
+
+    $NoDnsHealth = $BaseHealth.PSObject.Copy()
+    $NoDnsHealth.DNS = [pscustomobject]@{
+        InterfaceIndex = 12
+        Servers = @()
+        ServerCount = 0
+        DuplicateCount = 0
+        Duplicates = @()
+    }
+
+    $NoDnsResult = Invoke-MTNetworkRules `
+        -Topology $TopologyFixture `
+        -Health $NoDnsHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET005 = @(
+        $NoDnsResult.Results |
+        Where-Object Id -eq 'NET005'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET005 -or -not $NET005.Triggered) {
+        throw 'NET005 no-DNS fixture failed.'
+    }
+
+    $DuplicateDnsHealth = $BaseHealth.PSObject.Copy()
+    $DuplicateDnsHealth.DNS = [pscustomobject]@{
+        InterfaceIndex = 12
+        Servers = @('192.0.2.53','192.0.2.53')
+        ServerCount = 2
+        DuplicateCount = 1
+        Duplicates = @(
+            [pscustomobject]@{
+                Server = '192.0.2.53'
+                Count = 2
+            }
+        )
+    }
+
+    $DuplicateDnsResult = Invoke-MTNetworkRules `
+        -Topology $TopologyFixture `
+        -Health $DuplicateDnsHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET006 = @(
+        $DuplicateDnsResult.Results |
+        Where-Object Id -eq 'NET006'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET006 -or -not $NET006.Triggered) {
+        throw 'NET006 duplicate-DNS fixture failed.'
+    }
+
+    $DhcpHealth = $BaseHealth.PSObject.Copy()
+    $DhcpHealth.DHCP = [pscustomobject]@{
+        InterfaceIndex = 12
+        Known = $true
+        Enabled = $false
+        Server = $null
+        UsableIPv4Count = 0
+        UsableIPv4Addresses = @()
+    }
+
+    $DhcpResult = Invoke-MTNetworkRules `
+        -Topology $TopologyFixture `
+        -Health $DhcpHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET007 = @(
+        $DhcpResult.Results |
+        Where-Object Id -eq 'NET007'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET007 -or -not $NET007.Triggered) {
+        throw 'NET007 DHCP/static-IP consistency fixture failed.'
+    }
+
+    $HealthyResult = Invoke-MTNetworkRules `
+        -Topology $TopologyFixture `
+        -Health $BaseHealth `
+        -RulesConfiguration $RulesConfiguration
+
+    foreach ($ExpectedClear in @('NET005','NET006','NET007')) {
+        $Result = @(
+            $HealthyResult.Results |
+            Where-Object Id -eq $ExpectedClear
+        ) | Select-Object -First 1
+
+        if ($null -eq $Result -or $Result.Triggered) {
+            throw "Batch-2 rule unexpectedly triggered in healthy fixture: $ExpectedClear"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Network Health rules batch 2 validation failed: {0}' -f
         $_.Exception.Message
     )
 }

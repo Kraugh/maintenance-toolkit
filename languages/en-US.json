@@ -237,5 +237,19 @@
   "NETWORK_GATEWAY_ICMP_OK": "Reply received in {0} ms",
   "NETWORK_GATEWAY_ICMP_NO_REPLY": "No ICMP reply received",
   "NETWORK_GATEWAY_ICMP_NOT_TESTED": "Not tested: no usable default gateway",
-  "NETWORK_APIPA_COUNT": "Active APIPA addresses"
+  "NETWORK_APIPA_COUNT": "Active APIPA addresses",
+  "NET005_TITLE": "No DNS servers on effective interface",
+  "NET005_MESSAGE": "The interface used by the effective route has no DNS servers configured. Name resolution may fail even if IP connectivity works.",
+  "NET006_TITLE": "Duplicate DNS server entries",
+  "NET006_MESSAGE": "The effective interface contains duplicate DNS server entries. This is usually harmless but indicates redundant configuration.",
+  "NET007_TITLE": "DHCP disabled without usable IPv4 address",
+  "NET007_MESSAGE": "DHCP is disabled on the effective interface and no usable non-APIPA IPv4 address was detected. Verify the static IP configuration.",
+  "NETWORK_DNS_SERVERS": "DNS servers (effective interface)",
+  "NETWORK_DNS_NONE": "None configured",
+  "NETWORK_DNS_DUPLICATE_COUNT": "Duplicate DNS entries",
+  "NETWORK_DHCP_STATE": "DHCP",
+  "NETWORK_DHCP_ENABLED": "Enabled",
+  "NETWORK_DHCP_DISABLED": "Disabled",
+  "NETWORK_DHCP_UNKNOWN": "Unknown",
+  "NETWORK_DHCP_SERVER": "DHCP server"
 }
