@@ -123,4 +123,8 @@ critical or centrally managed systems and follow your organization's policies.
 
 ## MT4 development
 
-The `app/core`, `config`, `languages`, `themes`, `rules`, `tests`, `logs` and `reports` directories are the initial MT4 foundation. The stable 3.7.2 runtime remains unchanged while the new bilingual core is developed and validated. See `project/MT4-INTEGRATION-MAP.md`.
+Maintenance Toolkit 4.0 is in release-convergence testing. The bilingual core,
+Network Diagnostics, health rules, VPN diagnostics and reporting are integrated
+while compatibility with the validated 3.7.2 maintenance modules is retained.
+
+Release Candidate promotion is controlled by `project/RC1-CHECKLIST.md`.

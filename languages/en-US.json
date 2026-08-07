@@ -287,5 +287,14 @@
   "VPN009_TITLE": "VPN technology not identified",
   "VPN009_MESSAGE": "An active VPN adapter was detected but its technology could not be identified from the adapter name or description.",
   "NETWORK_VPN_TECHNOLOGY": "VPN technology",
-  "NETWORK_VPN_VENDOR": "VPN vendor"
+  "NETWORK_VPN_VENDOR": "VPN vendor",
+  "NET011_TITLE": "DNS resolution test failed",
+  "NET011_MESSAGE": "The configured DNS probe hostname could not be resolved. IP connectivity may still work while name resolution is unavailable.",
+  "NETWORK_DNS_PROBE": "DNS resolution",
+  "NETWORK_DNS_PROBE_OK": "{0} -> {1}",
+  "NETWORK_DNS_PROBE_FAILED": "Unable to resolve {0}",
+  "NETWORK_DIAGNOSTIC_OUTCOME": "Diagnostic outcome",
+  "NETWORK_DIAGNOSTIC_OUTCOME_VALUE": "{0} critical, {1} warnings, {2} triggered rules",
+  "NETWORK_CRITICAL_COUNT": "Critical findings",
+  "NETWORK_WARNING_COUNT": "Warnings"
 }

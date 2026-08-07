@@ -252,7 +252,7 @@ function Invoke-MTNetworkQuickDiagnosis {
     if ($null -ne $Topology) {
         try {
             $Step = Start-MTProfilerStep -Name "Health"
-            $Health = Get-MTNetworkHealthContext -Topology $Topology
+            $Health = Get-MTNetworkHealthContext -Topology $Topology -Settings $Settings
             $null = Stop-MTProfilerStep -Step $Step -Status "OK"
         }
         catch {
@@ -423,6 +423,29 @@ function Invoke-MTNetworkQuickDiagnosis {
             -Level $(if ([int]$Health.DNS.DuplicateCount -gt 0) { "WARN" } else { "OK" }) `
             -Label (Get-MTNetworkText $LanguageData "NETWORK_DNS_DUPLICATE_COUNT") `
             -Value ([string]$Health.DNS.DuplicateCount)
+
+        if ($null -ne $Health.DnsProbe) {
+            $DnsProbeValue = if ($Health.DnsProbe.Resolved) {
+                Get-MTNetworkText `
+                    -LanguageData $LanguageData `
+                    -Key "NETWORK_DNS_PROBE_OK" `
+                    -Arguments @(
+                        $Health.DnsProbe.HostName,
+                        (@($Health.DnsProbe.Addresses) -join ", ")
+                    )
+            }
+            else {
+                Get-MTNetworkText `
+                    -LanguageData $LanguageData `
+                    -Key "NETWORK_DNS_PROBE_FAILED" `
+                    -Arguments @($Health.DnsProbe.HostName)
+            }
+
+            Write-MTNetworkStatus `
+                -Level $(if ($Health.DnsProbe.Resolved) { "OK" } else { "WARN" }) `
+                -Label (Get-MTNetworkText $LanguageData "NETWORK_DNS_PROBE") `
+                -Value $DnsProbeValue
+        }
 
         $DhcpText = if (-not [bool]$Health.DHCP.Known) {
             Get-MTNetworkText $LanguageData "NETWORK_DHCP_UNKNOWN"
@@ -638,6 +661,27 @@ function Invoke-MTNetworkQuickDiagnosis {
             -Level "INFO" `
             -Label (Get-MTNetworkText $LanguageData "NETWORK_RULES_COUNT") `
             -Value ([string]$TriggeredRules.Count)
+
+        $CriticalCount = @($TriggeredRules | Where-Object Severity -eq 'Critical').Count
+        $WarningCount = @($TriggeredRules | Where-Object Severity -eq 'Warning').Count
+
+        $OutcomeLevel = if ($CriticalCount -gt 0) {
+            'ERROR'
+        }
+        elseif ($WarningCount -gt 0) {
+            'WARN'
+        }
+        else {
+            'OK'
+        }
+
+        Write-MTNetworkStatus `
+            -Level $OutcomeLevel `
+            -Label (Get-MTNetworkText $LanguageData 'NETWORK_DIAGNOSTIC_OUTCOME') `
+            -Value (Get-MTNetworkText `
+                -LanguageData $LanguageData `
+                -Key 'NETWORK_DIAGNOSTIC_OUTCOME_VALUE' `
+                -Arguments @($CriticalCount, $WarningCount, $TriggeredRules.Count))
     }
 
     $SpeedTestResult = $null

@@ -533,9 +533,9 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    if (@($NetworkRules.Rules).Count -ne 21) {
+    if (@($NetworkRules.Rules).Count -ne 22) {
         throw (
-            'Expected 21 Network Diagnostics rules, found {0}.' -f
+            'Expected 22 Network Diagnostics rules, found {0}.' -f
             @($NetworkRules.Rules).Count
         )
     }
@@ -544,7 +544,7 @@ try {
         'NET001','NET002','NET003','NET004','NET005','NET006','NET007',
         'NET008','NET009','NET010',
         'VPN001','VPN002','TOP001','TOP002','VPN003','VPN004',
-        'VPN005','VPN006','VPN007','VPN008','VPN009'
+        'VPN005','VPN006','VPN007','VPN008','VPN009','NET011'
     )) {
         if (-not (@($NetworkRules.Rules.Id) -contains $ExpectedRule)) {
             throw "Baseline NDP rule missing: $ExpectedRule"
@@ -2384,6 +2384,227 @@ catch {
     Add-MT4AutotestError (
         'Advanced VPN Diagnostics batch 3 validation failed: {0}' -f
         $_.Exception.Message
+    )
+}
+
+try {
+    $SuccessfulProbe = [pscustomobject]@{
+        Attempted = $true
+        HostName = 'fixture.example'
+        Resolved = $true
+        Addresses = @('192.0.2.53')
+        AddressCount = 1
+        Resolver = 'Fixture'
+        Detail = $null
+    }
+
+    $FailedProbe = [pscustomobject]@{
+        Attempted = $true
+        HostName = 'fixture.example'
+        Resolved = $false
+        Addresses = @()
+        AddressCount = 0
+        Resolver = 'Fixture'
+        Detail = 'Fixture resolution failure'
+    }
+
+    $RulesConfiguration = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'rules/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    $Rule = @(
+        $RulesConfiguration.Rules |
+        Where-Object Id -eq 'NET011'
+    ) | Select-Object -First 1
+
+    if ($null -eq $Rule) {
+        throw 'NET011 rule is missing.'
+    }
+
+    $MinimalTopology = [pscustomobject]@{
+        Summary = [pscustomobject]@{
+            DefaultRouteCount = 1
+            ActiveVPNCount = 0
+            VPNRouteCount = 0
+            VPNSpecificRouteCount = 0
+            RoutingModeCandidate = 'NoVPN'
+        }
+        EffectivePath = [pscustomobject]@{
+            DefaultRoute = [pscustomobject]@{ InterfaceIndex = 12 }
+            LogicalAdapter = [pscustomobject]@{ IsVirtual = $false }
+            PhysicalBackendCandidates = @()
+            PhysicalBackendSource = 'LogicalAdapter'
+        }
+        DefaultRoutes = @(
+            [pscustomobject]@{
+                DestinationPrefix = '0.0.0.0/0'
+                InterfaceIndex = 12
+                TotalMetric = 25
+            }
+        )
+        ActiveVPNAdapters = @()
+        VPNRoutes = @()
+    }
+
+    function New-MT24DnsFixtureHealth {
+        param([object]$Probe)
+
+        return [pscustomobject]@{
+            GatewayProbe = [pscustomobject]@{
+                Attempted = $true
+                Reachable = $true
+            }
+            ActiveApipaCount = 0
+            ActiveApipaAddresses = @()
+            DNS = [pscustomobject]@{
+                ServerCount = 1
+                DuplicateCount = 0
+            }
+            DHCP = [pscustomobject]@{
+                Known = $true
+                Enabled = $true
+                UsableIPv4Count = 1
+            }
+            EffectiveInterface = [pscustomobject]@{
+                Known = $true
+                IsVPN = $false
+                IsVirtual = $false
+                HardwareInterface = $true
+                MTU = 1500
+                LinkSpeedMbps = 1000
+            }
+            DefaultRouteCompetition = [pscustomobject]@{
+                BestRouteCount = 1
+            }
+            VPN = [pscustomobject]@{
+                ActiveVPNCount = 0
+                Profiles = @()
+                ProfilesWithoutTunnelIPv4 = @()
+                ProfilesWithoutDNS = @()
+                ProfilesWithDuplicateRoutes = @()
+                ProfilesWithPublicDNS = @()
+                ProfilesWithUnknownTechnology = @()
+                SplitTunnelCount = 0
+                FullTunnelCount = 0
+                NoRouteCount = 0
+            }
+            DnsProbe = $Probe
+        }
+    }
+
+    $FailedResult = Invoke-MTNetworkRules `
+        -Topology $MinimalTopology `
+        -Health (New-MT24DnsFixtureHealth -Probe $FailedProbe) `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET011Failed = @(
+        $FailedResult.Results |
+        Where-Object Id -eq 'NET011'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET011Failed -or -not $NET011Failed.Triggered) {
+        throw 'NET011 failed-DNS fixture did not trigger.'
+    }
+
+    $SuccessResult = Invoke-MTNetworkRules `
+        -Topology $MinimalTopology `
+        -Health (New-MT24DnsFixtureHealth -Probe $SuccessfulProbe) `
+        -RulesConfiguration $RulesConfiguration
+
+    $NET011Success = @(
+        $SuccessResult.Results |
+        Where-Object Id -eq 'NET011'
+    ) | Select-Object -First 1
+
+    if ($null -eq $NET011Success -or $NET011Success.Triggered) {
+        throw 'NET011 healthy-DNS fixture triggered unexpectedly.'
+    }
+
+    $NetworkConfig = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'config/network.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    if ([string]$NetworkConfig.Health.DnsProbeHost -ne 'www.msftconnecttest.com') {
+        throw 'DNS health probe target is missing or unexpected.'
+    }
+
+    foreach ($ExpectedPattern in @(
+        'Tailscale',
+        'Wintun',
+        'Cisco Secure Client',
+        'Palo Alto',
+        'PPTP'
+    )) {
+        if (
+            @($NetworkConfig.Topology.VPNPatterns) -notcontains $ExpectedPattern -or
+            @($NetworkConfig.Routing.VPNNamePatterns) -notcontains $ExpectedPattern
+        ) {
+            throw "VPN detection pattern missing: $ExpectedPattern"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Release-convergence network validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    $DiagnosticSource = Get-Content -LiteralPath (Join-Path $ProjectRoot 'app/modules/network/NetworkDiagnostics.ps1') -Raw -Encoding UTF8
+    $ReportSource = Get-Content -LiteralPath (Join-Path $ProjectRoot 'app/modules/network/NetworkReports.ps1') -Raw -Encoding UTF8
+
+    foreach ($Token in @(
+        'NETWORK_DIAGNOSTIC_OUTCOME',
+        'NETWORK_DIAGNOSTIC_OUTCOME_VALUE',
+        'NETWORK_CRITICAL_COUNT',
+        'NETWORK_WARNING_COUNT'
+    )) {
+        if ($DiagnosticSource -notmatch [regex]::Escape($Token) -and $ReportSource -notmatch [regex]::Escape($Token)) {
+            throw "Presentation token missing: $Token"
+        }
+    }
+}
+catch {
+    Add-MT4AutotestError ('Release-convergence presentation validation failed: {0}' -f $_.Exception.Message)
+}
+
+try {
+    $ReleaseToolPath = Join-Path $ProjectRoot 'tools/create-release.ps1'
+    $ReleaseToolSource = Get-Content -LiteralPath $ReleaseToolPath -Raw -Encoding UTF8
+    $RCChecklistPath = Join-Path $ProjectRoot 'project/RC1-CHECKLIST.md'
+
+    foreach ($Token in @(
+        'Assert-ReleaseVersionConsistency',
+        'Release version mismatch',
+        'required package file missing'
+    )) {
+        if ($ReleaseToolSource -notmatch [regex]::Escape($Token)) {
+            throw "Release hygiene token missing: $Token"
+        }
+    }
+
+    if (-not (Test-Path -LiteralPath $RCChecklistPath -PathType Leaf)) {
+        throw 'RC1 checklist is missing.'
+    }
+
+    $VersionManifest = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'config/version.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    if ([string]$VersionManifest.Version -ne '4.0.0-dev.26') {
+        throw "Unexpected dev.26 manifest version: $($VersionManifest.Version)"
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'RC1 preparation validation failed: {0}' -f $_.Exception.Message
     )
 }
 

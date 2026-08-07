@@ -375,7 +375,7 @@ function Invoke-MTNetworkTechnicalReport {
     if ($null -ne $Topology) {
         try {
             $Step = Start-MTProfilerStep -Name "Health"
-            $Health = Get-MTNetworkHealthContext -Topology $Topology
+            $Health = Get-MTNetworkHealthContext -Topology $Topology -Settings $NetworkSettings
             $null = Stop-MTProfilerStep -Step $Step -Status "OK"
         }
         catch {
@@ -719,6 +719,29 @@ function Invoke-MTNetworkTechnicalReport {
                 -Key (Get-MTText $LanguageData "NETWORK_DNS_DUPLICATE_COUNT") `
                 -Value $Health.DNS.DuplicateCount
 
+            if ($null -ne $Health.DnsProbe) {
+                $DnsProbeText = if ($Health.DnsProbe.Resolved) {
+                    Get-MTText `
+                        -LanguageData $LanguageData `
+                        -Key "NETWORK_DNS_PROBE_OK" `
+                        -Arguments @(
+                            $Health.DnsProbe.HostName,
+                            (@($Health.DnsProbe.Addresses) -join ", ")
+                        )
+                }
+                else {
+                    Get-MTText `
+                        -LanguageData $LanguageData `
+                        -Key "NETWORK_DNS_PROBE_FAILED" `
+                        -Arguments @($Health.DnsProbe.HostName)
+                }
+
+                Add-MTNetworkReportKeyValue `
+                    -Lines $Lines `
+                    -Key (Get-MTText $LanguageData "NETWORK_DNS_PROBE") `
+                    -Value $DnsProbeText
+            }
+
             $DhcpText = if (-not [bool]$Health.DHCP.Known) {
                 Get-MTText $LanguageData "NETWORK_DHCP_UNKNOWN"
             }
@@ -811,6 +834,31 @@ function Invoke-MTNetworkTechnicalReport {
     }
 
     $SpeedTestResult = $null
+
+    if ($null -ne $RuleEvaluation) {
+        $TriggeredRules = @($RuleEvaluation.Triggered)
+        $CriticalCount = @($TriggeredRules | Where-Object Severity -eq 'Critical').Count
+        $WarningCount = @($TriggeredRules | Where-Object Severity -eq 'Warning').Count
+
+        Add-MTNetworkReportSection `
+            -Lines $Lines `
+            -Title (Get-MTText $LanguageData 'NETWORK_DIAGNOSTIC_OUTCOME')
+
+        Add-MTNetworkReportKeyValue `
+            -Lines $Lines `
+            -Key (Get-MTText $LanguageData 'NETWORK_CRITICAL_COUNT') `
+            -Value $CriticalCount
+
+        Add-MTNetworkReportKeyValue `
+            -Lines $Lines `
+            -Key (Get-MTText $LanguageData 'NETWORK_WARNING_COUNT') `
+            -Value $WarningCount
+
+        Add-MTNetworkReportKeyValue `
+            -Lines $Lines `
+            -Key (Get-MTText $LanguageData 'NETWORK_RULES_COUNT') `
+            -Value $TriggeredRules.Count
+    }
 
     if ($SpeedTest) {
         Add-MTNetworkReportSection `

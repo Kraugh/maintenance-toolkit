@@ -439,3 +439,41 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [ ] Run Foundation AUTOTEST.
 - [ ] Run `tools/normalize-eol.ps1` directly.
 - [ ] Verify `git add -A` emits zero line-ending warnings.
+
+
+## Development increment 24 — release convergence: DNS health + VPN coverage
+
+- [x] Add configurable system DNS resolution probe.
+- [x] Use `www.msftconnecttest.com` as the default DNS-only probe target.
+- [x] Add NET011 warning when DNS resolution fails.
+- [x] Show DNS probe evidence in Quick Diagnosis.
+- [x] Include DNS probe evidence in Technical Report.
+- [x] Expand VPN adapter detection for Tailscale, Wintun, Cisco Secure Client, Palo Alto and PPTP.
+- [x] Keep NET011 fixture-safe under StrictMode.
+- [x] Add AUTOTEST coverage for healthy/failing DNS resolution evidence.
+- [x] Add AUTOTEST coverage for VPN detection patterns.
+- [ ] Validate DNS probe on physical Windows.
+- [ ] Validate EOL-clean `git add -A`.
+
+## Development increment 25 — release convergence: presentation/report polish
+
+- [x] Add compact final diagnostic outcome to Quick Diagnosis.
+- [x] Derive severity from triggered Critical/Warning rules.
+- [x] Add matching counters to Technical Report.
+- [x] Add bilingual strings and AUTOTEST presentation coverage.
+- [ ] Validate on physical Windows 10.
+- [ ] Validate Technical Report output before RC.
+
+
+## Development increment 26 — RC1 preparation
+
+- [x] Freeze new feature subsystems before RC1.
+- [x] Add explicit RC1 release-gate checklist.
+- [x] Add release-package version consistency validation.
+- [x] Validate required files in the staged release package.
+- [x] Refresh README development status.
+- [x] Add 4.0.0 development summary to changelog.
+- [ ] Complete Windows 10 validation.
+- [ ] Complete Technical Report validation.
+- [ ] Promote the next complete passing build to 4.0.0-rc.1.
+

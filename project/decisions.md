@@ -965,3 +965,45 @@ Extensionless `LICENSE` and `*.ps1.disabled` are explicit text edge cases.
 On Windows PowerShell 5.1, relying on `$PSScriptRoot` inside a parameter default
 proved unreliable in this execution path. File classification based only on the
 last extension also missed repository text files without a normal extension.
+
+
+---
+
+## 2026-08-07 — Dev.24 starts release convergence
+
+### Decision
+
+No broad new subsystem is introduced after dev.23a.
+
+Dev.24 adds one missing generic health signal — DNS resolution — and closes
+known VPN detection gaps between the classifier and the topology pattern list.
+
+The default DNS probe target is `www.msftconnecttest.com`; only DNS resolution
+is performed.
+
+### Reason
+
+Before RC, MT4 should distinguish "IP path works but DNS does not" without
+expanding into another large diagnostics feature. VPN technology recognition
+also needs matching adapter-detection patterns or recognized products such as
+Tailscale can be missed before classification even runs.
+
+---
+
+## 2026-08-07 — Dev.25 is presentation-only release convergence
+
+No new diagnostic subsystem is introduced. Dev.25 exposes a compact final
+severity summary in Quick Diagnosis and the Technical Report. New feature work
+remains deferred while MT4 converges toward RC1.
+
+---
+
+## 2026-08-07 — Dev.26 freezes feature scope before RC1
+
+Dev.26 is the final planned development increment before `4.0.0-rc.1`.
+No new feature subsystem is accepted after this point unless required to fix a
+release-blocking defect. RC promotion is controlled by
+`project/RC1-CHECKLIST.md`.
+
+The release packager now refuses version mismatches and validates the minimum
+runtime/documentation payload before compression.

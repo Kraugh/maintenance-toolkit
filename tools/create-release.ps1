@@ -60,6 +60,48 @@ function Assert-ReleaseSource {
     }
 }
 
+function Assert-ReleaseVersionConsistency {
+    param(
+        [Parameter(Mandatory)]
+        [string]$ExpectedVersion
+    )
+
+    $VersionManifestPath = Join-Path $RepositoryRoot 'config\version.json'
+    Assert-ReleaseSource -Path $VersionManifestPath -Description 'version manifest'
+
+    $VersionManifest = Get-Content `
+        -LiteralPath $VersionManifestPath `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    if ([string]$VersionManifest.Version -ne $ExpectedVersion) {
+        throw (
+            "Release version mismatch: requested '{0}', config/version.json contains '{1}'." -f @(
+                $ExpectedVersion,
+                [string]$VersionManifest.Version
+            )
+        )
+    }
+
+    $MainScriptPath = Join-Path $RepositoryRoot 'app\MaintenanceToolkit.ps1'
+    Assert-ReleaseSource -Path $MainScriptPath -Description 'main runtime script'
+
+    $MainScript = Get-Content `
+        -LiteralPath $MainScriptPath `
+        -Raw `
+        -Encoding UTF8
+
+    $EscapedVersion = [regex]::Escape($ExpectedVersion)
+
+    if ($MainScript -notmatch ('\$Version\s*=\s*"' + $EscapedVersion + '"')) {
+        throw (
+            "Release version mismatch: app/MaintenanceToolkit.ps1 does not declare '{0}'." -f
+            $ExpectedVersion
+        )
+    }
+}
+
 function Test-ZipForExcludedDirectories {
     param(
         [Parameter(Mandatory)]
@@ -104,6 +146,8 @@ try {
             -Path (Join-Path $RepositoryRoot $Directory) `
             -Description $Directory
     }
+
+    Assert-ReleaseVersionConsistency -ExpectedVersion $Version
 
     New-Item -ItemType Directory -Path $PackageRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
@@ -165,6 +209,22 @@ try {
                 -Destination $PackageDocs `
                 -Recurse `
                 -Force
+        }
+    }
+
+    foreach ($RequiredPackageFile in @(
+        'Avvia_Manutenzione.bat',
+        'app\MaintenanceToolkit.ps1',
+        'config\version.json',
+        'docs\README.md',
+        'docs\LICENSE',
+        'docs\ABOUT.txt',
+        'docs\CHANGELOG.md'
+    )) {
+        $RequiredPackagePath = Join-Path $PackageRoot $RequiredPackageFile
+
+        if (-not (Test-Path -LiteralPath $RequiredPackagePath -PathType Leaf)) {
+            throw "Release validation failed: required package file missing: $RequiredPackageFile"
         }
     }
 

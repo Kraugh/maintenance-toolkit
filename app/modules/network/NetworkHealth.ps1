@@ -346,10 +346,120 @@ function Get-MTNetworkDefaultRouteCompetitionState {
     }
 }
 
+function Test-MTNetworkDnsResolution {
+    [CmdletBinding()]
+    param(
+        [string]$HostName = 'www.msftconnecttest.com'
+    )
+
+    if ([string]::IsNullOrWhiteSpace($HostName)) {
+        return [pscustomobject]@{
+            Attempted = $false
+            HostName = $HostName
+            Resolved = $null
+            Addresses = @()
+            AddressCount = 0
+            Resolver = $null
+            Detail = 'DNS probe target is empty.'
+        }
+    }
+
+    try {
+        $Addresses = @()
+
+        if (Get-Command Resolve-DnsName -ErrorAction SilentlyContinue) {
+            $Addresses = @(
+                Resolve-DnsName `
+                    -Name $HostName `
+                    -Type A `
+                    -DnsOnly `
+                    -QuickTimeout `
+                    -ErrorAction Stop |
+                Where-Object {
+                    -not [string]::IsNullOrWhiteSpace([string]$_.IPAddress)
+                } |
+                ForEach-Object {
+                    [string]$_.IPAddress
+                } |
+                Select-Object -Unique
+            )
+
+            $Resolver = 'Resolve-DnsName'
+        }
+        else {
+            $Addresses = @(
+                [System.Net.Dns]::GetHostAddresses($HostName) |
+                Where-Object {
+                    $_.AddressFamily -eq
+                        [System.Net.Sockets.AddressFamily]::InterNetwork
+                } |
+                ForEach-Object {
+                    $_.IPAddressToString
+                } |
+                Select-Object -Unique
+            )
+
+            $Resolver = 'System.Net.Dns'
+        }
+
+        return [pscustomobject]@{
+            Attempted = $true
+            HostName = $HostName
+            Resolved = ($Addresses.Count -gt 0)
+            Addresses = $Addresses
+            AddressCount = $Addresses.Count
+            Resolver = $Resolver
+            Detail = $null
+        }
+    }
+    catch {
+        return [pscustomobject]@{
+            Attempted = $true
+            HostName = $HostName
+            Resolved = $false
+            Addresses = @()
+            AddressCount = 0
+            Resolver = $null
+            Detail = $_.Exception.Message
+        }
+    }
+}
+
+function Get-MTNetworkDnsProbeTarget {
+    [CmdletBinding()]
+    param(
+        [AllowNull()][object]$Settings
+    )
+
+    $DefaultTarget = 'www.msftconnecttest.com'
+
+    if ($null -eq $Settings) {
+        return $DefaultTarget
+    }
+
+    $HealthProperty = $Settings.PSObject.Properties['Health']
+
+    if ($null -eq $HealthProperty -or $null -eq $HealthProperty.Value) {
+        return $DefaultTarget
+    }
+
+    $TargetProperty = $HealthProperty.Value.PSObject.Properties['DnsProbeHost']
+
+    if (
+        $null -eq $TargetProperty -or
+        [string]::IsNullOrWhiteSpace([string]$TargetProperty.Value)
+    ) {
+        return $DefaultTarget
+    }
+
+    return [string]$TargetProperty.Value
+}
+
 function Get-MTNetworkHealthContext {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][object]$Topology
+        [Parameter(Mandatory)][object]$Topology,
+        [AllowNull()][object]$Settings = $null
     )
 
     $Gateway = $null
@@ -414,6 +524,9 @@ function Get-MTNetworkHealthContext {
 
     $VpnState = Get-MTNetworkVpnContext -Topology $Topology
 
+    $DnsProbeTarget = Get-MTNetworkDnsProbeTarget -Settings $Settings
+    $DnsProbe = Test-MTNetworkDnsResolution -HostName $DnsProbeTarget
+
     return [pscustomobject]@{
         CollectedAt = (Get-Date).ToString('o')
         EffectiveInterfaceIndex = $EffectiveInterfaceIndex
@@ -425,6 +538,7 @@ function Get-MTNetworkHealthContext {
         EffectiveInterface = $InterfaceState
         DefaultRouteCompetition = $RouteCompetition
         VPN = $VpnState
+        DnsProbe = $DnsProbe
     }
 }
 
@@ -668,6 +782,30 @@ function Invoke-MTNetworkExtendedRules {
                         Count = @($Health.VPN.ProfilesWithUnknownTechnology).Count
                         Profiles = @($Health.VPN.ProfilesWithUnknownTechnology)
                     })
+            }
+
+            'DnsResolutionFailed' {
+                $ProbeProperty = $Health.PSObject.Properties['DnsProbe']
+                $Probe = if ($null -ne $ProbeProperty) {
+                    $ProbeProperty.Value
+                }
+                else {
+                    $null
+                }
+
+                $Triggered = (
+                    $null -ne $Probe -and
+                    [bool]$Probe.Attempted -and
+                    $Probe.Resolved -eq $false
+                )
+
+                $Result = New-NDRuleResult `
+                    $Rule.Id `
+                    $Rule.Severity `
+                    $Triggered `
+                    'NET011_TITLE' `
+                    'NET011_MESSAGE' `
+                    $Probe
             }
         }
 

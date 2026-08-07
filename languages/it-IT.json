@@ -287,5 +287,14 @@
   "VPN009_TITLE": "Tecnologia VPN non identificata",
   "VPN009_MESSAGE": "È stato rilevato un adattatore VPN attivo, ma non è stato possibile identificarne la tecnologia dal nome o dalla descrizione dell’adattatore.",
   "NETWORK_VPN_TECHNOLOGY": "Tecnologia VPN",
-  "NETWORK_VPN_VENDOR": "Produttore VPN"
+  "NETWORK_VPN_VENDOR": "Produttore VPN",
+  "NET011_TITLE": "Test di risoluzione DNS non riuscito",
+  "NET011_MESSAGE": "Non è stato possibile risolvere il nome host configurato per il test DNS. La connettività IP può funzionare anche se la risoluzione dei nomi non è disponibile.",
+  "NETWORK_DNS_PROBE": "Risoluzione DNS",
+  "NETWORK_DNS_PROBE_OK": "{0} -> {1}",
+  "NETWORK_DNS_PROBE_FAILED": "Impossibile risolvere {0}",
+  "NETWORK_DIAGNOSTIC_OUTCOME": "Esito diagnostica",
+  "NETWORK_DIAGNOSTIC_OUTCOME_VALUE": "{0} critiche, {1} avvisi, {2} regole attivate",
+  "NETWORK_CRITICAL_COUNT": "Anomalie critiche",
+  "NETWORK_WARNING_COUNT": "Avvisi"
 }

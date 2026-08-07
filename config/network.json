@@ -18,7 +18,12 @@
       "IKEv2",
       "L2TP",
       "AnyConnect",
-      "GlobalProtect"
+      "GlobalProtect",
+      "Tailscale",
+      "Wintun",
+      "Cisco Secure Client",
+      "Palo Alto",
+      "PPTP"
     ],
     "VirtualAdapterPatterns": [
       "Hyper-V",
@@ -47,7 +52,12 @@
       "IKEv2",
       "L2TP",
       "AnyConnect",
-      "GlobalProtect"
+      "GlobalProtect",
+      "Tailscale",
+      "Wintun",
+      "Cisco Secure Client",
+      "Palo Alto",
+      "PPTP"
     ],
     "VirtualPatterns": [
       "Hyper-V",
@@ -59,5 +69,8 @@
       "Docker",
       "Virtual"
     ]
+  },
+  "Health": {
+    "DnsProbeHost": "www.msftconnecttest.com"
   }
 }

@@ -5,6 +5,21 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 4.0.0 development — RC1 preparation
+
+### Release convergence
+
+- integrated the MT4 bilingual foundation with the legacy-compatible runtime;
+- added topology-aware Network Diagnostics and automatic health rules;
+- added DNS health probing and Advanced VPN Diagnostics;
+- added compact diagnostic outcome and Technical Report refinements;
+- added repository EOL normalization and validation;
+- strengthened release packaging with version-consistency and required-file checks;
+- added the explicit `project/RC1-CHECKLIST.md` release gate.
+
+The next complete candidate is intended to be `4.0.0-rc.1`; no new feature
+subsystem is planned before that candidate.
+
 ## 3.7.2 — 1 August 2026
 
 ### Highlights
