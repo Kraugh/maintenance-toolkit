@@ -24,3 +24,6 @@ logs/*
 !logs/README.md
 reports/*
 !reports/README.md
+
+# Generated release packages
+dist/
