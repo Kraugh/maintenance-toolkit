@@ -267,7 +267,7 @@ function Show-MTNetworkSpeedTestResult {
         Write-MTNetworkStatus `
             -Level 'INFO' `
             -Label (Get-MTText $LanguageData 'PACKET_LOSS') `
-            -Value ('{0} %' -f $Result.PacketLossPercent)
+            -Value ('{0:N2} %' -f [double]$Result.PacketLossPercent)
     }
 
     if (-not [string]::IsNullOrWhiteSpace([string]$Result.ServerName)) {

@@ -273,3 +273,29 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Add a SpeedTest-specific AUTOTEST regression guard.
 - [ ] Re-run Foundation AUTOTEST.
 - [ ] Continue with missing/present `speedtest.exe` runtime tests.
+
+
+## Development increment 16 — release builder and diagnostics polish
+
+- [x] Fix `create-release.ps1` Windows PowerShell 5.1 default destination handling.
+- [x] Default generated packages to `dist/`.
+- [x] Exclude `external/`, `logs/` and `reports/` completely from public releases.
+- [x] Validate excluded directories in staging and in the final ZIP.
+- [x] Fail release creation on unexpected files in the distribution root.
+- [x] Keep repository/developer material out of the public ZIP.
+- [x] Render Hyper-V guest adapters as `virtual` rather than `physical,virtual`.
+- [x] Round human-readable packet loss to two decimals.
+- [x] Preserve raw SpeedTest values in JSON.
+- [x] Add AUTOTEST guards for the release-builder contract.
+- [ ] Run Foundation AUTOTEST.
+- [ ] Run `tools/create-release.ps1 -Version 4.0.0-dev.16`.
+- [ ] Inspect generated ZIP layout.
+
+
+## Development increment 16a — presentation AUTOTEST regex fix
+
+- [x] Keep the dev.16 virtual-first report logic unchanged.
+- [x] Fix the multiline AUTOTEST regex with Singleline mode.
+- [x] Add an explicit source-order check for virtual-before-physical fallback.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Run `create-release.ps1` and inspect the generated ZIP.

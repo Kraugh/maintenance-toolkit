@@ -1124,6 +1124,103 @@ catch {
 }
 
 try {
+    $ReleaseBuilderPath = Join-Path $ProjectRoot 'tools/create-release.ps1'
+
+    Test-MT4PowerShellSyntax $ReleaseBuilderPath
+
+    $ReleaseBuilderText = Get-Content `
+        -LiteralPath $ReleaseBuilderPath `
+        -Raw `
+        -Encoding UTF8
+
+    foreach ($RequiredExcludedDirectory in @(
+        '"external"',
+        '"logs"',
+        '"reports"'
+    )) {
+        if (-not $ReleaseBuilderText.Contains($RequiredExcludedDirectory)) {
+            throw (
+                'Release builder exclusion missing: {0}' -f
+                $RequiredExcludedDirectory
+            )
+        }
+    }
+
+    if (
+        $ReleaseBuilderText -match
+        '\[string\]\$Destination\s*=\s*\(Join-Path\s+\$PSScriptRoot'
+    ) {
+        throw 'Release builder still evaluates Destination from PSScriptRoot in param().'
+    }
+
+    if (
+        $ReleaseBuilderText -notmatch
+        'Test-ZipForExcludedDirectories'
+    ) {
+        throw 'Release builder does not validate the final ZIP exclusions.'
+    }
+
+    if (
+        $ReleaseBuilderText -match
+        '"external"\s*,?\s*\r?\n\s*"rules"'
+    ) {
+        throw 'Release builder still copies external as a runtime directory.'
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Release builder contract validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
+    $ReportScriptPath = Join-Path `
+        $ProjectRoot `
+        'app/modules/network/NetworkReports.ps1'
+
+    $ReportScriptText = Get-Content `
+        -LiteralPath $ReportScriptPath `
+        -Raw `
+        -Encoding UTF8
+
+    if (
+        $ReportScriptText -notmatch
+        '(?s)if \(\[bool\]\$Adapter\.IsVirtual\).*?elseif \(\[bool\]\$Adapter\.HardwareInterface\)'
+    ) {
+        throw 'Virtual-first adapter presentation rule missing.'
+    }
+
+    $VirtualFlagIndex = $ReportScriptText.IndexOf(
+        'if ([bool]$Adapter.IsVirtual)'
+    )
+    $PhysicalFlagIndex = $ReportScriptText.IndexOf(
+        'elseif ([bool]$Adapter.HardwareInterface)'
+    )
+
+    if (
+        $VirtualFlagIndex -lt 0 -or
+        $PhysicalFlagIndex -lt 0 -or
+        $VirtualFlagIndex -ge $PhysicalFlagIndex
+    ) {
+        throw 'Virtual adapter presentation does not precede physical fallback.'
+    }
+
+    if (
+        $ReportScriptText -notmatch
+        '-Template "\{0:N2\} %"'
+    ) {
+        throw 'Packet-loss human report is not formatted to two decimals.'
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Network Diagnostics presentation polish validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
     $LegacySmoke = Join-Path `
         $ProjectRoot `
         'app/tools/Test-MT4LegacyCompatibility.ps1'

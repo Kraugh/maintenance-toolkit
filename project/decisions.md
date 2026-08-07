@@ -716,3 +716,45 @@ Dev.15 accidentally reintroduced five PowerShell `-f` expressions in the new
 SpeedTest section. The pre-existing dev.14d AUTOTEST correctly rejected them
 before runtime. The safe formatter contract therefore applies to the whole
 report composer, not only the original sections.
+
+
+---
+
+## 2026-08-07 — Public release packages contain no runtime artifacts or external binaries
+
+### Decision
+
+`create-release.ps1` excludes the following directories completely:
+
+- `external/`
+- `logs/`
+- `reports/`
+
+The builder validates both the staging tree and the generated ZIP and fails if
+any excluded directory is present.
+
+### Reason
+
+The repository is a development workspace; the release archive is a clean
+end-user distribution. Logs and reports may contain environment-specific data,
+and external binaries have independent redistribution terms.
+
+The same increment also applies presentation-only polish: virtual adapters take
+precedence over the Windows `HardwareInterface` flag in human output, while raw
+engine data remains unchanged.
+
+
+---
+
+## 2026-08-07 — Multiline source assertions must enable regex Singleline mode
+
+### Decision
+
+AUTOTEST regex assertions that span multiple physical lines use `(?s)` or a
+non-regex ordering check.
+
+### Reason
+
+PowerShell/.NET regex `.` does not match newline by default. Dev.16 correctly
+implemented the virtual-first report presentation, but its test falsely failed
+because the assertion expected `.*?` to cross line boundaries.

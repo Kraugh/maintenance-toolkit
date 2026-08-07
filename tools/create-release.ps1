@@ -1,59 +1,129 @@
 ﻿[CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
     [string]$Version,
 
-    [string]$Destination = (Join-Path $PSScriptRoot "..\dist")
+    [string]$Destination
 )
 
 $ErrorActionPreference = "Stop"
+
 $RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$BuildRoot = Join-Path $env:TEMP ("MaintenanceToolkit-{0}-{1}" -f $Version, [guid]::NewGuid().ToString("N"))
-$PackageRoot = Join-Path $BuildRoot ("Maintenance-Toolkit-{0}" -f $Version)
-$ZipPath = Join-Path $Destination ("Maintenance-Toolkit-{0}.zip" -f $Version)
-$ChecksumPath = "$ZipPath.sha256"
 
-function Convert-MarkdownToPlainText {
-    param([string]$Markdown)
+if ([string]::IsNullOrWhiteSpace($Destination)) {
+    $Destination = Join-Path $RepositoryRoot "dist"
+}
+elseif (-not [System.IO.Path]::IsPathRooted($Destination)) {
+    $Destination = Join-Path $RepositoryRoot $Destination
+}
 
-    $Text = $Markdown
-    $Text = [regex]::Replace($Text, '(?m)^#{1,6}\s*', '')
-    $Text = [regex]::Replace($Text, '\[([^\]]+)\]\([^)]+\)', '$1')
-    $Text = $Text.Replace('**', '').Replace('__', '').Replace('`', '')
-    $Text = [regex]::Replace($Text, '(?m)^\s*[-*]\s+', '- ')
-    return $Text.Trim() + [Environment]::NewLine
+$Destination = [System.IO.Path]::GetFullPath($Destination)
+
+$BuildRoot = Join-Path `
+    $env:TEMP `
+    ("MaintenanceToolkit-{0}-{1}" -f @(
+        $Version,
+        [guid]::NewGuid().ToString("N")
+    ))
+
+$PackageFolderName = "Maintenance-Toolkit-{0}" -f $Version
+$PackageRoot = Join-Path $BuildRoot $PackageFolderName
+$ZipPath = Join-Path $Destination ($PackageFolderName + ".zip")
+$ChecksumPath = $ZipPath + ".sha256"
+
+$RuntimeDirectories = @(
+    "app",
+    "config",
+    "languages",
+    "rules",
+    "themes"
+)
+
+# These directories are intentionally NEVER distributed.
+$ExcludedReleaseDirectories = @(
+    "external",
+    "logs",
+    "reports"
+)
+
+function Assert-ReleaseSource {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+        [Parameter(Mandatory)]
+        [string]$Description
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        throw "Release source missing: $Description ($Path)"
+    }
+}
+
+function Test-ZipForExcludedDirectories {
+    param(
+        [Parameter(Mandatory)]
+        [string]$ArchivePath,
+        [Parameter(Mandatory)]
+        [string[]]$ExcludedDirectoryNames
+    )
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    $Archive = [System.IO.Compression.ZipFile]::OpenRead($ArchivePath)
+
+    try {
+        foreach ($Entry in $Archive.Entries) {
+            $EntryPath = $Entry.FullName.Replace("\", "/")
+            $Parts = @($EntryPath.Split("/") | Where-Object { $_ })
+
+            foreach ($ExcludedName in $ExcludedDirectoryNames) {
+                if ($Parts -contains $ExcludedName) {
+                    throw (
+                        "Release validation failed: excluded directory '{0}' found in ZIP entry '{1}'." -f @(
+                            $ExcludedName,
+                            $Entry.FullName
+                        )
+                    )
+                }
+            }
+        }
+    }
+    finally {
+        $Archive.Dispose()
+    }
 }
 
 try {
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
+        -Description "launcher"
+
+    foreach ($Directory in $RuntimeDirectories) {
+        Assert-ReleaseSource `
+            -Path (Join-Path $RepositoryRoot $Directory) `
+            -Description $Directory
+    }
+
     New-Item -ItemType Directory -Path $PackageRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 
-    # User-facing package: the root contains only the launcher.
+    # The extracted distribution root has one obvious human entry point.
     Copy-Item `
         -LiteralPath (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
         -Destination $PackageRoot `
         -Force
 
-    foreach ($Directory in @(
-        "app",
-        "config",
-        "languages",
-        "external",
-        "rules",
-        "themes"
-    )) {
-        $Source = Join-Path $RepositoryRoot $Directory
-        if (Test-Path -LiteralPath $Source) {
-            Copy-Item `
-                -LiteralPath $Source `
-                -Destination $PackageRoot `
-                -Recurse `
-                -Force
-        }
+    foreach ($Directory in $RuntimeDirectories) {
+        Copy-Item `
+            -LiteralPath (Join-Path $RepositoryRoot $Directory) `
+            -Destination $PackageRoot `
+            -Recurse `
+            -Force
     }
 
-    # Runtime documentation is kept under docs; developer-only project material,
-    # .github, release tooling and repository metadata are intentionally excluded.
+    # Runtime documentation only. Developer-only .github, project, tools,
+    # repository metadata and test artifacts are deliberately excluded.
     $PackageDocs = Join-Path $PackageRoot "docs"
     New-Item -ItemType Directory -Path $PackageDocs -Force | Out-Null
 
@@ -62,25 +132,34 @@ try {
         "CONTRIBUTING.md",
         "LICENSE"
     )) {
-        Copy-Item `
-            -LiteralPath (Join-Path $RepositoryRoot $DocFile) `
-            -Destination $PackageDocs `
-            -Force
+        $Source = Join-Path $RepositoryRoot $DocFile
+
+        if (Test-Path -LiteralPath $Source -PathType Leaf) {
+            Copy-Item `
+                -LiteralPath $Source `
+                -Destination $PackageDocs `
+                -Force
+        }
     }
 
     foreach ($DocFile in @(
         "ABOUT.txt",
         "CHANGELOG.md"
     )) {
-        Copy-Item `
-            -LiteralPath (Join-Path $RepositoryRoot "docs\$DocFile") `
-            -Destination $PackageDocs `
-            -Force
+        $Source = Join-Path $RepositoryRoot ("docs\" + $DocFile)
+
+        if (Test-Path -LiteralPath $Source -PathType Leaf) {
+            Copy-Item `
+                -LiteralPath $Source `
+                -Destination $PackageDocs `
+                -Force
+        }
     }
 
     foreach ($DocLanguage in @("eng", "ita")) {
-        $Source = Join-Path $RepositoryRoot "docs\$DocLanguage"
-        if (Test-Path -LiteralPath $Source) {
+        $Source = Join-Path $RepositoryRoot ("docs\" + $DocLanguage)
+
+        if (Test-Path -LiteralPath $Source -PathType Container) {
             Copy-Item `
                 -LiteralPath $Source `
                 -Destination $PackageDocs `
@@ -89,8 +168,36 @@ try {
         }
     }
 
+    # Staging-tree validation before compression.
+    foreach ($ExcludedName in $ExcludedReleaseDirectories) {
+        $ForbiddenPath = Join-Path $PackageRoot $ExcludedName
+
+        if (Test-Path -LiteralPath $ForbiddenPath) {
+            throw (
+                "Release validation failed: excluded directory present in staging tree: {0}" -f
+                $ForbiddenPath
+            )
+        }
+    }
+
+    $UnexpectedRootFiles = @(
+        Get-ChildItem -LiteralPath $PackageRoot -File |
+        Where-Object { $_.Name -ne "Avvia_Manutenzione.bat" }
+    )
+
+    if ($UnexpectedRootFiles.Count -gt 0) {
+        throw (
+            "Release validation failed: unexpected file(s) in distribution root: {0}" -f
+            (($UnexpectedRootFiles | ForEach-Object Name) -join ", ")
+        )
+    }
+
     if (Test-Path -LiteralPath $ZipPath) {
         Remove-Item -LiteralPath $ZipPath -Force
+    }
+
+    if (Test-Path -LiteralPath $ChecksumPath) {
+        Remove-Item -LiteralPath $ChecksumPath -Force
     }
 
     Compress-Archive `
@@ -98,13 +205,45 @@ try {
         -DestinationPath $ZipPath `
         -CompressionLevel Optimal
 
-    $Hash = (Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256).Hash.ToLowerInvariant()
-    "$Hash  $(Split-Path -Leaf $ZipPath)" |
-        Set-Content -LiteralPath $ChecksumPath -Encoding ASCII
+    # Validate the actual ZIP, not only the staging directory.
+    Test-ZipForExcludedDirectories `
+        -ArchivePath $ZipPath `
+        -ExcludedDirectoryNames $ExcludedReleaseDirectories
 
-    Write-Host "Package created: $ZipPath" -ForegroundColor Green
-    Write-Host "SHA-256: $Hash"
+    $Hash = (
+        Get-FileHash `
+            -LiteralPath $ZipPath `
+            -Algorithm SHA256
+    ).Hash.ToLowerInvariant()
+
+    ("{0}  {1}" -f @(
+        $Hash,
+        (Split-Path -Leaf $ZipPath)
+    )) |
+        Set-Content `
+            -LiteralPath $ChecksumPath `
+            -Encoding ASCII
+
+    Write-Host ""
+    Write-Host "Release package validated." -ForegroundColor Green
+    Write-Host ("Package : {0}" -f $ZipPath)
+    Write-Host ("SHA-256: {0}" -f $Hash)
+    Write-Host ""
+    Write-Host "Excluded from public release:" -ForegroundColor Cyan
+
+    foreach ($ExcludedName in $ExcludedReleaseDirectories) {
+        Write-Host ("  - {0}\" -f $ExcludedName)
+    }
 }
 finally {
-    Remove-Item -LiteralPath $BuildRoot -Recurse -Force -ErrorAction SilentlyContinue
+    if (
+        -not [string]::IsNullOrWhiteSpace([string]$BuildRoot) -and
+        (Test-Path -LiteralPath $BuildRoot)
+    ) {
+        Remove-Item `
+            -LiteralPath $BuildRoot `
+            -Recurse `
+            -Force `
+            -ErrorAction SilentlyContinue
+    }
 }

@@ -462,15 +462,18 @@ function Invoke-MTNetworkTechnicalReport {
         )) {
             $Flags = New-Object System.Collections.Generic.List[string]
 
-            if ([bool]$Adapter.HardwareInterface) {
-                [void]$Flags.Add(
-                    (Get-MTText $LanguageData "REPORT_FLAG_PHYSICAL")
-                )
-            }
-
+            # Windows can expose a Hyper-V guest NIC with both
+            # HardwareInterface=true and IsVirtual=true. In human output,
+            # "virtual" takes precedence so we do not describe the same guest
+            # adapter as both physical and virtual.
             if ([bool]$Adapter.IsVirtual) {
                 [void]$Flags.Add(
                     (Get-MTText $LanguageData "REPORT_FLAG_VIRTUAL")
+                )
+            }
+            elseif ([bool]$Adapter.HardwareInterface) {
+                [void]$Flags.Add(
+                    (Get-MTText $LanguageData "REPORT_FLAG_PHYSICAL")
                 )
             }
 
@@ -676,8 +679,8 @@ function Invoke-MTNetworkTechnicalReport {
                     -Lines $Lines `
                     -Key (Get-MTText $LanguageData 'PACKET_LOSS') `
                     -Value (Format-MTNetworkReportText `
-                        -Template "{0} %" `
-                        -Arguments @($Speed.PacketLossPercent))
+                        -Template "{0:N2} %" `
+                        -Arguments @([double]$Speed.PacketLossPercent))
             }
 
             Add-MTNetworkReportKeyValue `
