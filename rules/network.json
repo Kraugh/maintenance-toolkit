@@ -1,0 +1,54 @@
+{
+  "SchemaVersion": "1.0",
+  "Origin": "NDP 0.0.19-RC",
+  "Rules": [
+    {
+      "Id": "NET001",
+      "Severity": "Critical",
+      "Enabled": true,
+      "Condition": "NoDefaultRoute"
+    },
+    {
+      "Id": "NET002",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "MultipleDefaultRoutes"
+    },
+    {
+      "Id": "VPN001",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "VPNWithoutRoutes"
+    },
+    {
+      "Id": "VPN002",
+      "Severity": "Info",
+      "Enabled": true,
+      "Condition": "MultipleActiveVPNs"
+    },
+    {
+      "Id": "TOP001",
+      "Severity": "Warning",
+      "Enabled": true,
+      "Condition": "AmbiguousPhysicalBackend"
+    },
+    {
+      "Id": "TOP002",
+      "Severity": "Info",
+      "Enabled": true,
+      "Condition": "VirtualRoutingInterface"
+    },
+    {
+      "Id": "VPN003",
+      "Severity": "Success",
+      "Enabled": true,
+      "Condition": "SplitTunnelCandidate"
+    },
+    {
+      "Id": "VPN004",
+      "Severity": "Success",
+      "Enabled": true,
+      "Condition": "FullTunnelCandidate"
+    }
+  ]
+}

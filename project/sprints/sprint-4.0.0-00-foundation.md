@@ -135,3 +135,141 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Add an AUTOTEST regression guard for caller-scope root isolation.
 - [ ] Re-run Foundation AUTOTEST on Windows 11.
 - [ ] Launch MT from the root BAT and test EN/IT.
+
+## Development increment 12 — Network Diagnostics foundation import
+
+- [x] Import NDP 0.0.19-RC topology engine unchanged.
+- [x] Import NDP 0.0.19-RC routing analyzer unchanged.
+- [x] Import NDP 0.0.19-RC rules engine unchanged.
+- [x] Preserve NDP function names during the regression bridge.
+- [x] Generalize NDP profiler into MT core names.
+- [x] Generalize NDP privilege helpers into MT core names.
+- [x] Import the eight NDP diagnostic rules as `rules/network.json`.
+- [x] Add a same-process Network Diagnostics foundation loader.
+- [x] Add static/load regression checks to MT4 AUTOTEST.
+- [x] Do not import standalone NDP launchers or menus.
+- [x] Do not execute live network diagnostics yet.
+- [ ] Validate foundation AUTOTEST on Windows 11 / PowerShell 5.1.
+- [ ] Next increment: native MT Network Diagnostics submenu and first callable action.
+
+
+## Development increment 13 — native Network Diagnostics menu
+
+- [x] Enable the Network Diagnostics domain in MT4.
+- [x] Add `[N] Network Diagnostics` to the MT main menu.
+- [x] Add a bilingual MT-native Network Diagnostics submenu.
+- [x] Add the first callable action: Quick diagnosis.
+- [x] Execute topology, routing and rules engines in the existing MT process.
+- [x] Reuse the NDP 0.0.19-RC topology/routing/rules models.
+- [x] Render the first diagnostic output with MT-owned bilingual text.
+- [x] Preserve `Get-VMSwitch` precedence from the NDP topology engine.
+- [x] Do not spawn PowerShell/cmd or request additional elevation.
+- [x] Add AUTOTEST guards against nested launch/elevation tokens.
+- [ ] Validate Quick diagnosis on Windows 11 / Hyper-V in EN and IT.
+- [ ] Next increment: technical report and internal `reports` contract.
+
+
+## Development increment 13a — Hyper-V guest backend presentation
+
+- [x] Detect when NDP returns the same virtual adapter as logical and physical backend.
+- [x] Do not present a guest-only Hyper-V virtual NIC as a real physical adapter.
+- [x] Show a localized warning that the physical backend is not visible from the guest.
+- [x] Keep the NDP topology engine unchanged.
+- [x] Render diagnostic duration in seconds when >= 1 second.
+- [x] Add a regression fixture to AUTOTEST.
+- [ ] Re-test Quick diagnosis on the Windows 11 Hyper-V guest in EN and IT.
+
+
+## Development increment 14 — native Network Technical Report
+
+- [x] Add `[2] Technical report` to the native Network Diagnostics submenu.
+- [x] Generate the TXT report inside MT `reports/`.
+- [x] Put report identity fields in the first eight lines.
+- [x] Include option/menu, report type, SpeedTest state, scope, RunId, computer and timestamp.
+- [x] Use an ASCII-safe descriptive filename.
+- [x] Generate correlated Topology and Rules JSON artifacts with the same RunId.
+- [x] Reuse NDP 0.0.19-RC topology/routing/rules engines unchanged.
+- [x] Keep collection, interpretation, rules and report composition separate.
+- [x] Do not add SpeedTest yet; report explicitly records `SpeedTest: NO`.
+- [x] Add AUTOTEST checks for report identity, filename safety and no nested execution.
+- [ ] Validate Technical Report on Windows 11 in EN and IT.
+- [ ] Compare topology/rules artifacts with NDP 0.0.19-RC baseline.
+
+
+## Development increment 14a — Windows PowerShell 5.1 parser fix
+
+- [x] Parenthesize `Get-MTText` calls passed to `.Add(...)`.
+- [x] Fix the parser cascade in `NetworkReports.ps1`.
+- [x] Add an AUTOTEST regression guard for unparenthesized command calls inside `.Add(...)`.
+- [ ] Re-run Foundation AUTOTEST on Windows PowerShell 5.1.
+- [ ] Re-test Network Technical Report (`N` -> `2`).
+
+
+## Development increment 14b — report mutable-buffer binding fix
+
+- [x] Remove strict generic-list parameter binding from report helper functions.
+- [x] Accept the mutable report buffer as an object and validate the `.Add()` contract at runtime.
+- [x] Allow empty string values and section separators intentionally.
+- [x] Add an AUTOTEST fixture using a newly-created empty report buffer.
+- [ ] Re-run Foundation AUTOTEST on Windows PowerShell 5.1.
+- [ ] Re-run Network Technical Report (`N` -> `2`).
+
+
+## Development increment 14c — multiline format-operator fix
+
+- [x] Make all multiline `-f` report expressions explicit for Windows PowerShell 5.1.
+- [x] Cover interface, route, VPN, rule, profiler and error report formatting.
+- [x] Add AUTOTEST samples for every affected format template.
+- [x] Show source position on live Technical Report exceptions.
+- [x] Keep write-at-end behaviour: no partial report artifacts on failure.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Re-run Network Technical Report (`N` -> `2`).
+
+
+## Development increment 14d — safe report formatter
+
+- [x] Remove PowerShell `-f` from Network Report composition.
+- [x] Centralize string formatting in `Format-MTNetworkReportText`.
+- [x] Use .NET `String.Format` with an explicit argument array.
+- [x] Add formatter tests for 1, 2, 5 and 6 arguments.
+- [x] Add a deliberate mismatch test with diagnostic template/argument count.
+- [x] Preserve write-at-end semantics and no partial artifacts on failure.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Re-run Network Technical Report (`N` -> `2`).
+
+
+## Development increment 14e — reports directory fix
+
+- [x] Read the report directory from `config/settings.json -> Paths.Reports`.
+- [x] Fall back safely to `reports` if the configured value is empty.
+- [x] Keep all Network Technical Report artifacts under the internal `reports/` directory.
+- [x] Add an AUTOTEST regression guard for the configured reports path.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Re-run Network Technical Report (`N` -> `2`) and verify artifact location.
+
+
+## Development increment 15 — optional SpeedTest integration
+
+- [x] Add native optional Ookla SpeedTest service.
+- [x] Search `external/speedtest.exe`, then PATH.
+- [x] Never download or auto-install SpeedTest.
+- [x] Missing executable degrades to WARN/SKIP, not ERROR.
+- [x] Add `[3] Quick diagnosis + SpeedTest`.
+- [x] Add `[4] Technical report + SpeedTest`.
+- [x] Preserve one MT process and one elevation boundary.
+- [x] Parse Ookla JSON and expose ping, jitter, download, upload and packet loss.
+- [x] Technical report header records `SpeedTest: YES`.
+- [x] SpeedTest report artifacts share the same RunId and prefix.
+- [x] Add parser/conversion and no-download AUTOTEST guards.
+- [ ] Validate missing-SpeedTest case on Windows 11.
+- [ ] Validate present-SpeedTest case when `speedtest.exe` is available.
+
+
+## Development increment 15a — SpeedTest report formatter fix
+
+- [x] Route SpeedTest report values through `Format-MTNetworkReportText`.
+- [x] Remove the five `-f` expressions reintroduced by dev.15.
+- [x] Preserve the dev.14d safe-formatting contract for all report composition.
+- [x] Add a SpeedTest-specific AUTOTEST regression guard.
+- [ ] Re-run Foundation AUTOTEST.
+- [ ] Continue with missing/present `speedtest.exe` runtime tests.

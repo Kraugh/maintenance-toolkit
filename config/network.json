@@ -1,0 +1,63 @@
+{
+  "SchemaVersion": 1,
+  "Baseline": "NDP 0.0.19-RC",
+  "Routing": {
+    "Enabled": true,
+    "IncludeLoopback": false,
+    "IncludeLinkLocal": false,
+    "MaxDisplayedRoutes": 20,
+    "VPNNamePatterns": [
+      "Fortinet",
+      "FortiClient",
+      "OpenVPN",
+      "TAP-Windows",
+      "WireGuard",
+      "Zyxel",
+      "SecuExtender",
+      "SSTP",
+      "IKEv2",
+      "L2TP",
+      "AnyConnect",
+      "GlobalProtect"
+    ],
+    "VirtualAdapterPatterns": [
+      "Hyper-V",
+      "vEthernet",
+      "Virtual",
+      "VMware",
+      "VirtualBox",
+      "WSL"
+    ]
+  },
+  "Topology": {
+    "Enabled": true,
+    "IncludeAllIPv4Routes": true,
+    "ExcludeRouteStates": [
+      "Dead"
+    ],
+    "VPNPatterns": [
+      "Fortinet",
+      "FortiClient",
+      "OpenVPN",
+      "TAP-Windows",
+      "WireGuard",
+      "Zyxel",
+      "SecuExtender",
+      "SSTP",
+      "IKEv2",
+      "L2TP",
+      "AnyConnect",
+      "GlobalProtect"
+    ],
+    "VirtualPatterns": [
+      "Hyper-V",
+      "vEthernet",
+      "vSwitch",
+      "VMware",
+      "VirtualBox",
+      "WSL",
+      "Docker",
+      "Virtual"
+    ]
+  }
+}

@@ -12,7 +12,7 @@
     "Reports": "reports"
   },
   "NetworkDiagnostics": {
-    "Enabled": false,
+    "Enabled": true,
     "SpeedTest": {
       "Enabled": false,
       "Optional": true

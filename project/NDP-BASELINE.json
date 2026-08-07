@@ -1,0 +1,12 @@
+{
+  "Product": "Network Diagnostics",
+  "BaselineVersion": "0.0.19-RC",
+  "Archive": "NDP-20260806-0019-RC.zip",
+  "IntegratedIn": "MT 4.0.0-dev.12",
+  "ImportedEngines": [
+    "TopologyEngine.ps1",
+    "RoutingAnalyzer.ps1",
+    "RulesEngine.ps1"
+  ],
+  "StandaloneWorkflowsImported": false
+}

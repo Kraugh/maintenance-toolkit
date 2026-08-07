@@ -12,9 +12,11 @@
     {
       "Key": "networkDiagnostics",
       "Domain": "network",
-      "Enabled": false,
+      "Enabled": true,
       "Automatic": false,
-      "NameKey": "MODULE_NETWORK_DIAGNOSTICS"
+      "NameKey": "MODULE_NETWORK_DIAGNOSTICS",
+      "State": "native-menu-dev13",
+      "Baseline": "NDP 0.0.19-RC"
     }
   ]
 }

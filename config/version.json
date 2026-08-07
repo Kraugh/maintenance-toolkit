@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0-dev.11",
+  "Version": "4.0.0-dev.15a",
   "Channel": "development",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "Phase 2 - structure compatibility root fix"
+  "Milestone": "Phase 3 - SpeedTest report formatter compatibility fix"
 }

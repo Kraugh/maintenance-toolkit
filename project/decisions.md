@@ -489,3 +489,230 @@ Because the loader is dot-sourced, a generic `$ProjectRoot` assignment mutates
 the caller scope. Dev.10 therefore changed the AUTOTEST project root from the
 repository root to `app`, producing duplicated paths such as `app/app/tools`
 and failed `app/config` / `app/languages` lookups.
+
+---
+
+## 2026-08-07 — NDP integration begins with engine primitives, not workflows
+
+### Decision
+
+MT4 dev.12 imports the NDP 0.0.19-RC topology, routing and rules engines as
+engine primitives under `app/modules/network`.
+
+The NDP standalone entry point, `.cmd` launchers, `QuickDiagnosis.ps1` and
+`TechnicalReport.ps1` are not copied into the MT runtime.
+
+### Regression bridge
+
+Original `ND` engine function names are temporarily preserved. This is
+intentional: it minimizes behavioural changes while MT output is compared
+against the immutable NDP 0.0.19-RC oracle.
+
+NDP profiler and privilege helpers are generalized immediately to MT names
+because they are common-platform services rather than network-domain identity.
+
+### Execution boundary
+
+Network Diagnostics remains disabled in the MT menu in dev.12. The foundation
+loader only dot-sources callable functions into the existing MT process. It
+does not elevate, open a nested menu, or launch another PowerShell process.
+
+
+---
+
+## 2026-08-07 — Network Diagnostics first appears as a native MT submenu
+
+### Decision
+
+MT4 dev.13 exposes Network Diagnostics through `[N]` in the existing
+Maintenance Toolkit menu.
+
+The first action, Quick diagnosis, calls the imported NDP topology, routing and
+rules engines directly in the current MT PowerShell process.
+
+### Boundaries
+
+- no NDP standalone menu;
+- no `Start.ps1`;
+- no `.cmd` launcher;
+- no second PowerShell process;
+- no internal UAC/elevation request;
+- no report generation yet.
+
+The original NDP engine model is preserved while MT owns orchestration,
+localization and presentation.
+
+
+---
+
+## 2026-08-07 — MT presentation must not invent host-visible physical hardware
+
+### Decision
+
+When the NDP topology model returns the same virtual adapter as both the
+logical interface and the physical backend, MT treats the physical backend as
+not visible from the Hyper-V guest rather than displaying that virtual adapter
+as a physical NIC.
+
+### Reason
+
+A guest VM cannot reliably identify the host's real network adapter unless the
+Hyper-V binding information is actually available. MT therefore keeps the
+engine model unchanged for regression parity but applies a conservative
+presentation rule at the MT orchestration layer.
+
+
+---
+
+## 2026-08-07 — Native Network Technical Report owns report identity, not engines
+
+### Decision
+
+MT4 dev.14 introduces `NetworkReports.ps1` as the Network Diagnostics report
+composition layer.
+
+Topology, routing and rules engines remain independent and return models. The
+report layer consumes those models and writes the user-facing TXT plus
+correlated JSON artifacts.
+
+### Report contract
+
+The first eight lines identify the report before any decorative heading:
+
+1. Maintenance Toolkit version;
+2. menu option/action;
+3. report type;
+4. SpeedTest state;
+5. scope;
+6. RunId;
+7. computer;
+8. timestamp.
+
+All related artifacts use the same RunId and an ASCII-safe descriptive prefix.
+
+SpeedTest is deliberately not part of dev.14; the report states that explicitly.
+
+
+---
+
+## 2026-08-07 — Parenthesize command expressions used as .NET method arguments
+
+### Decision
+
+When a PowerShell command invocation is passed as an argument to a .NET method
+such as `.Add(...)`, MT4 wraps the command invocation in parentheses.
+
+### Reason
+
+Windows PowerShell 5.1 rejects constructs such as
+`$List.Add(Get-MTText ...)`, producing a parser cascade. The compatible form is
+`$List.Add((Get-MTText ...))`.
+
+
+---
+
+## 2026-08-07 — Report line buffers use a behavioural contract
+
+### Decision
+
+Report helper functions accept the line buffer as an object and verify that it
+exposes a mutable `.Add()` method instead of relying on PowerShell parameter
+binding to a generic `List[string]`.
+
+### Reason
+
+Windows PowerShell 5.1 parameter binding can enumerate or reject collection
+arguments in ways that are undesirable for an intentionally mutable buffer,
+especially while the collection is empty. The report helpers need object
+identity and mutation semantics, not collection coercion.
+
+
+---
+
+## 2026-08-07 — Multiline format operators require explicit continuation
+
+### Decision
+
+When an MT PowerShell format expression (`-f`) spans multiple physical lines,
+the line containing `-f` ends with an explicit continuation character.
+
+### Reason
+
+Windows PowerShell 5.1 may otherwise bind only part of the intended argument
+list when the expression is nested in another call. The resulting runtime
+exception reports a format index outside the supplied argument list.
+
+This is treated as a PowerShell 5.1 compatibility rule and is covered by
+AUTOTEST.
+
+
+---
+
+## 2026-08-07 — Network report composition does not use PowerShell -f
+
+### Decision
+
+Network Technical Report composition uses a dedicated
+`Format-MTNetworkReportText` helper backed by .NET `String.Format`.
+
+### Reason
+
+Three successive Windows PowerShell 5.1 runtime failures showed that the `-f`
+operator is too easy to make ambiguous when combined with multiline syntax,
+method calls and argument lists.
+
+The report layer now passes an explicit object array to a single formatter.
+Formatting failures also include the template and argument count, so a future
+mismatch can be located immediately.
+
+
+---
+
+## 2026-08-07 — Runtime paths are read from the structured Paths object
+
+### Decision
+
+Network report output uses `config/settings.json -> Paths.Reports`.
+
+### Reason
+
+The MT4 structured settings schema stores runtime directories under `Paths`.
+Dev.14d incorrectly looked for a top-level `ReportDirectory` property. In
+PowerShell this evaluated to an empty value, so `Join-Path` resolved to the
+project root and the report artifacts were written beside the launcher.
+
+
+---
+
+## 2026-08-07 — SpeedTest remains an optional local dependency
+
+### Decision
+
+MT4 never downloads or installs Ookla SpeedTest automatically.
+
+Network Diagnostics searches `external/speedtest.exe` first and then PATH.
+Options 3 and 4 request SpeedTest explicitly. Missing executable is a warning
+and does not fail Quick Diagnosis or the Technical Report.
+
+### Artifacts
+
+When SpeedTest succeeds during a Technical Report, the raw parsed result is
+stored as a correlated `-SpeedTest.json` artifact using the same RunId as the
+TXT, Topology and Rules files.
+
+
+---
+
+## 2026-08-07 — Optional report sections obey the report formatter contract
+
+### Decision
+
+Any future section added to `NetworkReports.ps1`, including SpeedTest, must use
+`Format-MTNetworkReportText` for formatted report values.
+
+### Reason
+
+Dev.15 accidentally reintroduced five PowerShell `-f` expressions in the new
+SpeedTest section. The pre-existing dev.14d AUTOTEST correctly rejected them
+before runtime. The safe formatter contract therefore applies to the whole
+report composer, not only the original sections.

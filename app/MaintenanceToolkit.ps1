@@ -19,7 +19,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.0-dev.11"
+$Version = "4.0.0-dev.15a"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -58,6 +58,14 @@ $LanguageData = $MT4Context.Language
 $LanguageResolution = $MT4Context.LanguageResolution
 $CurrentLanguage = [string]$LanguageResolution.Language
 $env:MT_LANGUAGE = $CurrentLanguage
+
+# Native Network Diagnostics domain. Engine functions are loaded into the
+# current MT process; no standalone NDP launcher or second elevation exists.
+. (Join-Path $AppDir "modules\network\NetworkFoundation.ps1")
+$null = Import-MTNetworkDiagnosticsFoundation -ProjectRoot $Root
+. (Join-Path $AppDir "modules\network\SpeedTest.ps1")
+. (Join-Path $AppDir "modules\network\NetworkDiagnostics.ps1")
+. (Join-Path $AppDir "modules\network\NetworkReports.ps1")
 
 function T {
     param(
@@ -373,6 +381,9 @@ function Show-Menu {
     }
 
     Write-Host ""
+    if ([bool]$MT4Settings.NetworkDiagnostics.Enabled) {
+        Write-Host ("[N] {0}" -f (T "MENU_NETWORK_DIAGNOSTICS"))
+    }
     Write-Host ("[A] {0}" -f (T "MENU_RUN_AUTOMATIC"))
     Write-Host ("[C] {0}" -f (T "MENU_OPEN_CONFIG"))
     Write-Host ("[L] {0}" -f (T "MENU_OPEN_LOGS"))
@@ -383,6 +394,197 @@ function Show-Menu {
     Write-Host ""
 }
 
+function Show-NetworkDiagnosticsMenu {
+    Clear-Host
+    Write-Host "============================================================"
+    Write-Host (" {0}" -f (T "NETWORK_MENU_TITLE"))
+    Write-Host (" {0}: {1} ({2})" -f (T "MENU_LANGUAGE"), (T "LANGUAGE_NAME"), $CurrentLanguage)
+    Write-Host "============================================================"
+    Write-Host ""
+    Write-Host ("[1] {0}" -f (T "NETWORK_QUICK_DIAGNOSIS"))
+    Write-Host ("[2] {0}" -f (T "NETWORK_TECHNICAL_REPORT"))
+    Write-Host ("[3] {0}" -f (T "NETWORK_QUICK_DIAGNOSIS_SPEEDTEST"))
+    Write-Host ("[4] {0}" -f (T "NETWORK_TECHNICAL_REPORT_SPEEDTEST"))
+    Write-Host ""
+    Write-Host ("[0] {0}" -f (T "NETWORK_MENU_RETURN"))
+    Write-Host ""
+}
+
+function Invoke-MTNetworkDiagnosticsMenu {
+    while ($true) {
+        Show-NetworkDiagnosticsMenu
+        $NetworkChoice = Read-Host (T "MENU_SELECTION")
+
+        switch ($NetworkChoice) {
+            "1" {
+                $null = Invoke-MTNetworkQuickDiagnosis `
+                    -ProjectRoot $Root `
+                    -LanguageData $LanguageData
+
+                Write-Host ""
+                Write-Host (T "MENU_PRESS_ENTER")
+                [void](Read-Host)
+            }
+
+            "2" {
+                Clear-Host
+                Write-Host (T "NETWORK_REPORT_GENERATING") -ForegroundColor Cyan
+                Write-Host ""
+
+                try {
+                    $ReportResult = Invoke-MTNetworkTechnicalReport `
+                        -ProjectRoot $Root `
+                        -LanguageData $LanguageData `
+                        -Version $Version
+
+                    if ($ReportResult.Succeeded) {
+                        Write-Host (
+                            "[OK] {0}: {1}" -f
+                            (T "NETWORK_REPORT_SAVED"),
+                            $ReportResult.ReportPath
+                        ) -ForegroundColor Green
+
+                        if ($ReportResult.TopologyPath) {
+                            Write-Host (
+                                "[OK] {0}: {1}" -f
+                                (T "NETWORK_TOPOLOGY_SAVED"),
+                                $ReportResult.TopologyPath
+                            ) -ForegroundColor Green
+                        }
+
+                        if ($ReportResult.RulesPath) {
+                            Write-Host (
+                                "[OK] {0}: {1}" -f
+                                (T "NETWORK_RULES_SAVED"),
+                                $ReportResult.RulesPath
+                            ) -ForegroundColor Green
+                        }
+                    }
+                    else {
+                        Write-Host (
+                            "[WARN] {0}: {1}" -f
+                            (T "NETWORK_REPORT_SAVED"),
+                            $ReportResult.ReportPath
+                        ) -ForegroundColor Yellow
+                    }
+                }
+                catch {
+                    Write-Host (
+                        "[ERROR] {0}: {1}" -f `
+                        (T "NETWORK_REPORT_FAILED"),
+                        $_.Exception.Message
+                    ) -ForegroundColor Red
+
+                    if (
+                        $null -ne $_.InvocationInfo -and
+                        -not [string]::IsNullOrWhiteSpace(
+                            [string]$_.InvocationInfo.PositionMessage
+                        )
+                    ) {
+                        Write-Host $_.InvocationInfo.PositionMessage -ForegroundColor DarkGray
+                    }
+                }
+
+                Write-Host ""
+                Write-Host (T "MENU_PRESS_ENTER")
+                [void](Read-Host)
+            }
+
+            "3" {
+                $null = Invoke-MTNetworkQuickDiagnosis `
+                    -ProjectRoot $Root `
+                    -LanguageData $LanguageData `
+                    -SpeedTest
+
+                Write-Host ""
+                Write-Host (T "MENU_PRESS_ENTER")
+                [void](Read-Host)
+            }
+
+            "4" {
+                Clear-Host
+                Write-Host (T "NETWORK_REPORT_GENERATING") -ForegroundColor Cyan
+                Write-Host ""
+
+                try {
+                    $ReportResult = Invoke-MTNetworkTechnicalReport `
+                        -ProjectRoot $Root `
+                        -LanguageData $LanguageData `
+                        -Version $Version `
+                        -SpeedTest `
+                        -OptionCode 'N4' `
+                        -ReportType 'Technical-SpeedTest'
+
+                    if ($ReportResult.Succeeded) {
+                        Write-Host (
+                            "[OK] {0}: {1}" -f
+                            (T "NETWORK_REPORT_SAVED"),
+                            $ReportResult.ReportPath
+                        ) -ForegroundColor Green
+
+                        if ($ReportResult.TopologyPath) {
+                            Write-Host (
+                                "[OK] {0}: {1}" -f
+                                (T "NETWORK_TOPOLOGY_SAVED"),
+                                $ReportResult.TopologyPath
+                            ) -ForegroundColor Green
+                        }
+
+                        if ($ReportResult.RulesPath) {
+                            Write-Host (
+                                "[OK] {0}: {1}" -f
+                                (T "NETWORK_RULES_SAVED"),
+                                $ReportResult.RulesPath
+                            ) -ForegroundColor Green
+                        }
+
+                        if ($ReportResult.SpeedTestPath) {
+                            Write-Host (
+                                "[OK] {0}: {1}" -f
+                                (T "NETWORK_SPEEDTEST_SAVED"),
+                                $ReportResult.SpeedTestPath
+                            ) -ForegroundColor Green
+                        }
+                        elseif (
+                            $null -ne $ReportResult.SpeedTest -and
+                            $ReportResult.SpeedTest.Status -eq 'WARN'
+                        ) {
+                            Write-Host (
+                                "[WARN] {0}" -f
+                                $ReportResult.SpeedTest.ErrorMessage
+                            ) -ForegroundColor Yellow
+                        }
+                    }
+                }
+                catch {
+                    Write-Host (
+                        "[ERROR] {0}: {1}" -f `
+                        (T "NETWORK_REPORT_FAILED"),
+                        $_.Exception.Message
+                    ) -ForegroundColor Red
+
+                    if (
+                        $null -ne $_.InvocationInfo -and
+                        -not [string]::IsNullOrWhiteSpace(
+                            [string]$_.InvocationInfo.PositionMessage
+                        )
+                    ) {
+                        Write-Host $_.InvocationInfo.PositionMessage -ForegroundColor DarkGray
+                    }
+                }
+
+                Write-Host ""
+                Write-Host (T "MENU_PRESS_ENTER")
+                [void](Read-Host)
+            }
+
+            "0" {
+                return
+            }
+        }
+    }
+}
+
 function Select-Modules {
     while ($true) {
         Show-Menu
@@ -390,6 +592,13 @@ function Select-Modules {
 
         if ($Choice -match '^[Qq]$') {
             return $null
+        }
+
+        if ($Choice -match '^[Nn]$') {
+            if ([bool]$MT4Settings.NetworkDiagnostics.Enabled) {
+                Invoke-MTNetworkDiagnosticsMenu
+            }
+            continue
         }
 
         if ($Choice -match '^[Cc]$') {

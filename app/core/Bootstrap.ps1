@@ -11,7 +11,9 @@ $script:MT4CoreFiles = @(
     'Renderer.ps1',
     'LegacyIni.ps1',
     'Results.ps1',
-    'ProcessRunner.ps1'
+    'ProcessRunner.ps1',
+    'Profiler.ps1',
+    'Privileges.ps1'
 )
 
 # Load the core services in the caller's dot-sourcing scope.
