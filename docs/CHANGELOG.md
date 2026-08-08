@@ -5,20 +5,49 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
-## 4.0.0 development — RC1 preparation
+## 4.0.0-rc.1 — 7 August 2026
 
-### Release convergence
+### First Maintenance Toolkit 4.0 release candidate
 
-- integrated the MT4 bilingual foundation with the legacy-compatible runtime;
-- added topology-aware Network Diagnostics and automatic health rules;
-- added DNS health probing and Advanced VPN Diagnostics;
-- added compact diagnostic outcome and Technical Report refinements;
-- added repository EOL normalization and validation;
-- strengthened release packaging with version-consistency and required-file checks;
-- added the explicit `project/RC1-CHECKLIST.md` release gate.
+- integrated the bilingual MT4 runtime while retaining validated legacy
+  maintenance modules;
+- integrated native Network Diagnostics into the MT menu;
+- added topology-aware physical/virtual interface analysis;
+- added route, gateway, DNS, DHCP, APIPA, MTU, metric and link-speed health
+  diagnostics;
+- added configurable DNS resolution probing;
+- added automatic network-health rules with concise severity summaries;
+- added Advanced VPN Diagnostics for active tunnel addresses, DNS, routes,
+  split/full-tunnel classification and common VPN technology identification;
+- added TXT technical network reports with correlated JSON topology and rule
+  artifacts;
+- retained optional Ookla Speedtest integration without bundling the external
+  executable in the public package;
+- added Foundation AUTOTEST and legacy-compatibility validation;
+- normalized repository line endings and preserved UTF-8 BOM requirements for
+  Windows PowerShell 5.1;
+- strengthened release packaging with version-consistency, required-file and
+  excluded-directory validation;
+- added an explicit RC1 release gate.
 
-The next complete candidate is intended to be `4.0.0-rc.1`; no new feature
-subsystem is planned before that candidate.
+### Validation completed before RC1
+
+- Windows 11 physical system: Network Quick Diagnosis and Technical Report;
+- Windows 10 22H2 / PowerShell 5.1 physical system: Network Quick Diagnosis,
+  DNS health and Technical Report;
+- Hyper-V Windows 11 guest: virtual-first topology handling;
+- no-VPN systems: clean informational VPN state;
+- Foundation AUTOTEST: 0 errors / 0 warnings on validated builds.
+
+### RC validation still required
+
+- complete Toolkit smoke test from the extracted candidate package;
+- representative legacy maintenance module on Windows 10 and Windows 11;
+- real connected VPN validation when an appropriate test environment is
+  available.
+
+No new feature subsystem is accepted during RC validation. Only
+release-blocking fixes are allowed.
 
 ## 3.7.2 — 1 August 2026
 

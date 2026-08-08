@@ -1045,3 +1045,22 @@ format.
 A release-gate test that expects `4.0.0-dev.26` becomes invalid as soon as a
 release-blocking fix requires `dev.26a`, `dev.26b` or the eventual `rc.1`.
 The invariant is version consistency, not a particular development suffix.
+
+
+---
+
+## 2026-08-07 — Promote 4.0.0-rc.1
+
+### Decision
+
+`4.0.0-rc.1` is the first complete Maintenance Toolkit 4.0 release candidate.
+
+Feature scope is frozen. Only defects that block release quality, compatibility,
+packaging or documentation may change the candidate line before stable 4.0.0.
+
+### Evidence
+
+The pre-RC line has passed Foundation AUTOTEST and Network Diagnostics runtime
+validation on Windows 11 physical hardware, Windows 10 / Windows PowerShell 5.1,
+and a Windows 11 Hyper-V guest. Technical Network Report generation has also
+been validated on Windows 10 and Windows 11.

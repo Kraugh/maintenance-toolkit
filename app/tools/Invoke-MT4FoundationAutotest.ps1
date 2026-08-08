@@ -2685,6 +2685,32 @@ catch {
 }
 
 try {
+    $RCVersionManifest = Get-Content `
+        -LiteralPath (Join-Path $ProjectRoot 'config/version.json') `
+        -Raw `
+        -Encoding UTF8 |
+        ConvertFrom-Json
+
+    if (
+        [string]$RCVersionManifest.Version -match '^4\.0\.0-rc\.[0-9]+$' -and
+        [string]$RCVersionManifest.Channel -ne 'release-candidate'
+    ) {
+        throw (
+            "RC version requires release-candidate channel: {0}/{1}" -f @(
+                [string]$RCVersionManifest.Version,
+                [string]$RCVersionManifest.Channel
+            )
+        )
+    }
+}
+catch {
+    Add-MT4AutotestError (
+        'Release-candidate channel validation failed: {0}' -f
+        $_.Exception.Message
+    )
+}
+
+try {
     $LegacySmoke = Join-Path `
         $ProjectRoot `
         'app/tools/Test-MT4LegacyCompatibility.ps1'

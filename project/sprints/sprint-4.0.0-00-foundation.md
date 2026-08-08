@@ -498,3 +498,19 @@ Create the bilingual common foundation for MT4 without integrating the NDP netwo
 - [x] Preserve the Windows PowerShell 5.1 BOM fix from dev.26a.
 - [ ] Re-run Foundation AUTOTEST on Windows 10.
 - [ ] Continue RC1 gate only after 0/0.
+
+
+## Release Candidate 1 — 4.0.0-rc.1
+
+- [x] Promote runtime and manifest to `4.0.0-rc.1`.
+- [x] Set release channel to `release-candidate`.
+- [x] Freeze new feature subsystems.
+- [x] Record completed Windows 11, Windows 10 and Hyper-V network validation.
+- [x] Preserve Windows PowerShell 5.1 BOM compatibility fix.
+- [x] Preserve release-package version and payload validation.
+- [ ] Run Foundation AUTOTEST on extracted RC1.
+- [ ] Run Quick Diagnosis on extracted RC1.
+- [ ] Generate Technical Report from extracted RC1.
+- [ ] Smoke-test a representative legacy maintenance module.
+- [ ] Generate and validate public RC package with `tools/create-release.ps1`.
+- [ ] Validate a real connected VPN when practical.

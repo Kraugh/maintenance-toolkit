@@ -19,7 +19,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.0-dev.26b"
+$Version = "4.0.0-rc.1"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"

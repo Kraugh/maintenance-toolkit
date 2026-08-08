@@ -5,10 +5,10 @@ This checklist is the release gate for the first 4.0.0 Release Candidate.
 ## Repository
 
 - [ ] `git status` reports a clean working tree.
-- [ ] Foundation AUTOTEST reports 0 errors and 0 warnings.
-- [ ] Legacy compatibility test passes.
-- [ ] `git add -A` produces no EOL warnings.
-- [ ] Version is consistent between runtime and `config/version.json`.
+- [x] Foundation AUTOTEST reports 0 errors and 0 warnings.
+- [x] Legacy compatibility test passes.
+- [x] `git add -A` produces no EOL warnings.
+- [x] Version is consistent between runtime and `config/version.json`.
 
 ## Runtime smoke tests
 
@@ -17,8 +17,8 @@ This checklist is the release gate for the first 4.0.0 Release Candidate.
 - [ ] Toolkit starts from `Avvia_Manutenzione.bat`.
 - [ ] Administrative elevation succeeds.
 - [ ] Main menu renders correctly.
-- [ ] Network Quick Diagnosis completes and returns to the menu.
-- [ ] Technical Network Report completes.
+- [x] Network Quick Diagnosis completes and returns to the menu.
+- [x] Technical Network Report completes.
 - [ ] At least one representative legacy maintenance module completes.
 
 ### Windows 10
@@ -26,26 +26,26 @@ This checklist is the release gate for the first 4.0.0 Release Candidate.
 - [ ] Toolkit starts from `Avvia_Manutenzione.bat`.
 - [ ] Administrative elevation succeeds.
 - [ ] Main menu renders correctly.
-- [ ] Network Quick Diagnosis completes and returns to the menu.
-- [ ] Technical Network Report completes.
+- [x] Network Quick Diagnosis completes and returns to the menu.
+- [x] Technical Network Report completes.
 - [ ] At least one representative legacy maintenance module completes.
 
 ## Network diagnostics
 
-- [ ] Physical adapter is identified correctly.
-- [ ] Default gateway and effective DNS servers are plausible.
-- [ ] DNS resolution probe behaves correctly.
-- [ ] DHCP, MTU, metric and link speed are displayed.
-- [ ] No-VPN systems report no active VPN without false warnings.
-- [ ] Hyper-V guest reports virtual-first topology correctly.
+- [x] Physical adapter is identified correctly.
+- [x] Default gateway and effective DNS servers are plausible.
+- [x] DNS resolution probe behaves correctly.
+- [x] DHCP, MTU, metric and link speed are displayed.
+- [x] No-VPN systems report no active VPN without false warnings.
+- [x] Hyper-V guest reports virtual-first topology correctly.
 - [ ] A real VPN case is tested when available, or explicitly deferred to RC validation.
 
 ## Reports and presentation
 
-- [ ] Quick Diagnosis final outcome matches triggered rules.
-- [ ] Technical Report contains topology, health, VPN and rule summaries.
-- [ ] Italian UI contains no obvious missing localization keys.
-- [ ] English resources remain in key parity with Italian resources.
+- [x] Quick Diagnosis final outcome matches triggered rules.
+- [x] Technical Report contains topology, health, VPN and rule summaries.
+- [x] Italian UI contains no obvious missing localization keys.
+- [x] English resources remain in key parity with Italian resources.
 
 ## Release package
 
