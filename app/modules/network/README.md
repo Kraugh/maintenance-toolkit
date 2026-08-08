@@ -1,18 +1,23 @@
 # MT4 Network Diagnostics domain
 
-Baseline imported from **NDP 0.0.19-RC** (`NDP-20260806-0019-RC.zip`).
+Network Diagnostics is integrated natively into Maintenance Toolkit 4.
 
-This directory initially contains only the engine primitives that are safe to
-load as callable functions:
+The domain originated from the validated **NDP 0.0.19-RC** baseline and now
+runs through the MT4 shell, localization, reporting and Rules Engine.
 
-- `TopologyEngine.ps1`
-- `RoutingAnalyzer.ps1`
-- `RulesEngine.ps1`
+Main components:
 
-The standalone NDP launchers and workflows (`Start.ps1`, `QuickDiagnosis.ps1`,
-`TechnicalReport.ps1`, `.cmd` launchers) are intentionally **not** copied into
-MT4. They must be refactored into native MT actions.
+- `NetworkFoundation.ps1` — shared network-domain helpers;
+- `TopologyEngine.ps1` — interface and topology model;
+- `RoutingAnalyzer.ps1` — routes and routing-mode analysis;
+- `NetworkHealth.ps1` — health evidence and rule conditions;
+- `RulesEngine.ps1` — rule evaluation;
+- `VPNDiagnostics.ps1` — active VPN evidence and classification;
+- `SpeedTest.ps1` — optional Ookla Speedtest integration;
+- `NetworkDiagnostics.ps1` — interactive Quick Diagnosis workflow;
+- `NetworkReports.ps1` — technical TXT/JSON report generation.
 
-During the bridge phase the original `ND` function names are preserved so that
-behaviour can be compared directly with the immutable NDP 0.0.19-RC baseline.
-They will be renamed only after regression parity is proven.
+The standalone NDP launchers are not part of the MT4 runtime.
+
+Generated reports belong under `reports/`; operational logs remain under
+`logs/`. Optional third-party tools are not bundled in the public release.

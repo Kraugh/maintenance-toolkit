@@ -4,7 +4,7 @@ This checklist is the release gate for the first 4.0.0 Release Candidate.
 
 ## Repository
 
-- [ ] `git status` reports a clean working tree.
+- [x] `git status` reports a clean working tree.
 - [x] Foundation AUTOTEST reports 0 errors and 0 warnings.
 - [x] Legacy compatibility test passes.
 - [x] `git add -A` produces no EOL warnings.
@@ -14,18 +14,18 @@ This checklist is the release gate for the first 4.0.0 Release Candidate.
 
 ### Windows 11
 
-- [ ] Toolkit starts from `Avvia_Manutenzione.bat`.
-- [ ] Administrative elevation succeeds.
-- [ ] Main menu renders correctly.
+- [x] Toolkit starts from `Avvia_Manutenzione.bat`.
+- [x] Administrative elevation succeeds.
+- [x] Main menu renders correctly.
 - [x] Network Quick Diagnosis completes and returns to the menu.
 - [x] Technical Network Report completes.
 - [ ] At least one representative legacy maintenance module completes.
 
 ### Windows 10
 
-- [ ] Toolkit starts from `Avvia_Manutenzione.bat`.
-- [ ] Administrative elevation succeeds.
-- [ ] Main menu renders correctly.
+- [x] Toolkit starts from `Avvia_Manutenzione.bat`.
+- [x] Administrative elevation succeeds.
+- [x] Main menu renders correctly.
 - [x] Network Quick Diagnosis completes and returns to the menu.
 - [x] Technical Network Report completes.
 - [ ] At least one representative legacy maintenance module completes.
@@ -50,19 +50,19 @@ This checklist is the release gate for the first 4.0.0 Release Candidate.
 ## Release package
 
 - [ ] `tools/create-release.ps1` rejects a mismatched version.
-- [ ] Release ZIP is generated successfully with the exact candidate version.
-- [ ] ZIP contains launcher, runtime directories and runtime documentation.
-- [ ] ZIP excludes `external`, `logs` and `reports`.
-- [ ] SHA-256 sidecar is generated.
-- [ ] Extracted ZIP starts successfully on a clean test path.
+- [x] Release ZIP is generated successfully with the exact candidate version.
+- [x] ZIP contains launcher, runtime directories and runtime documentation.
+- [x] ZIP excludes `external`, `logs` and `reports`.
+- [x] SHA-256 sidecar is generated.
+- [x] Extracted ZIP starts successfully on a clean test path.
 
 ## Promotion
 
-- [ ] Update `docs/CHANGELOG.md` with the RC1 entry.
-- [ ] Set `config/version.json` channel to `release-candidate`.
-- [ ] Generate `4.0.0-rc.1`.
-- [ ] Commit and push the RC candidate.
-- [ ] Publish RC only after the complete candidate passes the release gate.
+- [x] Update `docs/CHANGELOG.md` with the RC1 entry.
+- [x] Set `config/version.json` channel to `release-candidate`.
+- [x] Generate `4.0.0-rc.1`.
+- [x] Commit and push the RC candidate.
+- [x] Publish RC only after the complete candidate passes the release gate.
 
 No new feature is accepted after this gate unless it fixes a release-blocking
 problem. Other work moves to the post-4.0 backlog.

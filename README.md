@@ -1,47 +1,79 @@
 # Maintenance Toolkit 4.0
 
-Maintenance Toolkit is a free and open-source utility for maintaining,
-diagnosing and collecting information from Microsoft Windows systems.
+Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
+maintenance, diagnostics and technical reporting.
 
-It automates common maintenance tasks, generates inventories and reports, and
-stores detailed logs to support troubleshooting and document technical work.
+**Current pre-release:** `4.0.0-rc.1`  
+**Current stable release:** `3.7.2`
 
-## Author
-
-**Luca Miselli**  
-<https://www.kraugh.it>
-
-Developed with the indispensable help of a very patient Rubber Duck.
+The 4.0 line introduces a bilingual application core, integrated Network
+Diagnostics, automatic health rules, Advanced VPN Diagnostics and technical
+network reports while retaining the validated maintenance modules from the
+3.7.x line.
 
 ## Main features
 
 - connectivity checks;
 - hardware and software inventory;
-- network configuration reports;
-- restore point creation;
 - application updates through Winget;
-- visible status messages during long-running Winget operations;
 - Microsoft Update;
-- Microsoft Defender signature updates;
-- optional integration with installed OEM tools;
-- DISM and SFC diagnostic checks;
+- Microsoft Defender updates;
+- restore point creation;
+- DISM and SFC diagnostic/repair actions;
 - disk health information;
-- optional TEMP cleanup;
-- optional Windows component cleanup;
-- TXT, CSV and HTML logs for each session.
+- optional TEMP and Windows component cleanup;
+- Network Diagnostics with topology, route, gateway, DNS, DHCP, APIPA, MTU,
+  interface metric and link-speed analysis;
+- automatic network-health rules with severity summaries;
+- Advanced VPN Diagnostics for active tunnel addresses, DNS, routes,
+  split/full-tunnel classification and common VPN technologies;
+- TXT technical network reports with correlated JSON topology and rule data;
+- optional Ookla Speedtest CLI integration;
+- per-computer session logs and summaries;
+- bilingual interface resources (Italian and English).
 
-## Getting started
+## Download
 
-1. Extract the complete Toolkit folder.
-2. Run `Avvia_Manutenzione.bat`.
-3. Accept the administrative elevation request.
-4. Select one or more modules from the menu.
+Use the GitHub **Releases** page.
 
-> Do not run individual files from the `app/modules` directory directly.
+- Choose `3.7.2` for the current stable version.
+- Choose `4.0.0-rc.1` only if you want to test the Maintenance Toolkit 4
+  Release Candidate.
+
+Release packages contain the runtime only. Development files, generated logs,
+reports and optional third-party executables are not bundled.
+
+## First run
+
+1. Download the release ZIP from the official GitHub repository.
+2. Verify the SHA-256 file published with the release when appropriate.
+3. If Windows marks the downloaded ZIP as coming from the Internet, verify that
+   it came from the official project release and use **Properties → Unblock**
+   on the ZIP before extracting it.
+4. Extract the complete archive.
+5. Run `Avvia_Manutenzione.bat`.
+6. Accept the administrative elevation request.
+
+> Do not launch individual scripts from `app/modules` directly.
+
+### Windows Smart App Control / Mark of the Web
+
+On some Windows 11 systems, files extracted from an Internet-downloaded ZIP may
+be blocked by Smart App Control or Windows security controls.
+
+Do **not** disable Smart App Control globally. If you downloaded the archive
+from the official project release and have verified its origin, unblock the ZIP
+before extracting it. From PowerShell you may also use:
+
+```powershell
+Unblock-File .\Maintenance-Toolkit-4.0.0-rc.1.zip
+```
+
+Then extract the archive again.
 
 ## Conservative defaults
 
-The following operations are disabled by default:
+Potentially invasive operations remain disabled by default, including:
 
 - automatic restore point creation;
 - DISM RestoreHealth;
@@ -50,66 +82,79 @@ The following operations are disabled by default:
 - TEMP cleanup;
 - Windows component cleanup.
 
-No module restarts the computer automatically.
+No module intentionally reboots the computer automatically.
+
+## Network Diagnostics
+
+From the MT4 network submenu:
+
+- `N1` — Quick Diagnosis;
+- `N2` — Technical Report;
+- `N3` — Quick Diagnosis + optional SpeedTest;
+- `N4` — Technical Report + optional SpeedTest.
+
+Reports are written under `reports/`. SpeedTest support is optional: place the
+Ookla CLI executable at `external\speedtest.exe` or make it available in
+`PATH`. Maintenance Toolkit does not download or bundle SpeedTest.
 
 ## Logs
 
-Logs are separated by computer so the Toolkit can run from USB storage,
-Dropbox or a network share without mixing results from different systems.
+Operational logs are kept under:
 
 ```text
 logs/
 └── COMPUTER-NAME/
-    ├── aggiornamenti_script.log
-    ├── errori_script.log
     └── YYYYMMDD-HHMMSS_COMPUTER-NAME/
-        ├── sessione.log
-        ├── riepilogo.txt
-        ├── riepilogo.csv
-        ├── riepilogo.html
-        └── detailed tool output
 ```
 
-Each operation started from the menu creates a separate session.
+Generated Network Diagnostics reports are intentionally separated under
+`reports/`.
+
+## RC1 validation status
+
+`4.0.0-rc.1` has been exercised on:
+
+- Windows 11 physical hardware;
+- Windows 10 22H2 with Windows PowerShell 5.1;
+- a Windows 11 Hyper-V guest;
+- physical Ethernet and Wi-Fi interfaces;
+- systems with no active VPN;
+- Network Quick Diagnosis and Technical Report workflows.
+
+A real connected-VPN validation is still desirable before the final 4.0.0
+promotion.
+
+### Known RC1 operational note
+
+Very long maintenance operations can last hours on systems with many pending
+updates. Until power-management inhibition is implemented, configure Windows so
+that the computer does not enter sleep while a long maintenance operation is in
+progress. The display may still turn off.
 
 ## Self-test and update check
 
-The main menu provides:
+The main menu provides Toolkit self-test and update-check functions.
 
-- **T — Toolkit self-test**, which checks required files, PowerShell syntax,
-  configuration and update-manifest availability;
-- **U — Check for updates**, which compares the installed version with the
-  stable version published on kraugh.it.
-
-Command-line examples:
+Development/Foundation validation can be run with:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MaintenanceToolkit.ps1 -SelfTest
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\app\MaintenanceToolkit.ps1 -CheckUpdates
+powershell.exe -NoProfile -ExecutionPolicy Bypass `
+    -File .\app\tools\Invoke-MT4FoundationAutotest.ps1
 ```
 
-The update check is optional: network errors do not prevent Toolkit use.
+The public update endpoint continues to advertise the stable release channel;
+pre-releases remain opt-in through GitHub Releases.
 
 ## Documentation
 
-User documentation is organized by language:
+- [Italian documentation](docs/ita/README.md)
+- [Italian technical guide](docs/ita/manuale-tecnico.md)
+- [English field technician guide](docs/eng/field-technician-guide.md)
+- [Changelog](docs/CHANGELOG.md)
+- [About](docs/ABOUT.txt)
+- [Contributing](CONTRIBUTING.md)
 
-- [Italian documentation](docs/ita/)
-- [English documentation](docs/eng/)
-
-Project documentation:
-
-- [Roadmap](project/roadmap.md)
-- [Backlog](project/backlog.md)
-- [Architectural decisions](project/decisions.md)
-- [Sprint history](project/sprints/)
-- [Changelog](CHANGELOG.md)
-
-## Repository structure
-
-The repository layout is optimized for maintainability. Release packages are
-generated independently and keep the launcher in the package root for immediate
-use by Windows technicians.
+Development history and architecture notes are under `project/`.
 
 ## License
 
@@ -120,11 +165,9 @@ See [LICENSE](LICENSE).
 The software is provided as-is, without warranty. Test it before using it on
 critical or centrally managed systems and follow your organization's policies.
 
+## Author
 
-## MT4 development
+**Luca Miselli**  
+<https://www.kraugh.it>
 
-Maintenance Toolkit 4.0 is in release-convergence testing. The bilingual core,
-Network Diagnostics, health rules, VPN diagnostics and reporting are integrated
-while compatibility with the validated 3.7.2 maintenance modules is retained.
-
-Release Candidate promotion is controlled by `project/RC1-CHECKLIST.md`.
+Developed with the indispensable help of a very patient Rubber Duck.

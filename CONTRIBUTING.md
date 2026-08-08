@@ -2,20 +2,24 @@
 
 Thank you for your interest in Maintenance Toolkit.
 
-Maintenance Toolkit is developed through approximately two-week development sprints.
-
-New features are evaluated at the beginning of each sprint.
+Bug reports, test results, documentation improvements and feature suggestions
+are welcome.
 
 Before opening a new Issue:
 
 - search existing issues first;
-- include logs whenever possible;
-- describe the problem clearly;
-- describe how to reproduce it.
+- state the exact Maintenance Toolkit version;
+- state the Windows version;
+- describe the expected and actual behaviour;
+- provide clear reproduction steps;
+- attach relevant logs or reports when useful;
+- remove personal or sensitive information before publishing logs.
 
-Bug reports and suggestions are always welcome.
+During a Release Candidate phase, release-blocking bug fixes and documentation
+corrections take priority over new features. Larger feature work is normally
+deferred to the next development cycle.
 
-Please do not include personal or sensitive information in public logs or issue reports.
+Please keep pull requests focused and explain the problem being solved.
 
 Thank you for contributing.
 

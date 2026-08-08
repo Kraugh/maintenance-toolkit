@@ -29,6 +29,7 @@ software version.
 - strengthened release packaging with version-consistency, required-file and
   excluded-directory validation;
 - added an explicit RC1 release gate.
+- refreshed public documentation for MT4 RC1, including Smart App Control and long-operation notes.
 
 ### Validation completed before RC1
 

@@ -10,7 +10,7 @@ assignees: ""
 
 ## Maintenance Toolkit version / Versione di Maintenance Toolkit
 
-(e.g. / es. 3.7.1)
+(e.g. / es. 4.0.0-rc.1)
 
 ---
 
