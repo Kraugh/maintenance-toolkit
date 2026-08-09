@@ -6,6 +6,7 @@ logs/
 module_result.json
 temp_non_eliminati.txt
 launcher/build/
+/MaintenanceToolkit.exe
 
 # Release packages
 *.zip
