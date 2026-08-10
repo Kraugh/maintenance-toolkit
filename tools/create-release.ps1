@@ -138,8 +138,16 @@ function Test-ZipForExcludedDirectories {
 
 try {
     Assert-ReleaseSource `
-        -Path (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
-        -Description "launcher"
+        -Path (Join-Path $RepositoryRoot "launcher\MaintenanceToolkitLauncher.cpp") `
+        -Description "launcher source"
+
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "launcher\app.manifest") `
+        -Description "launcher manifest"
+
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "launcher\build-launcher.cmd") `
+        -Description "launcher build script"
 
     foreach ($Directory in $RuntimeDirectories) {
         Assert-ReleaseSource `
@@ -149,12 +157,27 @@ try {
 
     Assert-ReleaseVersionConsistency -ExpectedVersion $Version
 
+    # Always build the native launcher from the versioned sources.
+    $LauncherBuildScript = Join-Path $RepositoryRoot "launcher\build-launcher.cmd"
+
+    & $LauncherBuildScript
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Native launcher build failed with exit code $LASTEXITCODE."
+    }
+
+    $LauncherPath = Join-Path $RepositoryRoot "MaintenanceToolkit.exe"
+
+    Assert-ReleaseSource `
+        -Path $LauncherPath `
+        -Description "built native launcher"
+
     New-Item -ItemType Directory -Path $PackageRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 
     # The extracted distribution root has one obvious human entry point.
     Copy-Item `
-        -LiteralPath (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
+        -LiteralPath $LauncherPath `
         -Destination $PackageRoot `
         -Force
 
@@ -213,7 +236,7 @@ try {
     }
 
     foreach ($RequiredPackageFile in @(
-        'Avvia_Manutenzione.bat',
+        'MaintenanceToolkit.exe',
         'app\MaintenanceToolkit.ps1',
         'config\version.json',
         'docs\README.md',
@@ -242,7 +265,7 @@ try {
 
     $UnexpectedRootFiles = @(
         Get-ChildItem -LiteralPath $PackageRoot -File |
-        Where-Object { $_.Name -ne "Avvia_Manutenzione.bat" }
+        Where-Object { $_.Name -ne "MaintenanceToolkit.exe" }
     )
 
     if ($UnexpectedRootFiles.Count -gt 0) {
