@@ -149,6 +149,14 @@ try {
         -Path (Join-Path $RepositoryRoot "launcher\build-launcher.cmd") `
         -Description "launcher build script"
 
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
+        -Description "compatibility launcher"
+
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "LEGGIMI-READ-ME.txt") `
+        -Description "startup readme"
+
     foreach ($Directory in $RuntimeDirectories) {
         Assert-ReleaseSource `
             -Path (Join-Path $RepositoryRoot $Directory) `
@@ -178,6 +186,16 @@ try {
     # The extracted distribution root has one obvious human entry point.
     Copy-Item `
         -LiteralPath $LauncherPath `
+        -Destination $PackageRoot `
+        -Force
+
+    Copy-Item `
+        -LiteralPath (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
+        -Destination $PackageRoot `
+        -Force
+
+    Copy-Item `
+        -LiteralPath (Join-Path $RepositoryRoot "LEGGIMI-READ-ME.txt") `
         -Destination $PackageRoot `
         -Force
 
@@ -237,6 +255,8 @@ try {
 
     foreach ($RequiredPackageFile in @(
         'MaintenanceToolkit.exe',
+        'Avvia_Manutenzione.bat',
+        'LEGGIMI-READ-ME.txt',
         'app\MaintenanceToolkit.ps1',
         'config\version.json',
         'docs\README.md',
@@ -263,9 +283,15 @@ try {
         }
     }
 
+    $AllowedRootFiles = @(
+        "MaintenanceToolkit.exe",
+        "Avvia_Manutenzione.bat",
+        "LEGGIMI-READ-ME.txt"
+    )
+
     $UnexpectedRootFiles = @(
         Get-ChildItem -LiteralPath $PackageRoot -File |
-        Where-Object { $_.Name -ne "MaintenanceToolkit.exe" }
+        Where-Object { $_.Name -notin $AllowedRootFiles }
     )
 
     if ($UnexpectedRootFiles.Count -gt 0) {
