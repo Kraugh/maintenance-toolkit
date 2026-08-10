@@ -41,7 +41,9 @@ $env:MT_COMPUTER_LOG_NAME = $ComputerLogName
 $env:MT_INI = $IniPath
 
 . (Join-Path $ModulesDir "00_common.ps1")
+. (Join-Path $AppDir "core\PowerManagement.ps1")
 $Config = Read-IniFile $IniPath
+$MTSystemAwakeEnabled = Enable-MTSystemAwake
 
 # MT4 bilingual application shell.
 . (Join-Path $AppDir "core\Bootstrap.ps1")
