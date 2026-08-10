@@ -9,6 +9,7 @@ launcher/build/
 /MaintenanceToolkit.exe
 
 # Release packages
+dist/
 *.zip
 
 # Notepad++
