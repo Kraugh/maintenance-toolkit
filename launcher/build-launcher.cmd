@@ -20,9 +20,16 @@ if not defined VSROOT (
 call "%VSROOT%\VC\Auxiliary\Build\vcvars64.bat"
 if errorlevel 1 exit /b %errorlevel%
 
+rc /nologo ^
+    /fo "%BUILD%\MaintenanceToolkit.res" ^
+    "%LAUNCHER%MaintenanceToolkit.rc"
+
+if errorlevel 1 exit /b %errorlevel%
+
 cl /nologo /std:c++17 /O2 /EHsc /DUNICODE /D_UNICODE ^
     /Fo"%BUILD%\MaintenanceToolkitLauncher.obj" ^
     "%LAUNCHER%MaintenanceToolkitLauncher.cpp" ^
+    "%BUILD%\MaintenanceToolkit.res" ^
     /Fe:"%ROOT%\MaintenanceToolkit.exe" ^
     /link ^
     /MANIFEST:EMBED ^
