@@ -5,6 +5,17 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 4.0.0 — 17 August 2026
+
+### Stable release
+
+- promoted Maintenance Toolkit 4.0.0 from release candidate to stable;
+- added the Maintenance Toolkit application icon to the native launcher;
+- digitally signed `MaintenanceToolkit.exe` using an Authenticode code-signing certificate issued by Certum;
+- added a trusted RFC 3161 timestamp to the signed executable;
+- verified the final signed executable against the Windows Authenticode trust chain;
+- retained the 4.0.0-rc.2 functionality and validated release layout without introducing new feature subsystems.
+
 ## 4.0.0-rc.2 — 10 August 2026
 
 ### Release candidate 2
