@@ -4,7 +4,9 @@ param(
     [ValidateNotNullOrEmpty()]
     [string]$Version,
 
-    [string]$Destination
+    [string]$Destination,
+
+    [switch]$UseExistingLauncher
 )
 
 $ErrorActionPreference = "Stop"
@@ -165,20 +167,46 @@ try {
 
     Assert-ReleaseVersionConsistency -ExpectedVersion $Version
 
-    # Always build the native launcher from the versioned sources.
-    $LauncherBuildScript = Join-Path $RepositoryRoot "launcher\build-launcher.cmd"
-
-    & $LauncherBuildScript
-
-    if ($LASTEXITCODE -ne 0) {
-        throw "Native launcher build failed with exit code $LASTEXITCODE."
-    }
-
     $LauncherPath = Join-Path $RepositoryRoot "MaintenanceToolkit.exe"
 
-    Assert-ReleaseSource `
-        -Path $LauncherPath `
-        -Description "built native launcher"
+    if ($UseExistingLauncher) {
+        Assert-ReleaseSource `
+            -Path $LauncherPath `
+            -Description "existing native launcher"
+
+        $LauncherSignature = Get-AuthenticodeSignature `
+            -LiteralPath $LauncherPath
+
+        if ($LauncherSignature.Status -ne 'Valid') {
+            throw (
+                "Existing native launcher does not have a valid Authenticode signature. Status: {0}" -f
+                $LauncherSignature.Status
+            )
+        }
+
+        Write-Host (
+            "Using existing signed native launcher: {0}" -f
+            $LauncherPath
+        )
+        Write-Host (
+            "Signer: {0}" -f
+            $LauncherSignature.SignerCertificate.Subject
+        )
+    }
+    else {
+        # Build the native launcher from the versioned sources.
+        $LauncherBuildScript = Join-Path $RepositoryRoot "launcher\build-launcher.cmd"
+
+        & $LauncherBuildScript
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "Native launcher build failed with exit code $LASTEXITCODE."
+        }
+
+        Assert-ReleaseSource `
+            -Path $LauncherPath `
+            -Description "built native launcher"
+    }
 
     New-Item -ItemType Directory -Path $PackageRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
