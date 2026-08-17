@@ -1,0 +1,48 @@
+ENGLISH
+
+MAINTENANCE TOOLKIT 4.0.0
+==============================
+
+RECOMMENDED STARTUP
+Run MaintenanceToolkit.exe.
+
+COMPATIBILITY FALLBACK
+If Windows, endpoint protection, application control, or a corporate security
+policy blocks MaintenanceToolkit.exe, run Avvia_Manutenzione.bat instead.
+
+Both entry points start the same Maintenance Toolkit PowerShell runtime.
+The BAT file is provided as a compatibility fallback for environments where
+unsigned, newly built, or not-yet-reputed executables are restricted.
+
+Do not disable endpoint protection, antivirus software, Smart App Control,
+application-control policies, or corporate security policies in order to run
+Maintenance Toolkit.
+
+Maintenance Toolkit is open source. Its launcher source code and PowerShell
+runtime are available in the public project repository.
+
+
+ITALIANO
+
+MAINTENANCE TOOLKIT 4.0.0
+==============================
+
+AVVIO CONSIGLIATO
+Eseguire MaintenanceToolkit.exe.
+
+AVVIO ALTERNATIVO DI COMPATIBILITÀ
+Se Windows, il software di protezione dell'endpoint, il controllo applicazioni
+o una policy di sicurezza aziendale blocca MaintenanceToolkit.exe, eseguire
+Avvia_Manutenzione.bat.
+
+Entrambi i punti di avvio eseguono lo stesso runtime PowerShell di Maintenance
+Toolkit. Il file BAT viene fornito come alternativa di compatibilità per gli
+ambienti nei quali gli eseguibili non firmati, appena compilati o non ancora
+dotati di reputazione vengono limitati.
+
+Non disabilitare protezioni endpoint, antivirus, Smart App Control, policy di
+controllo applicazioni o policy di sicurezza aziendali per eseguire Maintenance
+Toolkit.
+
+Maintenance Toolkit è open source. Il codice sorgente del launcher e il runtime
+PowerShell sono disponibili nel repository pubblico del progetto.

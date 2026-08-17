@@ -1,9 +1,33 @@
-# Changelog
+﻿# Changelog
 
 All notable released changes to Maintenance Toolkit are documented here.
 
 Repository-only documentation changes may be committed without changing the
 software version.
+
+## 4.0.0 — 17 August 2026
+
+### Stable release
+
+- promoted Maintenance Toolkit 4.0.0 from release candidate to stable;
+- added the Maintenance Toolkit application icon to the native launcher;
+- digitally signed `MaintenanceToolkit.exe` using an Authenticode code-signing certificate issued by Certum;
+- added a trusted RFC 3161 timestamp to the signed executable;
+- verified the final signed executable against the Windows Authenticode trust chain;
+- retained the 4.0.0-rc.2 functionality and validated release layout without introducing new feature subsystems.
+
+## 4.0.0-rc.2 — 10 August 2026
+
+### Release candidate 2
+
+- added the native `MaintenanceToolkit.exe` launcher as the recommended entry point;
+- retained `Avvia_Manutenzione.bat` as a compatibility fallback for restricted environments;
+- added a bilingual EN/IT startup guide in the distribution root;
+- prevents system sleep while Maintenance Toolkit is running without forcing the display to remain on;
+- validated Network Diagnostics with no VPN, OpenVPN DCO, FortiClient, and both VPNs active behind an external Hyper-V vSwitch;
+- refined VPN DNS wording so detected DNS servers are not over-attributed to a specific VPN client;
+- kept `external`, `logs`, and `reports` out of public release packages;
+- prepared the release layout for Authenticode code signing.
 
 ## 4.0.0-rc.1 — 7 August 2026
 

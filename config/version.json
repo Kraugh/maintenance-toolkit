@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0-rc.1",
-  "Channel": "release-candidate",
+  "Version": "4.0.0",
+  "Channel": "stable",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "Release Candidate 1 - validation freeze"
+  "Milestone": "4.0.0 - stable release"
 }

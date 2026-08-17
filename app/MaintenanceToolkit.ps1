@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.0-dev.10
+# Maintenance Toolkit 4.0.0
 #
 # Autore:
 #   Luca Miselli
@@ -19,7 +19,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.0-rc.1"
+$Version = "4.0.0"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -41,7 +41,9 @@ $env:MT_COMPUTER_LOG_NAME = $ComputerLogName
 $env:MT_INI = $IniPath
 
 . (Join-Path $ModulesDir "00_common.ps1")
+. (Join-Path $AppDir "core\PowerManagement.ps1")
 $Config = Read-IniFile $IniPath
+$MTSystemAwakeEnabled = Enable-MTSystemAwake
 
 # MT4 bilingual application shell.
 . (Join-Path $AppDir "core\Bootstrap.ps1")

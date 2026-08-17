@@ -5,8 +5,11 @@ logs/
 # Generated results
 module_result.json
 temp_non_eliminati.txt
+launcher/build/
+/MaintenanceToolkit.exe
 
 # Release packages
+dist/
 *.zip
 
 # Notepad++
@@ -18,6 +21,7 @@ Desktop.ini
 
 # Editors
 .vscode/
+.vs/
 .idea/
 *.tmp
 logs/*
@@ -27,3 +31,4 @@ reports/*
 
 # Optional local external tools
 external/speedtest.exe
+

@@ -4,7 +4,9 @@ param(
     [ValidateNotNullOrEmpty()]
     [string]$Version,
 
-    [string]$Destination
+    [string]$Destination,
+
+    [switch]$UseExistingLauncher
 )
 
 $ErrorActionPreference = "Stop"
@@ -138,8 +140,24 @@ function Test-ZipForExcludedDirectories {
 
 try {
     Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "launcher\MaintenanceToolkitLauncher.cpp") `
+        -Description "launcher source"
+
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "launcher\app.manifest") `
+        -Description "launcher manifest"
+
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "launcher\build-launcher.cmd") `
+        -Description "launcher build script"
+
+    Assert-ReleaseSource `
         -Path (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
-        -Description "launcher"
+        -Description "compatibility launcher"
+
+    Assert-ReleaseSource `
+        -Path (Join-Path $RepositoryRoot "LEGGIMI-READ-ME.txt") `
+        -Description "startup readme"
 
     foreach ($Directory in $RuntimeDirectories) {
         Assert-ReleaseSource `
@@ -149,12 +167,63 @@ try {
 
     Assert-ReleaseVersionConsistency -ExpectedVersion $Version
 
+    $LauncherPath = Join-Path $RepositoryRoot "MaintenanceToolkit.exe"
+
+    if ($UseExistingLauncher) {
+        Assert-ReleaseSource `
+            -Path $LauncherPath `
+            -Description "existing native launcher"
+
+        $LauncherSignature = Get-AuthenticodeSignature `
+            -LiteralPath $LauncherPath
+
+        if ($LauncherSignature.Status -ne 'Valid') {
+            throw (
+                "Existing native launcher does not have a valid Authenticode signature. Status: {0}" -f
+                $LauncherSignature.Status
+            )
+        }
+
+        Write-Host (
+            "Using existing signed native launcher: {0}" -f
+            $LauncherPath
+        )
+        Write-Host (
+            "Signer: {0}" -f
+            $LauncherSignature.SignerCertificate.Subject
+        )
+    }
+    else {
+        # Build the native launcher from the versioned sources.
+        $LauncherBuildScript = Join-Path $RepositoryRoot "launcher\build-launcher.cmd"
+
+        & $LauncherBuildScript
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "Native launcher build failed with exit code $LASTEXITCODE."
+        }
+
+        Assert-ReleaseSource `
+            -Path $LauncherPath `
+            -Description "built native launcher"
+    }
+
     New-Item -ItemType Directory -Path $PackageRoot -Force | Out-Null
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 
     # The extracted distribution root has one obvious human entry point.
     Copy-Item `
+        -LiteralPath $LauncherPath `
+        -Destination $PackageRoot `
+        -Force
+
+    Copy-Item `
         -LiteralPath (Join-Path $RepositoryRoot "Avvia_Manutenzione.bat") `
+        -Destination $PackageRoot `
+        -Force
+
+    Copy-Item `
+        -LiteralPath (Join-Path $RepositoryRoot "LEGGIMI-READ-ME.txt") `
         -Destination $PackageRoot `
         -Force
 
@@ -213,7 +282,9 @@ try {
     }
 
     foreach ($RequiredPackageFile in @(
+        'MaintenanceToolkit.exe',
         'Avvia_Manutenzione.bat',
+        'LEGGIMI-READ-ME.txt',
         'app\MaintenanceToolkit.ps1',
         'config\version.json',
         'docs\README.md',
@@ -240,9 +311,15 @@ try {
         }
     }
 
+    $AllowedRootFiles = @(
+        "MaintenanceToolkit.exe",
+        "Avvia_Manutenzione.bat",
+        "LEGGIMI-READ-ME.txt"
+    )
+
     $UnexpectedRootFiles = @(
         Get-ChildItem -LiteralPath $PackageRoot -File |
-        Where-Object { $_.Name -ne "Avvia_Manutenzione.bat" }
+        Where-Object { $_.Name -notin $AllowedRootFiles }
     )
 
     if ($UnexpectedRootFiles.Count -gt 0) {
