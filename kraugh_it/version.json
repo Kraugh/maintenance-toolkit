@@ -1,13 +1,13 @@
 {
-    "project": "Maintenance Toolkit",
-    "latest_version": "3.7.2",
-    "minimum_supported": "3.5.0",
-    "release_date": "2026-08-01",
-    "release_notes": "Reliability improvements, progress reporting and compatibility fixes.",
-    "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/latest",
-    "repository_url": "https://github.com/Kraugh/maintenance-toolkit",
-    "documentation_url": "https://www.kraugh.it/projects/maintenance-toolkit/",
-    "selftest": true,
-    "update_check": true,
-    "duck_message": "La papera non ha trovato versioni più recenti."
+  "project": "Maintenance Toolkit",
+  "latest_version": "4.0.0",
+  "minimum_supported": "3.5.0",
+  "release_date": "2026-08-17",
+  "release_notes": "Maintenance Toolkit 4.0 stable release: native signed launcher, integrated Network Diagnostics, Advanced VPN Diagnostics, technical reporting, bilingual interface and reliability improvements.",
+  "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.0",
+  "repository_url": "https://github.com/Kraugh/maintenance-toolkit",
+  "documentation_url": "https://www.kraugh.it/software/maintenance-toolkit/",
+  "selftest": true,
+  "update_check": true,
+  "duck_message": "La papera non ha trovato versioni più recenti."
 }
