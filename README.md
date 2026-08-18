@@ -1,15 +1,18 @@
+<p align="center">
+  <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
+</p>
+
 # Maintenance Toolkit 4.0
 
 Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
 maintenance, diagnostics and technical reporting.
 
-**Current pre-release:** `4.0.0-rc.1`  
-**Current stable release:** `3.7.2`
+**Current stable release:** `4.0.0`
 
-The 4.0 line introduces a bilingual application core, integrated Network
-Diagnostics, automatic health rules, Advanced VPN Diagnostics and technical
-network reports while retaining the validated maintenance modules from the
-3.7.x line.
+Maintenance Toolkit 4.0 introduces a bilingual application core, integrated
+Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
+technical network reports, a native Windows launcher and Authenticode code
+signing, while retaining the validated maintenance modules from the 3.7.x line.
 
 ## Main features
 
@@ -30,43 +33,55 @@ network reports while retaining the validated maintenance modules from the
 - TXT technical network reports with correlated JSON topology and rule data;
 - optional Ookla Speedtest CLI integration;
 - per-computer session logs and summaries;
-- bilingual interface resources (Italian and English).
+- bilingual interface resources (Italian and English);
+- native `MaintenanceToolkit.exe` launcher;
+- Authenticode digital signature with trusted timestamp;
+- automatic prevention of system sleep while Maintenance Toolkit is running,
+  without forcing the display to remain on.
 
 ## Download
 
-Use the GitHub **Releases** page.
+Download the current stable release from the GitHub **Releases** page:
 
-- Choose `3.7.2` for the current stable version.
-- Choose `4.0.0-rc.1` only if you want to test the Maintenance Toolkit 4
-  Release Candidate.
+**Maintenance Toolkit 4.0.0**
+
+The release ZIP is accompanied by its SHA-256 checksum.
 
 Release packages contain the runtime only. Development files, generated logs,
 reports and optional third-party executables are not bundled.
 
 ## First run
 
-1. Download the release ZIP from the official GitHub repository.
-2. Verify the SHA-256 file published with the release when appropriate.
+1. Download `Maintenance-Toolkit-4.0.0.zip` from the official GitHub release.
+2. Verify the SHA-256 checksum when appropriate.
 3. If Windows marks the downloaded ZIP as coming from the Internet, verify that
    it came from the official project release and use **Properties → Unblock**
    on the ZIP before extracting it.
 4. Extract the complete archive.
-5. Run `Avvia_Manutenzione.bat`.
+5. Run `MaintenanceToolkit.exe`.
 6. Accept the administrative elevation request.
+
+`MaintenanceToolkit.exe` is digitally signed with an Authenticode code-signing
+certificate issued by Certum and includes a trusted RFC 3161 timestamp.
+
+`Avvia_Manutenzione.bat` remains available as a compatibility fallback for
+environments in which application-control or endpoint-security policies prevent
+the native launcher from running.
 
 > Do not launch individual scripts from `app/modules` directly.
 
 ### Windows Smart App Control / Mark of the Web
 
 On some Windows 11 systems, files extracted from an Internet-downloaded ZIP may
-be blocked by Smart App Control or Windows security controls.
+still be affected by Smart App Control, Mark of the Web or other Windows
+security controls.
 
 Do **not** disable Smart App Control globally. If you downloaded the archive
 from the official project release and have verified its origin, unblock the ZIP
 before extracting it. From PowerShell you may also use:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.0-rc.1.zip
+Unblock-File .\Maintenance-Toolkit-4.0.0.zip
 ```
 
 Then extract the archive again.
@@ -110,26 +125,25 @@ logs/
 Generated Network Diagnostics reports are intentionally separated under
 `reports/`.
 
-## RC1 validation status
+## 4.0.0 release status
 
-`4.0.0-rc.1` has been exercised on:
+Maintenance Toolkit 4.0.0 is the current stable release.
+
+The 4.0 release line has been exercised on:
 
 - Windows 11 physical hardware;
 - Windows 10 22H2 with Windows PowerShell 5.1;
 - a Windows 11 Hyper-V guest;
 - physical Ethernet and Wi-Fi interfaces;
 - systems with no active VPN;
+- OpenVPN DCO and FortiClient VPN scenarios;
 - Network Quick Diagnosis and Technical Report workflows.
 
-A real connected-VPN validation is still desirable before the final 4.0.0
-promotion.
+The native launcher is digitally signed and the final release executable has
+been verified against the Windows Authenticode trust chain.
 
-### Known RC1 operational note
-
-Very long maintenance operations can last hours on systems with many pending
-updates. Until power-management inhibition is implemented, configure Windows so
-that the computer does not enter sleep while a long maintenance operation is in
-progress. The display may still turn off.
+Long-running maintenance operations inhibit system sleep while Maintenance
+Toolkit is active. The display is still allowed to turn off normally.
 
 ## Self-test and update check
 
@@ -142,8 +156,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
     -File .\app\tools\Invoke-MT4FoundationAutotest.ps1
 ```
 
-The public update endpoint continues to advertise the stable release channel;
-pre-releases remain opt-in through GitHub Releases.
+The public update endpoint advertises the stable release channel. Pre-release
+builds, when available, remain opt-in through GitHub Releases.
 
 ## Documentation
 
