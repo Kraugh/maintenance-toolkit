@@ -60,26 +60,57 @@ The main menu provides the established maintenance functions, including:
 Potentially invasive actions remain disabled by default.
 
 
-## Non-interactive execution
+## Command-line and unattended execution
 
-MT 4.0.0 can run the automatic module set without opening the interactive menu:
+The signed launcher forwards command-line arguments to the PowerShell runtime.
+
+| Option | Purpose |
+|---|---|
+| `-RunAll` | Run the automatic modules enabled in `[Modules]` inside `config\MaintenanceToolkit.ini`, then exit. |
+| `-Only <Key>` | Run only the specified module key, then exit. |
+| `-SelfTest` | Run the built-in Toolkit self-test and exit. |
+| `-CheckUpdates` | Check the public update manifest and exit. |
+| `-Language auto|en-US|it-IT` | Override automatic language selection for this run. |
+
+Examples:
 
 ```powershell
 .\MaintenanceToolkit.exe -RunAll
+.\MaintenanceToolkit.exe -Only Connectivity
+.\MaintenanceToolkit.exe -SelfTest
+.\MaintenanceToolkit.exe -CheckUpdates
+.\MaintenanceToolkit.exe -Language en-US
 ```
 
 `-RunAll` is the command-line equivalent of **[A] Run all automatic modules**.
-It runs the modules enabled under `[Modules]` in
-`config\MaintenanceToolkit.ini`, then exits with an exit code instead of
-returning to the menu.
+It does not mean “run every module”: MT runs only the modules enabled under
+`[Modules]` in `config\MaintenanceToolkit.ini`.
 
-This mode is suitable for scheduled maintenance. For Windows Task Scheduler,
-run the task with **Run with highest privileges** and choose a maintenance
-window such as lunch time or the end of the working day rather than running it
-at every boot unless that behaviour is specifically required.
+For `-RunAll`, `-Only` and `-SelfTest`, exit code `0` means no warnings/errors,
+`20` means warnings without errors, and `1` means one or more errors.
+`-CheckUpdates` returns `10` when an update is available, `0` when none is
+available and `20` if the check cannot be completed normally.
 
-For Active Directory / GPO deployment, including execution as `SYSTEM` or from
-an SMB share, see [System Administrator Guide](System-Administrator-Guide.md).
+### Scheduled background execution
+
+For Windows Task Scheduler, create a full Task, enable **Run with highest
+privileges**, select **Run whether user is logged on or not** for background
+execution, set `MaintenanceToolkit.exe` as the program, `-RunAll` as the
+arguments and the MT root directory as **Start in**.
+
+A daily low-impact maintenance window is usually preferable to running at every
+boot. If appropriate, recover missed runs, require power/network conditions and
+choose **Do not start a new instance** when MT is already running.
+
+Allow the real scheduled trigger to start MT at least once, then verify the
+Last Run Result and the new session summary. Task Scheduler displays MT exit
+code `20` as `0x14`: this means warnings without errors, not a scheduler
+infrastructure failure.
+
+For fleets, consider a random trigger delay to avoid simultaneous update
+downloads. Execution as `SYSTEM`, Winget under `SYSTEM`, and direct SMB-share
+execution remain scenarios to validate separately; see the
+[System Administrator Guide](System-Administrator-Guide.md).
 
 ## Network Diagnostics
 
@@ -129,9 +160,12 @@ artifact.
 ## Logs
 
 Operational maintenance logs are stored under `logs/` and separated by computer
-and session.
+and session. The final session summary is normally available at
+`logs\COMPUTER-NAME\YYYYMMDD-HHMMSS_COMPUTER-NAME\riepilogo.txt`.
 
-Review logs and reports before sharing them publicly.
+Read the summary first; use detailed logs and Network Diagnostics reports under
+`reports/` when more context is needed. Review logs and reports before sharing
+them publicly.
 
 ## Long-running operations
 
@@ -170,29 +204,7 @@ before changing Windows security settings.
 Review the final summary and session logs. Where possible, MT continues with
 other modules so that useful diagnostic evidence is not lost.
 
-#
-## Non-interactive execution
-
-MT 4.0.0 can run the automatic module set without opening the interactive menu:
-
-```powershell
-.\MaintenanceToolkit.exe -RunAll
-```
-
-`-RunAll` is the command-line equivalent of **[A] Run all automatic modules**.
-It runs the modules enabled under `[Modules]` in
-`config\MaintenanceToolkit.ini`, then exits with an exit code instead of
-returning to the menu.
-
-This mode is suitable for scheduled maintenance. For Windows Task Scheduler,
-run the task with **Run with highest privileges** and choose a maintenance
-window such as lunch time or the end of the working day rather than running it
-at every boot unless that behaviour is specifically required.
-
-For Active Directory / GPO deployment, including execution as `SYSTEM` or from
-an SMB share, see [System Administrator Guide](System-Administrator-Guide.md).
-
-## Network Diagnostics warns that the gateway does not answer
+### Network Diagnostics warns that the gateway does not answer
 
 Test whether the gateway intentionally blocks ICMP. Working DNS and Internet
 traffic can coexist with an ICMP timeout.
@@ -213,17 +225,3 @@ When reporting a problem, provide:
 
 Repository: <https://github.com/Kraugh/maintenance-toolkit>
 Website: <https://www.kraugh.it>
-
-## Scheduled background execution
-
-Maintenance Toolkit can run the automatic modules enabled in the INI with:
-
-```powershell
-.\MaintenanceToolkit.exe -RunAll
-```
-
-For Windows Task Scheduler, create a full Task, enable **Run with highest privileges**, select **Run whether user is logged on or not** for background execution, set `MaintenanceToolkit.exe` as the program, `-RunAll` as the arguments, and the MT root directory as **Start in**.
-
-Exit code `0` means no warnings/errors; `20` (shown as `0x14` by Task Scheduler) means warnings without errors; `1` means one or more errors. Always inspect the session summary and logs.
-
-For fleets, consider a random trigger delay to avoid simultaneous update downloads. Execution as `SYSTEM`, Winget under `SYSTEM`, and direct SMB-share execution remain scenarios to validate separately.

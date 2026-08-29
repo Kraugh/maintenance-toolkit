@@ -125,6 +125,50 @@ logs/
 Generated Network Diagnostics reports are intentionally separated under
 `reports/`.
 
+The final session summary is normally available as:
+
+```text
+logs\COMPUTER-NAME\YYYYMMDD-HHMMSS_COMPUTER-NAME\riepilogo.txt
+```
+
+Read the summary first to distinguish successful modules, warnings, skipped
+operations and errors; use the detailed logs and reports when more context is
+needed.
+
+## Command-line options
+
+The signed launcher forwards command-line arguments to the PowerShell runtime.
+
+| Option | Purpose |
+|---|---|
+| `-RunAll` | Run the automatic modules enabled under `[Modules]` in `config\MaintenanceToolkit.ini`, then exit. |
+| `-Only <Key>` | Run only the specified module key, then exit. |
+| `-SelfTest` | Run the built-in Toolkit self-test and exit. |
+| `-CheckUpdates` | Check the public update manifest and exit. |
+| `-Language auto|en-US|it-IT` | Override automatic language selection for the current run. |
+
+Valid module keys for `-Only` are `Connectivity`, `Inventory`,
+`NetworkReport`, `RestorePoint`, `Winget`, `MicrosoftUpdate`, `Defender`,
+`OEM`, `DISM`, `SFC`, `DiskHealth`, `TempCleanup` and `ComponentCleanup`.
+
+Examples:
+
+```powershell
+.\MaintenanceToolkit.exe -RunAll
+.\MaintenanceToolkit.exe -Only Connectivity
+.\MaintenanceToolkit.exe -SelfTest
+.\MaintenanceToolkit.exe -CheckUpdates
+.\MaintenanceToolkit.exe -Language en-US
+```
+
+For `-RunAll`, `-Only` and `-SelfTest`, exit code `0` means no warnings/errors,
+`20` means warnings without errors, and `1` means one or more errors.
+`-CheckUpdates` returns `10` when an update is available, `0` when no update is
+available, and `20` if the update check itself cannot be completed normally.
+
+For unattended execution and Task Scheduler, see the
+[System Administrator Guide](docs/eng/System-Administrator-Guide.md).
+
 ## 4.0.0 release status
 
 Maintenance Toolkit 4.0.0 is the current stable release.
@@ -164,6 +208,7 @@ builds, when available, remain opt-in through GitHub Releases.
 - [Italian documentation](docs/ita/README.md)
 - [Italian technical guide](docs/ita/manuale-tecnico.md)
 - [English field technician guide](docs/eng/field-technician-guide.md)
+- [English system administrator guide](docs/eng/System-Administrator-Guide.md)
 - [Changelog](docs/CHANGELOG.md)
 - [About](docs/ABOUT.txt)
 - [Contributing](CONTRIBUTING.md)

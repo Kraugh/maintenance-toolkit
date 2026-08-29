@@ -169,120 +169,114 @@ il sistema, senza forzare il display a rimanere acceso. La richiesta resta valid
 per la durata del processo MT.
 
 
-## 11. Esecuzione non interattiva e pianificata
+## 11. Riga di comando ed esecuzione pianificata
 
-Maintenance Toolkit 4.0.0 supporta la modalità non interattiva `-RunAll`:
+Il launcher firmato `MaintenanceToolkit.exe` inoltra al runtime PowerShell i
+parametri ricevuti. Le opzioni disponibili in Maintenance Toolkit 4.0.0 sono:
+
+| Parametro | Funzione |
+|---|---|
+| `-RunAll` | Esegue i moduli automatici abilitati in `[Modules]` dentro `config\MaintenanceToolkit.ini`, quindi termina. |
+| `-Only <Key>` | Esegue soltanto il modulo indicato per chiave, quindi termina. |
+| `-SelfTest` | Esegue l'autotest integrato del Toolkit e termina. |
+| `-CheckUpdates` | Controlla il manifest pubblico degli aggiornamenti e termina. |
+| `-Language auto|en-US|it-IT` | Forza la lingua per la singola esecuzione. |
+
+Le chiavi valide per `-Only` sono `Connectivity`, `Inventory`,
+`NetworkReport`, `RestorePoint`, `Winget`, `MicrosoftUpdate`, `Defender`,
+`OEM`, `DISM`, `SFC`, `DiskHealth`, `TempCleanup` e `ComponentCleanup`.
+
+Esempi:
 
 ```powershell
 .\MaintenanceToolkit.exe -RunAll
+.\MaintenanceToolkit.exe -Only Connectivity
+.\MaintenanceToolkit.exe -SelfTest
+.\MaintenanceToolkit.exe -CheckUpdates
+.\MaintenanceToolkit.exe -Language it-IT
 ```
 
 `-RunAll` è l'equivalente da riga di comando della scelta **[A] Esegui tutti i
-moduli automatici**. Non esegue indiscriminatamente ogni modulo: seleziona i
-moduli abilitati nella sezione `[Modules]` di `config\MaintenanceToolkit.ini`.
-Al termine MT restituisce un exit code e chiude la sessione senza tornare al
-menu interattivo.
+moduli automatici**. Non significa “esegui ogni modulo”: vengono selezionati
+soltanto i moduli abilitati nella sezione `[Modules]` del file INI.
 
-Il launcher `MaintenanceToolkit.exe` richiede privilegi amministrativi. Per una
-esecuzione pianificata è preferibile creare l'attività direttamente con
-**Esegui con i privilegi più elevati**, così l'avvio non dipende da una conferma
-UAC interattiva.
-
-### Utilità di pianificazione di Windows
-
-Per una workstation sempre aggiornata è normalmente preferibile una
-pianificazione giornaliera in una finestra in cui il PC è acceso ma poco usato,
-per esempio pausa pranzo, fine giornata o una finestra di manutenzione aziendale.
-L'esecuzione a ogni avvio è possibile, ma in genere è meno opportuna: Winget,
-Microsoft Update e gli altri controlli verrebbero ripetuti a ogni riavvio.
-
-Configurazione consigliata:
-
-1. creare una nuova attività in **Utilità di pianificazione**;
-2. selezionare **Esegui con i privilegi più elevati**;
-3. impostare un trigger giornaliero nell'orario scelto;
-4. come programma indicare il percorso completo di `MaintenanceToolkit.exe`;
-5. nel campo degli argomenti specificare `-RunAll`;
-6. impostare **Avvia in** sulla cartella radice di Maintenance Toolkit;
-7. verificare manualmente una prima esecuzione e controllare il riepilogo e i
-   log prima di affidarsi alla pianificazione.
-
-Se il computer può essere spento all'ora prevista, valutare nelle proprietà
-dell'attività l'opzione per eseguirla appena possibile dopo un avvio pianificato
-non riuscito. Evitare invece di forzare riavvii automatici: MT mantiene
-`NeverReboot=1` per impostazione predefinita.
-
-### Distribuzione centralizzata con Active Directory / GPO
-
-In un dominio Active Directory `-RunAll` può essere usato come base per una
-Scheduled Task distribuita tramite Group Policy Preferences. Il modello
-consigliato è:
-
-```text
-GPO computer
-  -> Scheduled Task con privilegi elevati
-     -> MaintenanceToolkit.exe -RunAll
-```
-
-MT può essere mantenuto localmente sui client oppure richiamato da una share
-SMB amministrata centralmente. La seconda soluzione richiede però una verifica
-preventiva nel proprio ambiente. Se l'attività viene eseguita come `SYSTEM`,
-l'accesso alla rete usa normalmente l'identità del computer di dominio; di
-conseguenza permessi share e NTFS devono consentire la lettura ai computer
-interessati (per esempio tramite un gruppo AD dedicato).
-
-Per una distribuzione professionale:
-
-- usare una share in sola lettura per i client e limitare la scrittura agli
-  amministratori che pubblicano MT;
-- mantenere `config\MaintenanceToolkit.ini` sotto controllo amministrativo;
-- verificare prima il comportamento di Winget e degli altri moduli nel contesto
-  scelto (`SYSTEM` o account di servizio);
-- considerare che `logs\` è scritto nella radice di MT: l'esecuzione diretta da
-  una share richiede quindi anche una strategia esplicita per i permessi e la
-  raccolta dei log;
-- effettuare un test pilota su pochi computer prima di estendere la GPO.
-
-L'esecuzione da share SMB e il funzionamento di tutti i moduli come `SYSTEM`
-sono scenari da validare nell'ambiente di destinazione: questa guida non li
-considera automaticamente equivalenti a un'esecuzione locale interattiva.
-
-
-### Esecuzione pianificata in background
-
-Per una attività pianificata Windows, usare `MaintenanceToolkit.exe` con argomento `-RunAll` e impostare la cartella radice di MT come **Avvia in**.
-
-Configurazione collaudata il 29 agosto 2026:
-
-- creare una **Attività**, non una semplice Attività di base;
-- selezionare **Esegui indipendentemente dalla connessione dell'utente** per evitare la comparsa della console;
-- selezionare **Esegui con i privilegi più elevati**;
-- impostare un trigger giornaliero in una finestra di basso impatto (per esempio pausa pranzo o fine giornata);
-- programma: `C:\Percorso\Maintenance-Toolkit\MaintenanceToolkit.exe`;
-- argomenti: `-RunAll`;
-- **Avvia in**: `C:\Percorso\Maintenance-Toolkit`;
-- su portatili, valutare alimentazione da rete e interruzione al passaggio a batteria;
-- se gli aggiornamenti sono abilitati, richiedere una connessione di rete;
-- abilitare l'avvio appena possibile dopo una pianificazione mancata;
-- scegliere **Non avviare una nuova istanza** se MT è già in esecuzione.
-
-Windows può richiedere la password dell'account al salvataggio della task.
-
-Con **Esegui solo se l'utente è connesso** MT funziona, ma la console rimane visibile. La modalità in background è stata verificata con **Esegui indipendentemente dalla connessione dell'utente**.
-
-#### Exit code in Utilità di pianificazione
-
-`-RunAll` termina senza tornare al menu e restituisce:
+Per `-RunAll`, `-Only` e `-SelfTest` gli exit code principali sono:
 
 | Codice | Significato |
 |---:|---|
-| `0` | nessun warning o errore |
-| `20` (`0x14` in Utilità di pianificazione) | uno o più warning, nessun errore |
+| `0` | sessione completata senza warning o errori |
+| `20` | uno o più warning, nessun errore |
 | `1` | uno o più errori |
 
-`0x14` non indica quindi necessariamente un errore della task: è l'exit code MT `20`. Consultare `riepilogo.txt` e i log della sessione.
+`-CheckUpdates` restituisce `10` quando è disponibile un aggiornamento, `0`
+quando non risultano aggiornamenti e `20` se il controllo non può essere
+completato normalmente.
 
-Per leggere rapidamente l'ultimo riepilogo dalla radice di MT:
+### 11.1 Utilità di pianificazione di Windows
+
+Per una workstation è normalmente preferibile una pianificazione giornaliera
+in una finestra in cui il PC è acceso ma poco utilizzato, per esempio pausa
+pranzo, fine giornata o una finestra di manutenzione aziendale. L'esecuzione a
+ogni avvio è possibile, ma tende a ripetere inutilmente Winget, Microsoft
+Update e gli altri controlli a ogni riavvio.
+
+La configurazione seguente è stata collaudata il 29 agosto 2026:
+
+1. creare una **Attività** completa, non una semplice Attività di base;
+2. selezionare **Esegui indipendentemente dalla connessione dell'utente** per
+   eseguire MT in background senza mostrare la console;
+3. selezionare **Esegui con i privilegi più elevati**;
+4. impostare un trigger giornaliero nell'orario desiderato;
+5. come **Programma/script** indicare il percorso completo di
+   `MaintenanceToolkit.exe`;
+6. in **Aggiungi argomenti** specificare `-RunAll`;
+7. in **Avvia in** indicare la cartella radice di Maintenance Toolkit;
+8. su un portatile, valutare l'esecuzione solo con alimentazione da rete e
+   l'interruzione al passaggio a batteria;
+9. se sono abilitati moduli che richiedono Internet, richiedere una connessione
+   di rete disponibile;
+10. abilitare l'avvio appena possibile dopo una pianificazione mancata;
+11. scegliere **Non avviare una nuova istanza** se MT è già in esecuzione.
+
+Esempio:
+
+```text
+Programma/script:
+C:\Percorso\Maintenance-Toolkit\MaintenanceToolkit.exe
+
+Aggiungi argomenti:
+-RunAll
+
+Avvia in:
+C:\Percorso\Maintenance-Toolkit
+```
+
+Windows può richiedere la password dell'account al salvataggio della task.
+
+Con **Esegui solo se l'utente è connesso** MT funziona comunque, ma la finestra
+console è visibile. Il comportamento in background è stato verificato usando
+**Esegui indipendentemente dalla connessione dell'utente**.
+
+Dopo la creazione, effettuare almeno un test reale lasciando che sia il trigger
+pianificato ad avviare MT. Verificare:
+
+1. data e ora dell'ultima esecuzione;
+2. **Risultato ultima esecuzione**;
+3. la nuova cartella di sessione sotto `logs\`;
+4. il contenuto di `riepilogo.txt`;
+5. eventuali report prodotti sotto `reports\`.
+
+In Utilità di pianificazione l'exit code MT `20` viene mostrato in esadecimale
+come `0x14`: indica una sessione conclusa con warning e nessun errore, non un
+malfunzionamento dell'infrastruttura di pianificazione.
+
+Il riepilogo finale si trova normalmente in:
+
+```text
+logs\NOME-PC\YYYYMMDD-HHMMSS_NOME-PC\riepilogo.txt
+```
+
+Dalla cartella radice di MT è possibile leggere rapidamente l'ultimo riepilogo:
 
 ```powershell
 Get-Content (Get-ChildItem .\logs\$env:COMPUTERNAME -Directory |
@@ -291,15 +285,48 @@ Get-Content (Get-ChildItem .\logs\$env:COMPUTERNAME -Directory |
     ForEach-Object { Join-Path $_.FullName 'riepilogo.txt' })
 ```
 
-#### Nota su Winget
+MT mantiene `NeverReboot=1` per impostazione predefinita: non aggiungere un
+riavvio forzato esterno salvo che faccia parte di una politica amministrativa
+esplicita.
 
-MT interpreta l'esito restituito da Winget, ma non certifica a livello binario ogni applicazione aggiornata. Durante il collaudo è stato osservato un caso in cui Winget registrava una versione aggiornata mentre il binario dell'applicazione aperta era rimasto alla versione precedente. In caso di anomalie, verificare i log Winget e lo stato reale dell'applicazione.
+### 11.2 Nota su Winget
 
-#### Più endpoint
+MT registra e interpreta l'esito restituito da Winget, ma non può certificare
+autonomamente che ogni applicazione di terze parti abbia sostituito tutti i
+propri binari. Durante il collaudo è stato osservato un caso in cui
+l'applicazione aperta ha interferito con l'aggiornamento e lo stato registrato
+da Winget non corrispondeva ancora alla versione del binario in esecuzione.
 
-In ambienti con molti PC è opportuno evitare che tutti gli endpoint inizino gli aggiornamenti nello stesso istante. Task Scheduler permette un **ritardo casuale** del trigger; una finestra distribuita riduce il picco di download.
+In caso di anomalie applicative, verificare il log Winget e la versione reale
+dell'applicazione.
 
-`-RunAll` può essere distribuito tramite Group Policy Preferences come Scheduled Task. Esecuzione come `SYSTEM`, Winget sotto `SYSTEM` ed esecuzione diretta da share SMB restano scenari da validare separatamente prima di una distribuzione generale.
+### 11.3 Più endpoint, Active Directory e GPO
+
+In un dominio Active Directory `-RunAll` può essere usato come azione di una
+Scheduled Task distribuita tramite Group Policy Preferences:
+
+```text
+GPO computer
+  -> Scheduled Task con privilegi elevati
+     -> MaintenanceToolkit.exe -RunAll
+```
+
+Su molti endpoint evitare, quando possibile, che tutte le macchine inizino
+contemporaneamente aggiornamenti potenzialmente pesanti. Utilità di
+pianificazione permette di applicare un **ritardo casuale** al trigger per
+distribuire gli avvii nel tempo.
+
+Una copia locale controllata sui client è il punto di partenza più semplice.
+L'esecuzione diretta da share SMB e l'esecuzione come `SYSTEM` richiedono invece
+test specifici nel proprio ambiente: permessi share/NTFS, identità del computer
+di dominio, disponibilità della rete, strategia di scrittura/raccolta dei log e
+comportamento di Winget nel contesto scelto devono essere validati prima della
+distribuzione generale.
+
+Per una distribuzione professionale mantenere il pacchetto e
+`config\MaintenanceToolkit.ini` sotto controllo amministrativo, usare un
+gruppo pilota prima del rollout e non concedere ai client diritti di modifica
+sulla sorgente centrale.
 
 ## 12. Interpretazione degli esiti
 

@@ -45,18 +45,33 @@ maintenance window. Running at every boot is possible, but can cause Winget,
 Microsoft Update and the other automatic checks to run repeatedly after
 restarts.
 
-Recommended task configuration:
+The following local workstation configuration was validated on 29 August 2026:
 
-1. Create a task, not only a basic task, so all security options are available.
-2. Select **Run with highest privileges**.
-3. Choose the account/context appropriate for the environment.
+1. Create a full **Task**, not only a Basic Task, so all security options are
+   available.
+2. Select **Run whether user is logged on or not** for background execution
+   without a visible console.
+3. Select **Run with highest privileges**.
 4. Create a daily trigger at the chosen maintenance time.
 5. Set **Program/script** to the full path of `MaintenanceToolkit.exe`.
 6. Set **Add arguments** to `-RunAll`.
 7. Set **Start in** to the Maintenance Toolkit root directory.
-8. If appropriate, enable running the task as soon as possible after a missed
-   scheduled start.
-9. Run the task manually once and review the MT summary, exit result and logs.
+8. Where appropriate, configure AC-power/network conditions.
+9. Enable running the task as soon as possible after a missed scheduled start.
+10. If the task is already running, select **Do not start a new instance**.
+11. Save the task; Windows may request the selected account password.
+12. Let the real scheduled trigger start MT at least once, then review Last Run
+    Result, the session summary and detailed logs.
+
+With **Run only when user is logged on**, MT still runs but its console is
+visible in that user's session.
+
+Task Scheduler displays decimal exit code `20` as hexadecimal `0x14`. This
+means the MT session completed with warnings and no errors; it does not by
+itself indicate a scheduling failure.
+
+The final summary is normally written below
+`logs\COMPUTER-NAME\YYYYMMDD-HHMMSS_COMPUTER-NAME\riepilogo.txt`.
 
 Do not configure an external forced reboot merely to complete maintenance. MT
 uses `NeverReboot=1` by default so that reboot decisions remain under

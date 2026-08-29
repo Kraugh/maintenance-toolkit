@@ -99,18 +99,30 @@ il sistema; il display può comunque spegnersi normalmente.
 ## Log e report
 
 I log operativi sono organizzati per computer e sessione sotto `logs/`.
-I report di Network Diagnostics vengono mantenuti separatamente sotto
-`reports/`.
+Il riepilogo finale si trova normalmente in
+`logs\NOME-PC\YYYYMMDD-HHMMSS_NOME-PC\riepilogo.txt`. I report di Network
+Diagnostics vengono mantenuti separatamente sotto `reports/`.
 
 Prima di condividere log o report con terzi, verificarne sempre il contenuto e
 rimuovere eventuali informazioni che non si desidera rendere pubbliche.
 
 ## Esecuzione automatizzata
 
-La release 4.0.0 supporta `MaintenanceToolkit.exe -RunAll`, equivalente non
-interattivo della voce `[A]`: esegue i moduli automatici abilitati nel file INI
-e termina. Il manuale tecnico descrive anche l’uso con Utilità di pianificazione
-e gli scenari Active Directory / GPO.
+La release 4.0.0 supporta:
+
+```powershell
+.\MaintenanceToolkit.exe -RunAll
+```
+
+`-RunAll` è l'equivalente non interattivo della voce `[A]`: esegue i moduli
+automatici abilitati in `config\MaintenanceToolkit.ini` e termina. Il manuale
+tecnico documenta anche `-Only`, `-SelfTest`, `-CheckUpdates`, `-Language`, gli
+exit code e la configurazione completa di Utilità di pianificazione.
+
+Per eseguire MT in background con Utilità di pianificazione usare privilegi
+elevati e **Esegui indipendentemente dalla connessione dell'utente**. Gli
+scenari Active Directory / GPO, `SYSTEM`, Winget sotto `SYSTEM` e SMB sono
+trattati separatamente nel manuale e nella System Administrator Guide.
 
 ## Documentazione
 
@@ -132,13 +144,3 @@ Maintenance Toolkit è distribuito con licenza MIT. Consultare
 <https://www.kraugh.it>
 
 Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.
-
-## Esecuzione pianificata in background
-
-Maintenance Toolkit può essere eseguito automaticamente con:
-
-```powershell
-.\MaintenanceToolkit.exe -RunAll
-```
-
-Per Task Scheduler usare privilegi elevati e **Esegui indipendentemente dalla connessione dell'utente** per evitare la finestra console. La procedura completa, gli exit code e le note per ambienti aziendali sono nel manuale tecnico.
