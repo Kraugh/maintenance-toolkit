@@ -247,6 +247,60 @@ L'esecuzione da share SMB e il funzionamento di tutti i moduli come `SYSTEM`
 sono scenari da validare nell'ambiente di destinazione: questa guida non li
 considera automaticamente equivalenti a un'esecuzione locale interattiva.
 
+
+### Esecuzione pianificata in background
+
+Per una attività pianificata Windows, usare `MaintenanceToolkit.exe` con argomento `-RunAll` e impostare la cartella radice di MT come **Avvia in**.
+
+Configurazione collaudata il 29 agosto 2026:
+
+- creare una **Attività**, non una semplice Attività di base;
+- selezionare **Esegui indipendentemente dalla connessione dell'utente** per evitare la comparsa della console;
+- selezionare **Esegui con i privilegi più elevati**;
+- impostare un trigger giornaliero in una finestra di basso impatto (per esempio pausa pranzo o fine giornata);
+- programma: `C:\Percorso\Maintenance-Toolkit\MaintenanceToolkit.exe`;
+- argomenti: `-RunAll`;
+- **Avvia in**: `C:\Percorso\Maintenance-Toolkit`;
+- su portatili, valutare alimentazione da rete e interruzione al passaggio a batteria;
+- se gli aggiornamenti sono abilitati, richiedere una connessione di rete;
+- abilitare l'avvio appena possibile dopo una pianificazione mancata;
+- scegliere **Non avviare una nuova istanza** se MT è già in esecuzione.
+
+Windows può richiedere la password dell'account al salvataggio della task.
+
+Con **Esegui solo se l'utente è connesso** MT funziona, ma la console rimane visibile. La modalità in background è stata verificata con **Esegui indipendentemente dalla connessione dell'utente**.
+
+#### Exit code in Utilità di pianificazione
+
+`-RunAll` termina senza tornare al menu e restituisce:
+
+| Codice | Significato |
+|---:|---|
+| `0` | nessun warning o errore |
+| `20` (`0x14` in Utilità di pianificazione) | uno o più warning, nessun errore |
+| `1` | uno o più errori |
+
+`0x14` non indica quindi necessariamente un errore della task: è l'exit code MT `20`. Consultare `riepilogo.txt` e i log della sessione.
+
+Per leggere rapidamente l'ultimo riepilogo dalla radice di MT:
+
+```powershell
+Get-Content (Get-ChildItem .\logs\$env:COMPUTERNAME -Directory |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1 |
+    ForEach-Object { Join-Path $_.FullName 'riepilogo.txt' })
+```
+
+#### Nota su Winget
+
+MT interpreta l'esito restituito da Winget, ma non certifica a livello binario ogni applicazione aggiornata. Durante il collaudo è stato osservato un caso in cui Winget registrava una versione aggiornata mentre il binario dell'applicazione aperta era rimasto alla versione precedente. In caso di anomalie, verificare i log Winget e lo stato reale dell'applicazione.
+
+#### Più endpoint
+
+In ambienti con molti PC è opportuno evitare che tutti gli endpoint inizino gli aggiornamenti nello stesso istante. Task Scheduler permette un **ritardo casuale** del trigger; una finestra distribuita riduce il picco di download.
+
+`-RunAll` può essere distribuito tramite Group Policy Preferences come Scheduled Task. Esecuzione come `SYSTEM`, Winget sotto `SYSTEM` ed esecuzione diretta da share SMB restano scenari da validare separatamente prima di una distribuzione generale.
+
 ## 12. Interpretazione degli esiti
 
 Gli stati `OK`, `INFO`, `WARN` ed `ERROR` devono essere letti nel contesto.

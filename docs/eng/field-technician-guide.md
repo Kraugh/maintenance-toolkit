@@ -213,3 +213,17 @@ When reporting a problem, provide:
 
 Repository: <https://github.com/Kraugh/maintenance-toolkit>
 Website: <https://www.kraugh.it>
+
+## Scheduled background execution
+
+Maintenance Toolkit can run the automatic modules enabled in the INI with:
+
+```powershell
+.\MaintenanceToolkit.exe -RunAll
+```
+
+For Windows Task Scheduler, create a full Task, enable **Run with highest privileges**, select **Run whether user is logged on or not** for background execution, set `MaintenanceToolkit.exe` as the program, `-RunAll` as the arguments, and the MT root directory as **Start in**.
+
+Exit code `0` means no warnings/errors; `20` (shown as `0x14` by Task Scheduler) means warnings without errors; `1` means one or more errors. Always inspect the session summary and logs.
+
+For fleets, consider a random trigger delay to avoid simultaneous update downloads. Execution as `SYSTEM`, Winget under `SYSTEM`, and direct SMB-share execution remain scenarios to validate separately.

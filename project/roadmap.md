@@ -77,6 +77,8 @@ Le date di rilascio non sono prefissate. La qualità ha priorità sulla velocit�
 - [x] Guida per amministratori di sistema
 - [x] Guida Group Policy passo-passo
 - [x] Guida Task Scheduler passo-passo
+- [x] Test Task Scheduler locale in background con account utente, privilegi elevati e `-RunAll`
+- [x] Verifica propagazione exit code `0`, `20/0x14` e consultazione del riepilogo
 - [ ] Esecuzione come `SYSTEM`
 - [ ] Test di Winget in contesto `SYSTEM`
 - [ ] Raccolta e centralizzazione dei log
@@ -133,3 +135,14 @@ Le date di rilascio non sono prefissate. La qualità ha priorità sulla velocit�
 
 - [ ] Firma digitale degli script
 - [ ] Localizzazione multilingua dell'interfaccia
+
+---
+
+## Dashboard enterprise e centralizzazione
+
+- [ ] Definire un formato stabile per la raccolta centralizzata di log e report
+- [ ] Dashboard enterprise con stato complessivo degli endpoint
+- [ ] Evidenziare ultimo avvio, ultimo esito e macchine che non riportano da troppo tempo
+- [ ] Cronologia manutenzioni e aggiornamenti per endpoint
+- [ ] Drill-down da dashboard ai log/report originali
+- [ ] Valutare architettura AD/GPO e repository condiviso senza fissare prematuramente il modello

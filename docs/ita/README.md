@@ -132,3 +132,13 @@ Maintenance Toolkit è distribuito con licenza MIT. Consultare
 <https://www.kraugh.it>
 
 Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.
+
+## Esecuzione pianificata in background
+
+Maintenance Toolkit può essere eseguito automaticamente con:
+
+```powershell
+.\MaintenanceToolkit.exe -RunAll
+```
+
+Per Task Scheduler usare privilegi elevati e **Esegui indipendentemente dalla connessione dell'utente** per evitare la finestra console. La procedura completa, gli exit code e le note per ambienti aziendali sono nel manuale tecnico.
