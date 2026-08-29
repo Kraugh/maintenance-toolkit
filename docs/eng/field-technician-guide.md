@@ -1,8 +1,8 @@
 # Maintenance Toolkit 4.0 — Field Technician Guide
 
-**Document version:** 2.0  
-**Compatible with:** Maintenance Toolkit `4.0.0-rc.1`  
-**Updated:** 8 August 2026
+**Document version:** 2.1
+**Compatible with:** Maintenance Toolkit `4.0.0`
+**Updated:** 29 August 2026
 
 ## Overview
 
@@ -25,7 +25,7 @@ modules with integrated Network Diagnostics.
    verify its origin and use **Properties → Unblock** on the ZIP before
    extracting it.
 4. Extract the complete archive.
-5. Run `Avvia_Manutenzione.bat`.
+5. Run `MaintenanceToolkit.exe` (or `Avvia_Manutenzione.bat` as a fallback).
 6. Accept administrative elevation.
 
 Do not run individual scripts under `app/modules` directly unless you are
@@ -39,7 +39,7 @@ After verifying that the archive is the official project release, the ZIP can
 be unblocked before extraction:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.0-rc.1.zip
+Unblock-File .\Maintenance-Toolkit-4.0.0.zip
 ```
 
 Extract the archive again afterwards.
@@ -58,6 +58,28 @@ The main menu provides the established maintenance functions, including:
 - optional cleanup actions.
 
 Potentially invasive actions remain disabled by default.
+
+
+## Non-interactive execution
+
+MT 4.0.0 can run the automatic module set without opening the interactive menu:
+
+```powershell
+.\MaintenanceToolkit.exe -RunAll
+```
+
+`-RunAll` is the command-line equivalent of **[A] Run all automatic modules**.
+It runs the modules enabled under `[Modules]` in
+`config\MaintenanceToolkit.ini`, then exits with an exit code instead of
+returning to the menu.
+
+This mode is suitable for scheduled maintenance. For Windows Task Scheduler,
+run the task with **Run with highest privileges** and choose a maintenance
+window such as lunch time or the end of the working day rather than running it
+at every boot unless that behaviour is specifically required.
+
+For Active Directory / GPO deployment, including execution as `SYSTEM` or from
+an SMB share, see [System Administrator Guide](System-Administrator-Guide.md).
 
 ## Network Diagnostics
 
@@ -118,15 +140,14 @@ systems that are significantly behind on updates.
 
 MT displays periodic status messages while long operations are running.
 
-### RC1 power-management limitation
+### Power management
 
-RC1 does not yet inhibit Windows sleep. For long maintenance sessions,
-temporarily configure the PC so that it does not enter sleep. The display may
-still turn off normally.
+During a Maintenance Toolkit session, MT asks Windows to keep the system awake
+without forcing the display to remain on. The request lasts for the MT process.
 
-## RC1 validation
+## 4.0.0 validation
 
-The candidate has been exercised on:
+The 4.0 series has been exercised on:
 
 - physical Windows 11;
 - Windows 10 22H2 with Windows PowerShell 5.1;
@@ -135,7 +156,6 @@ The candidate has been exercised on:
 - systems with no active VPN;
 - Quick Diagnosis and Technical Report workflows.
 
-A real connected-VPN test remains desirable before final 4.0.0 promotion.
 
 ## Troubleshooting
 
@@ -150,7 +170,29 @@ before changing Windows security settings.
 Review the final summary and session logs. Where possible, MT continues with
 other modules so that useful diagnostic evidence is not lost.
 
-### Network Diagnostics warns that the gateway does not answer
+#
+## Non-interactive execution
+
+MT 4.0.0 can run the automatic module set without opening the interactive menu:
+
+```powershell
+.\MaintenanceToolkit.exe -RunAll
+```
+
+`-RunAll` is the command-line equivalent of **[A] Run all automatic modules**.
+It runs the modules enabled under `[Modules]` in
+`config\MaintenanceToolkit.ini`, then exits with an exit code instead of
+returning to the menu.
+
+This mode is suitable for scheduled maintenance. For Windows Task Scheduler,
+run the task with **Run with highest privileges** and choose a maintenance
+window such as lunch time or the end of the working day rather than running it
+at every boot unless that behaviour is specifically required.
+
+For Active Directory / GPO deployment, including execution as `SYSTEM` or from
+an SMB share, see [System Administrator Guide](System-Administrator-Guide.md).
+
+## Network Diagnostics warns that the gateway does not answer
 
 Test whether the gateway intentionally blocks ICMP. Working DNS and Internet
 traffic can coexist with an ICMP timeout.
@@ -169,5 +211,5 @@ When reporting a problem, provide:
 - reproduction steps;
 - relevant logs/reports after reviewing them for sensitive information.
 
-Repository: <https://github.com/Kraugh/maintenance-toolkit>  
+Repository: <https://github.com/Kraugh/maintenance-toolkit>
 Website: <https://www.kraugh.it>

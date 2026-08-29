@@ -3,8 +3,7 @@
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
 
-**Pre-release corrente:** `4.0.0-rc.1`  
-**Release stabile corrente:** `3.7.2`
+**Release stabile corrente:** `4.0.0`
 
 La serie 4.0 integra il nuovo core bilingue, Network Diagnostics, regole
 automatiche di analisi, diagnostica VPN avanzata e report tecnici di rete,
@@ -35,9 +34,6 @@ mantenendo i moduli di manutenzione già validati nella serie 3.7.x.
 
 Scaricare il pacchetto dalla pagina **Releases** del repository ufficiale.
 
-- `3.7.2` è la versione stabile.
-- `4.0.0-rc.1` è la Release Candidate della nuova serie 4.0.
-
 Per avviare il Toolkit:
 
 1. scaricare lo ZIP della release;
@@ -45,7 +41,7 @@ Per avviare il Toolkit:
 3. se Windows segnala che lo ZIP proviene da Internet, verificare che provenga
    dalla release ufficiale e usare **Proprietà → Sblocca** prima di estrarlo;
 4. estrarre completamente l'archivio;
-5. eseguire `Avvia_Manutenzione.bat`;
+5. eseguire `MaintenanceToolkit.exe` (`Avvia_Manutenzione.bat` resta disponibile come fallback);
 6. accettare l'elevazione amministrativa.
 
 > Non eseguire direttamente gli script presenti in `app/modules`.
@@ -62,7 +58,7 @@ riestrarre il contenuto.
 Da PowerShell:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.0-rc.1.zip
+Unblock-File .\Maintenance-Toolkit-4.0.0.zip
 ```
 
 ## Impostazioni prudenti
@@ -97,12 +93,8 @@ scaricato né distribuito automaticamente da Maintenance Toolkit.
 ## Operazioni lunghe e sospensione
 
 Microsoft Update, Winget, DISM e SFC possono richiedere molto tempo su sistemi
-non aggiornati.
-
-Nella RC1 il Toolkit non inibisce ancora la sospensione di Windows. Durante
-manutenzioni lunghe è quindi consigliabile impostare temporaneamente il sistema
-in modo che **non entri in sospensione**. Lo spegnimento del display può invece
-rimanere attivo.
+non aggiornati. Durante una sessione MT richiede a Windows di mantenere attivo
+il sistema; il display può comunque spegnersi normalmente.
 
 ## Log e report
 
@@ -113,18 +105,18 @@ I report di Network Diagnostics vengono mantenuti separatamente sotto
 Prima di condividere log o report con terzi, verificarne sempre il contenuto e
 rimuovere eventuali informazioni che non si desidera rendere pubbliche.
 
-## Stato della RC1
+## Esecuzione automatizzata
 
-La RC1 è stata verificata su Windows 10 e Windows 11, su hardware fisico e in
-Hyper-V, con interfacce Ethernet e Wi-Fi e in scenari senza VPN attiva.
-
-La validazione con una VPN realmente connessa resta un test desiderabile prima
-della promozione a 4.0.0 stabile.
+La release 4.0.0 supporta `MaintenanceToolkit.exe -RunAll`, equivalente non
+interattivo della voce `[A]`: esegue i moduli automatici abilitati nel file INI
+e termina. Il manuale tecnico descrive anche l’uso con Utilità di pianificazione
+e gli scenari Active Directory / GPO.
 
 ## Documentazione
 
 - [Manuale tecnico italiano](manuale-tecnico.md)
 - [Guida inglese per tecnici](../eng/field-technician-guide.md)
+- [System Administrator Guide](../eng/System-Administrator-Guide.md)
 - [Changelog](../CHANGELOG.md)
 - [About](../ABOUT.txt)
 - [Repository principale](../../README.md)
@@ -136,7 +128,7 @@ Maintenance Toolkit è distribuito con licenza MIT. Consultare
 
 ## Autore
 
-**Luca Miselli**  
+**Luca Miselli**
 <https://www.kraugh.it>
 
 Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.

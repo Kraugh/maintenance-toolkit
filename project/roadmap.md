@@ -64,7 +64,7 @@ Le date di rilascio non sono prefissate. La qualità ha priorità sulla velocit�
 
 ## Esecuzione automatizzata
 
-- [ ] Modalità non interattiva `-RunAll`
+- [x] Modalità non interattiva `-RunAll`
 - [ ] Modalità diagnostica `-Debug`
 - [x] Autotest da riga di comando `-SelfTest`
 - [ ] Test mirato alle novità della release `-TestRelease`
@@ -74,9 +74,9 @@ Le date di rilascio non sono prefissate. La qualità ha priorità sulla velocit�
 
 ## Distribuzione centralizzata
 
-- [ ] Guida per amministratori di sistema
-- [ ] Guida Group Policy passo-passo
-- [ ] Guida Task Scheduler passo-passo
+- [x] Guida per amministratori di sistema
+- [x] Guida Group Policy passo-passo
+- [x] Guida Task Scheduler passo-passo
 - [ ] Esecuzione come `SYSTEM`
 - [ ] Test di Winget in contesto `SYSTEM`
 - [ ] Raccolta e centralizzazione dei log
