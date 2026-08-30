@@ -10,7 +10,7 @@ A later decision may supersede an earlier one while preserving the history.
 
 ---
 
-## 2026-07-18 — GitHub becomes the official repository
+## 2026-07-18 â€” GitHub becomes the official repository
 
 ### Decision
 
@@ -33,7 +33,7 @@ longer the authoritative development repository.
 
 ---
 
-## 2026-07-18 — Release workflow
+## 2026-07-18 â€” Release workflow
 
 ### Decision
 
@@ -41,19 +41,19 @@ Development follows this workflow:
 
 ```text
 Change
-↓
+â†“
 Test
-↓
+â†“
 Review with git diff and git status
-↓
+â†“
 Commit
-↓
+â†“
 Push
-↓
+â†“
 Tag
-↓
+â†“
 GitHub Release
-↓
+â†“
 Distribution ZIP
 ```
 
@@ -72,7 +72,7 @@ creating unnecessary software versions for repository-only modifications.
 
 ---
 
-## 2026-07-18 — Atomic changes and releases
+## 2026-07-18 â€” Atomic changes and releases
 
 ### Decision
 
@@ -87,7 +87,7 @@ Small and isolated changes simplify testing, regression analysis and rollback.
 
 ---
 
-## 2026-07-18 — Project files in the repository root
+## 2026-07-18 â€” Project files in the repository root
 
 ### Decision
 
@@ -109,7 +109,7 @@ homepage, while manuals belong to a dedicated documentation tree.
 
 ---
 
-## 2026-07-18 — Separation of roadmap, backlog and changelog
+## 2026-07-18 â€” Separation of roadmap, backlog and changelog
 
 ### Decision
 
@@ -128,7 +128,7 @@ easier to understand.
 
 ---
 
-## 2026-07-18 — Documentation language structure
+## 2026-07-18 â€” Documentation language structure
 
 ### Decision
 
@@ -136,8 +136,8 @@ User documentation is organized by language:
 
 ```text
 docs/
-├── ita/
-└── eng/
+â”œâ”€â”€ ita/
+â””â”€â”€ eng/
 ```
 
 Three-letter language identifiers are used.
@@ -150,7 +150,7 @@ technical audience.
 
 ---
 
-## 2026-07-18 — Documentation file naming
+## 2026-07-18 â€” Documentation file naming
 
 ### Decision
 
@@ -172,7 +172,7 @@ case-sensitive operating systems.
 
 ---
 
-## 2026-07-18 — Documentation conventions
+## 2026-07-18 â€” Documentation conventions
 
 ### Decision
 
@@ -220,7 +220,7 @@ makes documents easier to maintain.
 
 ---
 
-## 2026-07-18 — Update checking architecture
+## 2026-07-18 â€” Update checking architecture
 
 ### Decision
 
@@ -240,7 +240,7 @@ messages to change without modifying the local program.
 
 ---
 
-## 2026-07-18 — Distribution analytics
+## 2026-07-18 â€” Distribution analytics
 
 ### Decision
 
@@ -257,7 +257,7 @@ Version-specific download statistics help evaluate adoption, update continuity
 and the effectiveness of documentation and publication channels.
 ---
 
-## 2026-08-01 — Long-running operation status
+## 2026-08-01 â€” Long-running operation status
 
 ### Decision
 
@@ -286,14 +286,14 @@ trust.
 
 ---
 
-## 2026-08-06 — MT4 integration baseline
+## 2026-08-06 â€” MT4 integration baseline
 
 NDP 0.0.19-RC is the immutable network regression baseline. MT4 will integrate its engines as a native domain only after a common bilingual core exists. MT process execution and session logging are retained; NDP localization, profiling, topology, routing, rules and scenario concepts are imported.
 
 
 ---
 
-## 2026-08-06 — MT4 compatibility loader
+## 2026-08-06 â€” MT4 compatibility loader
 
 ### Decision
 
@@ -313,7 +313,7 @@ new implementation functions to `modules/00_common.ps1`.
 
 ---
 
-## 2026-08-06 — Bootstrap core-loading scope
+## 2026-08-06 â€” Bootstrap core-loading scope
 
 ### Decision
 
@@ -334,7 +334,7 @@ and to the existing compatibility layer.
 
 ---
 
-## 2026-08-06 — StrictMode isolation during MT4 migration
+## 2026-08-06 â€” StrictMode isolation during MT4 migration
 
 ### Decision
 
@@ -358,7 +358,7 @@ behaviour, that become runtime errors when StrictMode is unexpectedly enabled.
 
 ---
 
-## 2026-08-06 — Legacy scalar Count regression contract
+## 2026-08-06 â€” Legacy scalar Count regression contract
 
 ### Decision
 
@@ -376,7 +376,7 @@ The regression introduced in dev.3 was not a wrong Count value; it was the
 
 ---
 
-## 2026-08-07 — Bilingual shell before module localization
+## 2026-08-07 â€” Bilingual shell before module localization
 
 ### Decision
 
@@ -395,7 +395,7 @@ as UTF-8 with BOM.
 
 ---
 
-## 2026-08-07 — Foundation settings ownership
+## 2026-08-07 â€” Foundation settings ownership
 
 ### Decision
 
@@ -419,7 +419,7 @@ without mutating persistent configuration.
 
 ---
 
-## 2026-08-07 — Runtime localization contract for maintenance modules
+## 2026-08-07 â€” Runtime localization contract for maintenance modules
 
 ### Decision
 
@@ -443,7 +443,7 @@ messages around that output follow the selected MT language.
 
 ---
 
-## 2026-08-07 — Common process feedback is localized in ProcessRunner
+## 2026-08-07 â€” Common process feedback is localized in ProcessRunner
 
 ### Decision
 
@@ -457,7 +457,7 @@ modules. They must not be translated independently by each module.
 
 ---
 
-## 2026-08-07 — Separate repository layout from end-user distribution layout
+## 2026-08-07 â€” Separate repository layout from end-user distribution layout
 
 ### Decision
 
@@ -476,7 +476,7 @@ release package must make the correct launch action unambiguous.
 
 ---
 
-## 2026-08-07 — Dot-sourced compatibility loaders must not own generic caller variables
+## 2026-08-07 â€” Dot-sourced compatibility loaders must not own generic caller variables
 
 ### Decision
 
@@ -492,7 +492,7 @@ and failed `app/config` / `app/languages` lookups.
 
 ---
 
-## 2026-08-07 — NDP integration begins with engine primitives, not workflows
+## 2026-08-07 â€” NDP integration begins with engine primitives, not workflows
 
 ### Decision
 
@@ -520,7 +520,7 @@ does not elevate, open a nested menu, or launch another PowerShell process.
 
 ---
 
-## 2026-08-07 — Network Diagnostics first appears as a native MT submenu
+## 2026-08-07 â€” Network Diagnostics first appears as a native MT submenu
 
 ### Decision
 
@@ -545,7 +545,7 @@ localization and presentation.
 
 ---
 
-## 2026-08-07 — MT presentation must not invent host-visible physical hardware
+## 2026-08-07 â€” MT presentation must not invent host-visible physical hardware
 
 ### Decision
 
@@ -564,7 +564,7 @@ presentation rule at the MT orchestration layer.
 
 ---
 
-## 2026-08-07 — Native Network Technical Report owns report identity, not engines
+## 2026-08-07 â€” Native Network Technical Report owns report identity, not engines
 
 ### Decision
 
@@ -595,7 +595,7 @@ SpeedTest is deliberately not part of dev.14; the report states that explicitly.
 
 ---
 
-## 2026-08-07 — Parenthesize command expressions used as .NET method arguments
+## 2026-08-07 â€” Parenthesize command expressions used as .NET method arguments
 
 ### Decision
 
@@ -611,7 +611,7 @@ Windows PowerShell 5.1 rejects constructs such as
 
 ---
 
-## 2026-08-07 — Report line buffers use a behavioural contract
+## 2026-08-07 â€” Report line buffers use a behavioural contract
 
 ### Decision
 
@@ -629,7 +629,7 @@ identity and mutation semantics, not collection coercion.
 
 ---
 
-## 2026-08-07 — Multiline format operators require explicit continuation
+## 2026-08-07 â€” Multiline format operators require explicit continuation
 
 ### Decision
 
@@ -648,7 +648,7 @@ AUTOTEST.
 
 ---
 
-## 2026-08-07 — Network report composition does not use PowerShell -f
+## 2026-08-07 â€” Network report composition does not use PowerShell -f
 
 ### Decision
 
@@ -668,7 +668,7 @@ mismatch can be located immediately.
 
 ---
 
-## 2026-08-07 — Runtime paths are read from the structured Paths object
+## 2026-08-07 â€” Runtime paths are read from the structured Paths object
 
 ### Decision
 
@@ -684,7 +684,7 @@ project root and the report artifacts were written beside the launcher.
 
 ---
 
-## 2026-08-07 — SpeedTest remains an optional local dependency
+## 2026-08-07 â€” SpeedTest remains an optional local dependency
 
 ### Decision
 
@@ -703,7 +703,7 @@ TXT, Topology and Rules files.
 
 ---
 
-## 2026-08-07 — Optional report sections obey the report formatter contract
+## 2026-08-07 â€” Optional report sections obey the report formatter contract
 
 ### Decision
 
@@ -720,7 +720,7 @@ report composer, not only the original sections.
 
 ---
 
-## 2026-08-07 — Public release packages contain no runtime artifacts or external binaries
+## 2026-08-07 â€” Public release packages contain no runtime artifacts or external binaries
 
 ### Decision
 
@@ -746,7 +746,7 @@ engine data remains unchanged.
 
 ---
 
-## 2026-08-07 — Multiline source assertions must enable regex Singleline mode
+## 2026-08-07 â€” Multiline source assertions must enable regex Singleline mode
 
 ### Decision
 
@@ -762,7 +762,7 @@ because the assertion expected `.*?` to cross line boundaries.
 
 ---
 
-## 2026-08-07 — MT health rules extend, rather than rewrite, the NDP baseline
+## 2026-08-07 â€” MT health rules extend, rather than rewrite, the NDP baseline
 
 ### Decision
 
@@ -780,7 +780,7 @@ devices may intentionally block ICMP.
 
 ---
 
-## 2026-08-07 — Health batch 2 evaluates DNS/DHCP on the effective interface
+## 2026-08-07 â€” Health batch 2 evaluates DNS/DHCP on the effective interface
 
 ### Decision
 
@@ -803,7 +803,7 @@ Unknown and the rule stays clear.
 
 ---
 
-## 2026-08-07 — Repository EOL policy is explicit and versioned
+## 2026-08-07 â€” Repository EOL policy is explicit and versioned
 
 ### Decision
 
@@ -820,7 +820,7 @@ Git configuration.
 
 ---
 
-## 2026-08-07 — Network Health batch 3 remains conservative
+## 2026-08-07 â€” Network Health batch 3 remains conservative
 
 ### Decision
 
@@ -837,7 +837,7 @@ VPN and virtualization configurations as faults.
 
 ---
 
-## 2026-08-07 — Health AUTOTEST fixtures track the complete Health context contract
+## 2026-08-07 â€” Health AUTOTEST fixtures track the complete Health context contract
 
 ### Decision
 
@@ -856,7 +856,7 @@ unchanged.
 
 ---
 
-## 2026-08-07 — Advanced VPN Diagnostics starts with deterministic tunnel state
+## 2026-08-07 â€” Advanced VPN Diagnostics starts with deterministic tunnel state
 
 ### Decision
 
@@ -876,7 +876,7 @@ are deferred to later rule packs.
 
 ---
 
-## 2026-08-07 — Synthetic Health fixtures use the complete enabled-rule contract
+## 2026-08-07 â€” Synthetic Health fixtures use the complete enabled-rule contract
 
 ### Decision
 
@@ -895,7 +895,7 @@ Dev.21a changes AUTOTEST fixtures only; runtime VPN diagnostics are unchanged.
 
 ---
 
-## 2026-08-07 — VPN route duplication is a warning; public VPN DNS is informational
+## 2026-08-07 â€” VPN route duplication is a warning; public VPN DNS is informational
 
 ### Decision
 
@@ -916,7 +916,7 @@ evidence without treating it as a fault.
 
 ---
 
-## 2026-08-07 — VPN technology classification is evidence-based and non-fatal
+## 2026-08-07 â€” VPN technology classification is evidence-based and non-fatal
 
 ### Decision
 
@@ -933,7 +933,7 @@ vendor/protocol certainty.
 
 ---
 
-## 2026-08-07 — Development snapshots obey `.gitattributes`
+## 2026-08-07 â€” Development snapshots obey `.gitattributes`
 
 ### Decision
 
@@ -950,7 +950,7 @@ or every `git add -A` emits conversion warnings even when content is unchanged.
 
 ---
 
-## 2026-08-07 — EOL normalizer resolves its path after parameter binding
+## 2026-08-07 â€” EOL normalizer resolves its path after parameter binding
 
 ### Decision
 
@@ -969,13 +969,13 @@ last extension also missed repository text files without a normal extension.
 
 ---
 
-## 2026-08-07 — Dev.24 starts release convergence
+## 2026-08-07 â€” Dev.24 starts release convergence
 
 ### Decision
 
 No broad new subsystem is introduced after dev.23a.
 
-Dev.24 adds one missing generic health signal — DNS resolution — and closes
+Dev.24 adds one missing generic health signal â€” DNS resolution â€” and closes
 known VPN detection gaps between the classifier and the topology pattern list.
 
 The default DNS probe target is `www.msftconnecttest.com`; only DNS resolution
@@ -990,7 +990,7 @@ Tailscale can be missed before classification even runs.
 
 ---
 
-## 2026-08-07 — Dev.25 is presentation-only release convergence
+## 2026-08-07 â€” Dev.25 is presentation-only release convergence
 
 No new diagnostic subsystem is introduced. Dev.25 exposes a compact final
 severity summary in Quick Diagnosis and the Technical Report. New feature work
@@ -998,7 +998,7 @@ remains deferred while MT4 converges toward RC1.
 
 ---
 
-## 2026-08-07 — Dev.26 freezes feature scope before RC1
+## 2026-08-07 â€” Dev.26 freezes feature scope before RC1
 
 Dev.26 is the final planned development increment before `4.0.0-rc.1`.
 No new feature subsystem is accepted after this point unless required to fix a
@@ -1011,7 +1011,7 @@ runtime/documentation payload before compression.
 
 ---
 
-## 2026-08-07 — UTF8Encoding(true).GetBytes does not prepend a BOM
+## 2026-08-07 â€” UTF8Encoding(true).GetBytes does not prepend a BOM
 
 ### Decision
 
@@ -1031,7 +1031,7 @@ are included.
 
 ---
 
-## 2026-08-07 — RC preparation tests validate consistency, not a fixed dev number
+## 2026-08-07 â€” RC preparation tests validate consistency, not a fixed dev number
 
 ### Decision
 
@@ -1049,7 +1049,7 @@ The invariant is version consistency, not a particular development suffix.
 
 ---
 
-## 2026-08-07 — Promote 4.0.0-rc.1
+## 2026-08-07 â€” Promote 4.0.0-rc.1
 
 ### Decision
 
@@ -1064,3 +1064,85 @@ The pre-RC line has passed Foundation AUTOTEST and Network Diagnostics runtime
 validation on Windows 11 physical hardware, Windows 10 / Windows PowerShell 5.1,
 and a Windows 11 Hyper-V guest. Technical Network Report generation has also
 been validated on Windows 10 and Windows 11.
+
+---
+
+## 2026-08-30 â€” Documentation, website and release information must remain aligned
+
+### Decision
+
+Every public release has a mandatory documentation gate covering repository documentation, configuration/defaults, CLI behaviour, logs/reports, public schemas, release manifests and the published Maintenance Toolkit material under `kraugh.it/software/`.
+
+The deployed website is verified from a current source archive downloaded from the hosting environment. Cached/crawled web content is not accepted as proof of the deployed source state.
+
+Historical sprint and decision documents are preserved as historical records and are not rewritten merely because the current implementation has moved on.
+
+### Reason
+
+A technically correct release can still mislead users if documentation or the public website describes obsolete behaviour. Release quality therefore includes consistency between code, package, repository documentation and deployed public documentation.
+
+---
+
+## 2026-08-30 â€” Localization is a cross-project architectural contract
+
+### Decision
+
+MT-generated user-facing text is resolved from external JSON language resources rather than hard-coded in application logic.
+
+The official target language set is Italian, English, German, French, Japanese and Simplified Chinese. Automatic language selection follows the operating-system/user language where supported; English is the fallback. An explicit language override remains available.
+
+Adding a new supported language should require a conforming language JSON resource, not application-logic changes.
+
+Machine-readable identifiers, CLI parameter names, exit codes, rule identifiers and versioned interchange-schema field names remain language-independent.
+
+### Reason
+
+Localization must scale without duplicating or branching application logic. Keeping presentation resources external also prevents translated UI from changing machine-to-machine contracts.
+
+MT 4.0 already provides the EN/IT JSON localization foundation; the complete six-language set is future work and must not be documented as already released until implementation and validation are complete.
+
+---
+
+## 2026-08-30 â€” MT Inventory and DMT are separated by a versioned data contract
+
+### Decision
+
+Maintenance Toolkit 5.x will introduce a stable Inventory Schema, versioned independently from the MT application version.
+
+MT observes and exports machine facts. Dashboard Maintenance Toolkit (DMT) consumes, stores and interprets those facts. DMT-specific management concepts such as tenant, site, department, assignee, contract, warranty and DMT AssetId remain outside MT.
+
+Every inventory collection produces a new snapshot with its own identifier and timestamp. A valid snapshot is always written locally. Optional remote publication is best-effort and uses a strategy that prevents consumers from importing incomplete files.
+
+The Inventory JSON is a report/output artifact, not an execution log.
+
+### Reason
+
+A stable boundary allows MT and DMT to evolve independently, keeps MT useful as a standalone maintenance tool and avoids turning MT into an RMM agent or embedding dashboard-specific business logic in the endpoint collector.
+
+---
+
+## 2026-08-30 â€” Roadmap, backlog and GitHub Issues have distinct roles
+
+### Decision
+
+The roadmap contains approved project goals. The backlog contains unscheduled ideas. GitHub Issues represent concrete, reviewable and closable work items.
+
+Completed work is removed from active roadmap/backlog checklists or marked complete where historical context is useful. Existing issues are reused or updated rather than duplicated when a roadmap goal is already tracked.
+
+### Reason
+
+Keeping these roles separate prevents stale checklists from presenting already released functionality as unfinished and makes the repository a reliable description of both current state and future work.
+
+---
+
+## 2026-08-30 â€” MT 5.0.0 scope is tracked by a dedicated GitHub milestone
+
+### Decision
+
+GitHub Milestone **5.0.0** groups the concrete work selected for the next major release. The initial milestone scope is represented by issues **#14â€“#21**: Inventory Schema 1.0, Windows inventory collection, snapshot persistence/optional remote publication, reliability/status semantics, profiling/benchmarking, validation, six-language JSON localization, and documentation/public-release alignment.
+
+Existing issues **#5**, **#9**, **#11** and **#12** remain valid future enhancements but are intentionally outside the 5.0.0 milestone. They are not prerequisites for the Inventory/DMT interoperability release unless a later explicit planning decision changes that scope.
+
+### Reason
+
+A milestone should describe what a release is actually expected to deliver rather than becoming a container for every open enhancement. Keeping unrelated DISM/SFC UX, Support Package, Advanced VPN Diagnostics and Rules Engine expansion outside 5.0.0 gives the major release a clear architectural purpose and prevents uncontrolled scope growth.
