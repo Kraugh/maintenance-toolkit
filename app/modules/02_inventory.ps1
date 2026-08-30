@@ -1,4 +1,4 @@
-###############################################################################
+﻿###############################################################################
 # Maintenance Toolkit 5.0 - Inventory module
 ###############################################################################
 
@@ -17,26 +17,43 @@ try {
 
     $Snapshot = Get-MTInventorySnapshot -CollectorVersion "5.0.0-dev"
 
-    $PublishResult = Publish-MTInventorySnapshot `
-        -Snapshot $Snapshot `
-        -LocalDirectory $ReportsPath
+    $PublishParameters = @{
+        Snapshot       = $Snapshot
+        LocalDirectory = $ReportsPath
+    }
 
-    switch ($Snapshot.collection.status) {
-        "ok" {
+    if (-not [string]::IsNullOrWhiteSpace($env:MT_INVENTORY_SHARE)) {
+        $PublishParameters.InventoryShare = $env:MT_INVENTORY_SHARE
+    }
+
+    $PublishResult = Publish-MTInventorySnapshot @PublishParameters
+
+    $ModuleStatus = switch ($Snapshot.collection.status) {
+        "ok"      { "OK" }
+        "partial" { "WARN" }
+        default   { "ERROR" }
+    }
+
+    $Detail = "Inventory Schema {0}: {1}" -f `
+        $Snapshot.schemaVersion,
+        $PublishResult.fileName
+
+    if ($PublishResult.remoteStatus -eq "warning") {
+        Add-Log "WARN" $PublishResult.warningCode $Module
+        $ModuleStatus = if ($ModuleStatus -eq "ERROR") { "ERROR" } else { "WARN" }
+        $Detail = "{0} | {1}" -f $Detail, $PublishResult.warningCode
+    }
+
+    switch ($ModuleStatus) {
+        "OK" {
             Write-Ok ("Inventory snapshot: {0}" -f $PublishResult.localPath) $Module
-            Set-ModuleResult `
-                "Inventario hardware/software" `
-                "OK" `
-                ("Inventory Schema {0}: {1}" -f $Snapshot.schemaVersion, $PublishResult.fileName)
+            Set-ModuleResult "Inventario hardware/software" "OK" $Detail
             exit 0
         }
 
-        "partial" {
-            Write-Warn ("Inventory snapshot partial: {0}" -f $PublishResult.localPath) $Module
-            Set-ModuleResult `
-                "Inventario hardware/software" `
-                "WARN" `
-                ("Inventory Schema {0} partial: {1}" -f $Snapshot.schemaVersion, $PublishResult.fileName)
+        "WARN" {
+            Add-Log "WARN" ("Inventory snapshot: {0}" -f $PublishResult.localPath) $Module
+            Set-ModuleResult "Inventario hardware/software" "WARN" $Detail
             exit 20
         }
 
@@ -44,11 +61,7 @@ try {
             Write-ErrorLog `
                 ("Inventory snapshot unusable. Status: {0}" -f $Snapshot.collection.status) `
                 $Module
-
-            Set-ModuleResult `
-                "Inventario hardware/software" `
-                "ERROR" `
-                ("Inventory Schema {0} unusable: {1}" -f $Snapshot.schemaVersion, $PublishResult.fileName)
+            Set-ModuleResult "Inventario hardware/software" "ERROR" $Detail
             exit 1
         }
     }

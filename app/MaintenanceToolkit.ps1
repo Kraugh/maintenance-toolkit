@@ -15,7 +15,8 @@ param(
     [switch]$SelfTest,
     [switch]$CheckUpdates,
     [ValidateSet("auto", "en-US", "it-IT")]
-    [string]$Language = "auto"
+    [string]$Language = "auto",
+    [string]$InventoryShare
 )
 
 $ErrorActionPreference = "Stop"
@@ -39,6 +40,16 @@ $env:MT_MODULES = $ModulesDir
 $env:MT_LOGS = $ComputerLogsDir
 $env:MT_COMPUTER_LOG_NAME = $ComputerLogName
 $env:MT_INI = $IniPath
+
+# Optional DMT publication destination for Inventory snapshots.
+# Modules run in the same PowerShell process, so the environment variable is
+# used only as a stable runtime hand-off and is not written into the snapshot.
+if ([string]::IsNullOrWhiteSpace($InventoryShare)) {
+    Remove-Item Env:MT_INVENTORY_SHARE -ErrorAction SilentlyContinue
+}
+else {
+    $env:MT_INVENTORY_SHARE = $InventoryShare
+}
 
 . (Join-Path $ModulesDir "00_common.ps1")
 . (Join-Path $AppDir "core\PowerManagement.ps1")
