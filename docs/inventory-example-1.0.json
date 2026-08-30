@@ -1,0 +1,289 @@
+{
+  "schemaVersion": "1.0",
+  "snapshotId": "550e8400-e29b-41d4-a716-446655440000",
+  "collectedAt": "2026-08-30T15:22:42+02:00",
+  "collector": {
+    "name": "Maintenance Toolkit",
+    "version": "5.0.0"
+  },
+  "collection": {
+    "status": "ok",
+    "durationMs": 12857
+  },
+  "device": {
+    "status": "ok",
+    "durationMs": 43,
+    "errors": [],
+    "data": {
+      "hostname": "WORKSTATION-01",
+      "manufacturer": "HP",
+      "model": "HP EliteDesk 800 G6 Tower PC",
+      "systemUuid": "00000000-0000-0000-0000-000000000000",
+      "biosSerialNumber": "EXAMPLE-SERIAL",
+      "assetTag": null,
+      "chassis": {
+        "serialNumber": "EXAMPLE-SERIAL",
+        "types": [
+          3
+        ]
+      },
+      "baseboard": {
+        "manufacturer": "HP",
+        "product": "870B",
+        "serialNumber": "EXAMPLE-BOARD"
+      }
+    }
+  },
+  "os": {
+    "status": "ok",
+    "durationMs": 204,
+    "errors": [],
+    "data": {
+      "name": "Microsoft Windows 11 Pro",
+      "edition": "Professional",
+      "displayVersion": "25H2",
+      "version": "10.0.26200",
+      "build": 26200,
+      "ubr": 9278,
+      "architecture": "64 bit",
+      "installDate": "2026-03-13T07:55:35+01:00",
+      "lastBootAt": "2026-08-30T08:25:17+02:00",
+      "locale": "it-IT"
+    }
+  },
+  "firmware": {
+    "status": "ok",
+    "durationMs": 25,
+    "errors": [],
+    "data": {
+      "type": "uefi",
+      "manufacturer": "HP",
+      "version": "S01 Ver. 02.26.00",
+      "releaseDate": "2026-05-06T02:00:00+02:00",
+      "smbiosVersion": "3.2",
+      "secureBootEnabled": true
+    }
+  },
+  "cpu": {
+    "status": "ok",
+    "durationMs": 200,
+    "errors": [],
+    "data": {
+      "sockets": [
+        {
+          "socket": "U3E1",
+          "manufacturer": "GenuineIntel",
+          "model": "Intel(R) Core(TM) i7-10700 CPU @ 2.90GHz",
+          "cores": 8,
+          "logicalProcessors": 16,
+          "maxClockMHz": 2904
+        }
+      ]
+    }
+  },
+  "memory": {
+    "status": "ok",
+    "durationMs": 891,
+    "errors": [],
+    "data": {
+      "installedBytes": 34359738368,
+      "systemVisibleBytes": 34125086720,
+      "modules": [
+        {
+          "bank": "ChannelB",
+          "slot": "DIMM1",
+          "manufacturer": "Samsung",
+          "partNumber": "EXAMPLE-PART",
+          "serialNumber": "EXAMPLE-RAM",
+          "capacityBytes": 34359738368,
+          "type": "ddr4",
+          "ratedSpeedMHz": 3200,
+          "configuredSpeedMHz": 2933
+        }
+      ]
+    }
+  },
+  "storage": {
+    "status": "ok",
+    "durationMs": 3453,
+    "errors": [],
+    "data": {
+      "disks": [
+        {
+          "manufacturer": null,
+          "model": "Samsung SSD 990 PRO with Heatsink 2TB",
+          "serialNumber": "EXAMPLE-DISK",
+          "capacityBytes": 2000398934016,
+          "busType": "nvme",
+          "mediaType": "ssd"
+        },
+        {
+          "manufacturer": null,
+          "model": "Samsung M3 Portable USB Device",
+          "serialNumber": "EXAMPLE-USB",
+          "capacityBytes": 2000398934016,
+          "busType": "usb",
+          "mediaType": null
+        }
+      ]
+    }
+  },
+  "volumes": {
+    "status": "ok",
+    "durationMs": 485,
+    "errors": [],
+    "data": [
+      {
+        "driveLetter": "C",
+        "label": "Windows",
+        "fileSystem": "NTFS",
+        "capacityBytes": 1997960900608,
+        "encrypted": true
+      },
+      {
+        "driveLetter": null,
+        "label": "SYSTEM",
+        "fileSystem": "FAT32",
+        "capacityBytes": 268435456,
+        "encrypted": null
+      }
+    ]
+  },
+  "gpu": {
+    "status": "ok",
+    "durationMs": 35,
+    "errors": [],
+    "data": {
+      "adapters": [
+        {
+          "name": "NVIDIA Quadro P620",
+          "manufacturer": "NVIDIA",
+          "driverVersion": "31.0.15.2889",
+          "driverDate": "2023-03-28T02:00:00+02:00",
+          "pnpDeviceId": "PCI\\VEN_10DE&DEV_EXAMPLE"
+        }
+      ]
+    }
+  },
+  "network": {
+    "status": "ok",
+    "durationMs": 1333,
+    "errors": [],
+    "data": {
+      "adapters": [
+        {
+          "name": "Ethernet",
+          "description": "Intel(R) Ethernet Connection (11) I219-LM",
+          "interfaceIndex": 15,
+          "macAddress": "00-00-00-00-00-00",
+          "type": "ethernet",
+          "isPhysical": true,
+          "isVirtual": false,
+          "driverVersion": null,
+          "driverDate": null,
+          "addresses": [
+            {
+              "family": "ipv4",
+              "address": "192.168.88.15",
+              "prefixLength": 24
+            },
+            {
+              "family": "ipv6",
+              "address": "fe80::1234%15",
+              "prefixLength": 64
+            }
+          ],
+          "gateways": [
+            {
+              "family": "ipv4",
+              "address": "192.168.88.1"
+            }
+          ],
+          "dnsServers": [
+            {
+              "family": "ipv4",
+              "address": "192.168.88.1"
+            },
+            {
+              "family": "ipv4",
+              "address": "88.149.128.12"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "join": {
+    "status": "ok",
+    "durationMs": 56,
+    "errors": [],
+    "data": {
+      "computerDomain": "WORKGROUP",
+      "domainJoined": false,
+      "entraJoined": false,
+      "enterpriseJoined": false,
+      "workplaceJoined": false
+    }
+  },
+  "tpm": {
+    "status": "ok",
+    "durationMs": 840,
+    "errors": [],
+    "data": {
+      "present": true,
+      "version": "2.0",
+      "manufacturer": "IFX",
+      "enabled": true,
+      "activated": true,
+      "owned": true
+    }
+  },
+  "software": {
+    "status": "ok",
+    "durationMs": 777,
+    "errors": [],
+    "data": {
+      "win32": [
+        {
+          "name": "Example Application",
+          "version": "1.2.3",
+          "publisher": "Example Publisher",
+          "scope": "machine",
+          "registryView": "64-bit",
+          "installDate": "20260801",
+          "windowsInstaller": false,
+          "systemComponent": false
+        }
+      ],
+      "appx": [
+        {
+          "name": "Microsoft.WindowsTerminal",
+          "version": "1.23.12371.0",
+          "architecture": "x64",
+          "isFramework": false,
+          "isResourcePackage": false
+        }
+      ]
+    }
+  },
+  "users": {
+    "status": "ok",
+    "durationMs": 48,
+    "errors": [],
+    "data": {
+      "lastKnownUser": "WORKSTATION-01\\example"
+    }
+  },
+  "maintenance": {
+    "status": "ok",
+    "durationMs": 64123,
+    "errors": [],
+    "data": {
+      "windowsUpdate": {
+        "attempted": true,
+        "status": "ok",
+        "errorCode": null
+      }
+    }
+  }
+}

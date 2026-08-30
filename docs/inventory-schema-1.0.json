@@ -1,0 +1,1567 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.kraugh.it/schema/maintenance-toolkit/inventory/1.0",
+  "title": "Maintenance Toolkit Inventory Schema 1.0",
+  "description": "Machine inventory snapshot contract produced by Maintenance Toolkit and consumed by DMT.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "collectionError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "source"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        }
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "snapshotId",
+    "collectedAt",
+    "collector",
+    "collection",
+    "device",
+    "os",
+    "firmware",
+    "cpu",
+    "memory",
+    "storage",
+    "volumes",
+    "gpu",
+    "network",
+    "join",
+    "tpm",
+    "software",
+    "users",
+    "maintenance"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "snapshotId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "collectedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "collector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "const": "Maintenance Toolkit"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "error"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "hostname",
+            "manufacturer",
+            "model",
+            "systemUuid",
+            "biosSerialNumber",
+            "assetTag",
+            "chassis",
+            "baseboard"
+          ],
+          "properties": {
+            "hostname": {
+              "type": "string",
+              "minLength": 1
+            },
+            "manufacturer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "model": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "systemUuid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "biosSerialNumber": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "assetTag": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "chassis": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "serialNumber",
+                "types"
+              ],
+              "properties": {
+                "serialNumber": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "types": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "baseboard": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "manufacturer",
+                "product",
+                "serialNumber"
+              ],
+              "properties": {
+                "manufacturer": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "product": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "serialNumber": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "os": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "edition",
+            "displayVersion",
+            "version",
+            "build",
+            "ubr",
+            "architecture",
+            "installDate",
+            "lastBootAt",
+            "locale"
+          ],
+          "properties": {
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "edition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "displayVersion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "build": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "ubr": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "architecture": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "installDate": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "lastBootAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "locale": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "firmware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "manufacturer",
+            "version",
+            "releaseDate",
+            "smbiosVersion",
+            "secureBootEnabled"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "bios",
+                "uefi",
+                "unknown"
+              ]
+            },
+            "manufacturer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "releaseDate": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "smbiosVersion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "secureBootEnabled": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "cpu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sockets"
+          ],
+          "properties": {
+            "sockets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "socket",
+                  "manufacturer",
+                  "model",
+                  "cores",
+                  "logicalProcessors",
+                  "maxClockMHz"
+                ],
+                "properties": {
+                  "socket": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "manufacturer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "model": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "cores": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "logicalProcessors": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "maxClockMHz": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "installedBytes",
+            "systemVisibleBytes",
+            "modules"
+          ],
+          "properties": {
+            "installedBytes": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "systemVisibleBytes": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "modules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "bank",
+                  "slot",
+                  "manufacturer",
+                  "partNumber",
+                  "serialNumber",
+                  "capacityBytes",
+                  "type",
+                  "ratedSpeedMHz",
+                  "configuredSpeedMHz"
+                ],
+                "properties": {
+                  "bank": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "slot": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "manufacturer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "partNumber": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "serialNumber": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "capacityBytes": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "ratedSpeedMHz": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "configuredSpeedMHz": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "disks"
+          ],
+          "properties": {
+            "disks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "manufacturer",
+                  "model",
+                  "serialNumber",
+                  "capacityBytes",
+                  "busType",
+                  "mediaType"
+                ],
+                "properties": {
+                  "manufacturer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "model": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "serialNumber": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "capacityBytes": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "busType": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "mediaType": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "volumes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "driveLetter",
+              "label",
+              "fileSystem",
+              "capacityBytes",
+              "encrypted"
+            ],
+            "properties": {
+              "driveLetter": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fileSystem": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "capacityBytes": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "encrypted": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "gpu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapters"
+          ],
+          "properties": {
+            "adapters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "manufacturer",
+                  "driverVersion",
+                  "driverDate",
+                  "pnpDeviceId"
+                ],
+                "properties": {
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "manufacturer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "driverVersion": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "driverDate": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "pnpDeviceId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapters"
+          ],
+          "properties": {
+            "adapters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "description",
+                  "interfaceIndex",
+                  "macAddress",
+                  "type",
+                  "isPhysical",
+                  "isVirtual",
+                  "driverVersion",
+                  "driverDate",
+                  "addresses",
+                  "gateways",
+                  "dnsServers"
+                ],
+                "properties": {
+                  "name": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "interfaceIndex": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "macAddress": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "type": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "isPhysical": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "isVirtual": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "driverVersion": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "driverDate": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  },
+                  "addresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "family",
+                        "address",
+                        "prefixLength"
+                      ],
+                      "properties": {
+                        "family": {
+                          "enum": [
+                            "ipv4",
+                            "ipv6"
+                          ]
+                        },
+                        "address": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "prefixLength": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 128
+                        }
+                      }
+                    }
+                  },
+                  "gateways": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "family",
+                        "address"
+                      ],
+                      "properties": {
+                        "family": {
+                          "enum": [
+                            "ipv4",
+                            "ipv6"
+                          ]
+                        },
+                        "address": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "dnsServers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "family",
+                        "address"
+                      ],
+                      "properties": {
+                        "family": {
+                          "enum": [
+                            "ipv4",
+                            "ipv6"
+                          ]
+                        },
+                        "address": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "join": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "computerDomain",
+            "domainJoined",
+            "entraJoined",
+            "enterpriseJoined",
+            "workplaceJoined"
+          ],
+          "properties": {
+            "computerDomain": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "domainJoined": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "entraJoined": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "enterpriseJoined": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "workplaceJoined": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "tpm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "present",
+            "version",
+            "manufacturer",
+            "enabled",
+            "activated",
+            "owned"
+          ],
+          "properties": {
+            "present": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "version": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "manufacturer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "enabled": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "activated": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "owned": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "software": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "win32",
+            "appx"
+          ],
+          "properties": {
+            "win32": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "version",
+                  "publisher",
+                  "scope",
+                  "registryView",
+                  "installDate",
+                  "windowsInstaller",
+                  "systemComponent"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "version": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "publisher": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "scope": {
+                    "enum": [
+                      "machine",
+                      "user"
+                    ]
+                  },
+                  "registryView": {
+                    "enum": [
+                      "32-bit",
+                      "64-bit",
+                      "native"
+                    ]
+                  },
+                  "installDate": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "windowsInstaller": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "systemComponent": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "appx": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "version",
+                  "architecture",
+                  "isFramework",
+                  "isResourcePackage"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "version": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "architecture": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "isFramework": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "isResourcePackage": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lastKnownUser"
+          ],
+          "properties": {
+            "lastKnownUser": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "maintenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "durationMs",
+        "errors",
+        "data"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "partial",
+            "unavailable",
+            "error",
+            "not_supported"
+          ]
+        },
+        "durationMs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/collectionError"
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "windowsUpdate"
+          ],
+          "properties": {
+            "windowsUpdate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "attempted",
+                "status",
+                "errorCode"
+              ],
+              "properties": {
+                "attempted": {
+                  "type": "boolean"
+                },
+                "status": {
+                  "enum": [
+                    "ok",
+                    "error",
+                    "not_run"
+                  ]
+                },
+                "errorCode": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    null,
+                    "update_scan_failed",
+                    "update_download_failed",
+                    "update_install_failed"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
