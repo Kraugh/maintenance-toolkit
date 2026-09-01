@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package
+      Name="Maintenance Toolkit"
+      Manufacturer="Kraugh"
+      Version="$(MTVersion)"
+      UpgradeCode="C1F2A740-51FD-4C40-A0F8-BE1D4E1B72A6"
+      Scope="perMachine"
+      InstallerVersion="500">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Maintenance Toolkit is already installed." />
+
+    <!-- Public MSI properties for unattended/GPO deployment. -->
+    <Property Id="CREATE_TASK" Value="0" Secure="yes" />
+    <Property Id="TASK_TIME" Value="03:00" Secure="yes" />
+    <Property Id="INVENTORY_SHARE" Secure="yes" />
+
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="KraughFolder" Name="Kraugh">
+        <Directory Id="INSTALLFOLDER" Name="Maintenance Toolkit" />
+      </Directory>
+    </StandardDirectory>
+
+    <!--
+      Keep the portable repository layout intact inside the installed product.
+      MSI packaging/docs remain separate in the repository and are not harvested.
+    -->
+    <Files Include="$(SourceRoot)\app\**" Directory="INSTALLFOLDER" Subdirectory="app" />
+    <Files Include="$(SourceRoot)\config\**" Directory="INSTALLFOLDER" Subdirectory="config" />
+    <Files Include="$(SourceRoot)\languages\**" Directory="INSTALLFOLDER" Subdirectory="languages" />
+    <Files Include="$(SourceRoot)\rules\**" Directory="INSTALLFOLDER" Subdirectory="rules" />
+    <Files Include="$(SourceRoot)\themes\**" Directory="INSTALLFOLDER" Subdirectory="themes" />
+    <File Id="MaintenanceToolkitExe"
+          Source="$(SourceRoot)\MaintenanceToolkit.exe"
+          Directory="INSTALLFOLDER" />
+
+    <!-- Preserve the public property without embedding it in a command line. -->
+    <Component Id="MsiConfiguration" Directory="INSTALLFOLDER">
+      <RegistryValue Root="HKLM"
+                     Key="Software\Kraugh\Maintenance Toolkit"
+                     Name="InventoryShare"
+                     Value="[INVENTORY_SHARE]"
+                     Type="string"
+                     KeyPath="yes" />
+    </Component>
+
+    <!-- Keep the runtime report directory without shipping generated reports. -->
+    <File Source="$(SourceRoot)\reports\README.md"
+          Directory="INSTALLFOLDER"
+          Subdirectory="reports" />
+
+    <!-- Task helper is MSI-specific support code. -->
+    <File Id="MsiTaskHelper"
+          Source="$(SourceRoot)\packaging\msi\scripts\Configure-MTScheduledTask.ps1"
+          Directory="INSTALLFOLDER"
+          Subdirectory="support" />
+
+    <!--
+      MSI-owned task has a unique name so that a future GPO-owned task can
+      coexist without an ownership collision.
+    -->
+    <SetProperty
+        Id="ConfigureMTScheduledTask"
+        Value="&quot;[%SystemRoot]\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;[INSTALLFOLDER]support\Configure-MTScheduledTask.ps1&quot; -Action Install -InstallDir &quot;[INSTALLFOLDER].&quot; -TaskTime &quot;[TASK_TIME]&quot; -ReadInventoryShareFromRegistry"
+        Before="ConfigureMTScheduledTask"
+        Sequence="execute" />
+
+    <CustomAction
+        Id="ConfigureMTScheduledTask"
+        BinaryRef="Wix4UtilCA_X64"
+        DllEntry="WixQuietExec"
+        Execute="deferred"
+        Impersonate="no"
+        Return="check" />
+
+    <SetProperty
+        Id="RemoveMTScheduledTask"
+        Value="&quot;[%SystemRoot]\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;[INSTALLFOLDER]support\Configure-MTScheduledTask.ps1&quot; -Action Uninstall -InstallDir &quot;[INSTALLFOLDER].&quot;"
+        Before="RemoveMTScheduledTask"
+        Sequence="execute" />
+
+    <CustomAction
+        Id="RemoveMTScheduledTask"
+        BinaryRef="Wix4UtilCA_X64"
+        DllEntry="WixQuietExec"
+        Execute="deferred"
+        Impersonate="no"
+        Return="ignore" />
+
+    <InstallExecuteSequence>
+      <!-- Only create/update the MSI-owned task when explicitly requested. -->
+      <Custom Action="ConfigureMTScheduledTask"
+              After="WriteRegistryValues"
+              Condition="CREATE_TASK = 1 AND NOT REMOVE~=&quot;ALL&quot;" />
+
+      <!-- Safe because this removes only the uniquely MSI-owned task. -->
+      <Custom Action="RemoveMTScheduledTask"
+              Before="RemoveFiles"
+              Condition="REMOVE~=&quot;ALL&quot;" />
+    </InstallExecuteSequence>
+
+  </Package>
+</Wix>

@@ -1,0 +1,6 @@
+# Local WiX tool and extension caches
+.tools/
+.wix/
+
+# Generated MSI build and validation artifacts
+out/

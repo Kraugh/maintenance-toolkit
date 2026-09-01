@@ -56,7 +56,13 @@ try {
     $Winget = Get-WingetCommand
 
     if (-not $Winget) {
-        throw (Get-MTRuntimeText "WINGET_NOT_FOUND")
+        $UnavailableMessage = Get-MTRuntimeText "WINGET_NOT_FOUND"
+        Write-Skip $UnavailableMessage $Module
+        Set-ModuleResult `
+            (Get-MTRuntimeText "MODULE_WINGET") `
+            "SKIP" `
+            $UnavailableMessage
+        exit 10
     }
 
     $BeforePath = Join-Path $env:MT_SESSION_DIR "winget_prima.txt"
