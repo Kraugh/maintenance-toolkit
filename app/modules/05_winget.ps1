@@ -12,6 +12,42 @@ function Get-WingetCommand {
     return Get-Command winget.exe -ErrorAction SilentlyContinue
 }
 
+
+function Save-WingetSnapshot {
+    param(
+        [string]$WingetPath,
+        [string]$DestinationPath
+    )
+
+    $ErrorPath = "$DestinationPath.err"
+
+    try {
+        $Process = Start-Process `
+            -FilePath $WingetPath `
+            -ArgumentList @(
+                "upgrade",
+                "--accept-source-agreements",
+                "--disable-interactivity"
+            ) `
+            -Wait `
+            -PassThru `
+            -NoNewWindow `
+            -RedirectStandardOutput $DestinationPath `
+            -RedirectStandardError $ErrorPath
+
+        $CombinedOutput = @(
+            Read-ProcessOutput -Path $DestinationPath -Encoding "UTF8"
+        )
+        $CombinedOutput += Read-ProcessOutput -Path $ErrorPath -Encoding "UTF8"
+        $CombinedOutput | Set-Content -LiteralPath $DestinationPath -Encoding UTF8
+
+        return [int]$Process.ExitCode
+    }
+    finally {
+        Remove-Item -LiteralPath $ErrorPath -Force -ErrorAction SilentlyContinue
+    }
+}
+
 function Invoke-WingetUpgradePass {
     param(
         [int]$Pass,
@@ -70,10 +106,9 @@ try {
 
     Write-Main (Get-MTRuntimeText "WINGET_GET_AVAILABLE")
 
-    & $Winget.Source upgrade `
-        --accept-source-agreements `
-        --disable-interactivity 2>&1 |
-        Set-Content -LiteralPath $BeforePath -Encoding UTF8
+    $null = Save-WingetSnapshot `
+        -WingetPath $Winget.Source `
+        -DestinationPath $BeforePath
 
     Write-Main (Get-MTRuntimeText "WINGET_UPDATE_SOURCES")
 
@@ -145,10 +180,9 @@ try {
             -Arguments $Arguments
     }
 
-    & $Winget.Source upgrade `
-        --accept-source-agreements `
-        --disable-interactivity 2>&1 |
-        Set-Content -LiteralPath $AfterPath -Encoding UTF8
+    $null = Save-WingetSnapshot `
+        -WingetPath $Winget.Source `
+        -DestinationPath $AfterPath
 
     if ($FinalResult -eq 0) {
         $Detail = if ($SecondPassUsed) {

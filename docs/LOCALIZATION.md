@@ -15,7 +15,7 @@ The official target language set is:
 - Japanese (`ja-JP`);
 - Simplified Chinese (`zh-CN`).
 
-MT 4.0 currently provides the existing EN/IT localization foundation. Expansion to the complete official language set is planned work and must not be described as already implemented until it has been released and validated.
+MT 4.0 has the validated EN/IT localization foundation. The development tree may contain additional language resources (currently including `sv-SE`) before they are part of the supported public language contract. A resource file alone does not make a language officially supported: runtime selection, key coverage, fallback behaviour and release validation must all be aligned. Expansion to the complete official target set is planned work and must not be described as released until it has been validated.
 
 ## Runtime selection
 

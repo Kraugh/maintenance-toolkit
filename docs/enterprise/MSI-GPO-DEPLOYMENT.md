@@ -95,3 +95,18 @@ When `-InventoryShare` points to a UNC path, the destination ACL must grant the 
 DMT consumes Inventory Schema snapshots.
 
 Normal daily execution remains controlled by MSI/GPO scheduling. A future DMT on-demand execution mechanism is intentionally outside this MSI feature.
+
+
+## Version management through Group Policy
+
+Enterprise deployment should target an **administrator-approved MT version**, not automatically execute whichever MSI happens to be newest in a share. Keep the MSI `UpgradeCode` stable across the product line and use normal MSI version/upgrade semantics for approved upgrades.
+
+A practical layout is:
+
+```text
+\\SERVER\Software\MaintenanceToolkit\
+    4.0.0\MaintenanceToolkit-4.0.0-x64.msi
+    <next-version>\MaintenanceToolkit-<next-version>-x64.msi
+```
+
+Test OUs/computer groups may receive a candidate version before the production GPO is updated. This keeps package storage separate from release approval and permits controlled rollout/rollback procedures according to the organization's Group Policy practices.

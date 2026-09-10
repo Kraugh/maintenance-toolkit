@@ -183,8 +183,10 @@ The MT 4.0 Network Diagnostics foundation is released. Future work is tracked as
 - [x] `-SelfTest` and `-CheckUpdates` command-line modes.
 - [x] Windows Task Scheduler guidance and validated background execution.
 - [x] Exit-code propagation documented and validated for scheduled execution.
-- [ ] Validate execution as `SYSTEM` where useful.
-- [ ] Validate Winget behaviour in `SYSTEM` context.
+- [x] Validate execution as `SYSTEM` for enterprise/MSI scheduling.
+- [x] Validate Winget behaviour in `SYSTEM` context, including graceful `SKIP` when Winget is unavailable.
+- [x] Provide per-machine MSI packaging for centralized deployment.
+- [x] Define GPO ownership of enterprise Scheduled Tasks (`CREATE_TASK=0`) and optional `-InventoryShare` publication.
 - [ ] Evaluate additional SMB-share and removable-media execution scenarios where they provide real operational value.
 - [ ] Consider `-Debug` / more verbose diagnostic logging only when a concrete troubleshooting requirement justifies it.
 
@@ -197,6 +199,9 @@ The MT 4.0 Network Diagnostics foundation is released. Future work is tracked as
 - [x] GitHub release ZIP and SHA-256 workflow.
 - [x] Signed native launcher.
 - [x] Public Maintenance Toolkit pages and documentation on kraugh.it.
+- [x] Enterprise MSI packaging source with reproducible WiX 5.0.2 build.
+- [x] MSI/GPO deployment guide and separate task-ownership model.
+- [ ] Publish the signed MSI artifact and align GitHub/kraugh.it release material before enterprise rollout.
 - [ ] Evaluate opening the official download page directly from MT.
 - [ ] Consider automatic self-update only after the manual update workflow remains proven and the trust/security model is explicitly designed.
 - [ ] Consider release-history and video material as documentation improvements, not release blockers unless explicitly selected for a release.
@@ -215,6 +220,26 @@ Possible future improvements remain subject to issue selection and validation:
 - [ ] Evaluate advanced SMART/storage diagnostics.
 - [ ] Evaluate advanced HTML diagnostic reporting.
 - [ ] Evaluate optional Sysinternals integration.
+
+---
+
+## Future application architecture — one engine, three faces
+
+A future MT release will preserve one diagnostic/maintenance engine and expose it through three presentation modes. This is approved architectural direction, but it is **not a blocker for the current enterprise MSI release**.
+
+1. **Headless / automation** — no interactive UI; intended for Scheduled Task, GPO and `SYSTEM` execution. It performs configured maintenance/collection and produces structured reports.
+2. **Console / semi-textual** — the current technician-oriented EXE/BAT/PowerShell experience remains supported and may be refined without being replaced by the GUI.
+3. **Graphical UI** — a future friendly interactive frontend for manual workstation analysis. It consumes the same structured results as the other modes and must not duplicate collector or maintenance logic.
+
+The core rule is: **collect once, render many ways**. Modules should increasingly expose structured results that can feed console presentation, JSON/report artifacts and the future GUI.
+
+### Local ports and services analysis
+
+- [ ] Add a native local Port & Service Analyzer to enumerate listening TCP/UDP endpoints and correlate them with processes/services where reliable.
+- [ ] Produce a structured, exportable report suitable for headless execution and future GUI rendering.
+- [ ] Reuse compatible concepts learned from DMT's pre-installation port/service conflict check without coupling MT to DMT runtime code.
+- [ ] Keep local exposure/diagnostic analysis distinct from remote network scanning.
+- [ ] Consider firewall-rule correlation and explanatory classifications only when evidence is reliable; MT must not invent security findings.
 
 ---
 

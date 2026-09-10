@@ -25,8 +25,6 @@ Completed work must be removed from this backlog rather than left here as an app
 
 ## Deployment and administration
 
-- Validate execution as `SYSTEM` where useful.
-- Validate Winget behaviour in `SYSTEM` context.
 - Evaluate additional execution scenarios from SMB shares and removable media.
 - Evaluate centralized log collection separately from DMT Inventory snapshot publication.
 

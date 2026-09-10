@@ -1146,3 +1146,48 @@ Existing issues **#5**, **#9**, **#11** and **#12** remain valid future enhancem
 ### Reason
 
 A milestone should describe what a release is actually expected to deliver rather than becoming a container for every open enhancement. Keeping unrelated DISM/SFC UX, Support Package, Advanced VPN Diagnostics and Rules Engine expansion outside 5.0.0 gives the major release a clear architectural purpose and prevents uncontrolled scope growth.
+
+
+---
+
+## 2026-09-10 — Enterprise MSI/GPO deployment is a supported distribution architecture
+
+### Decision
+
+Maintenance Toolkit keeps its portable ZIP distribution and adds a per-machine MSI channel for centrally managed Windows environments. The MSI installs the same runtime locally. Standalone installations may opt into the MSI-owned Scheduled Task with `CREATE_TASK=1`; Active Directory/GPO deployments use `CREATE_TASK=0`, and Group Policy owns scheduling and runtime arguments.
+
+For DMT interoperability, the GPO-managed task may pass `-InventoryShare` to publish Inventory JSON snapshots to an authorized UNC destination. Share permissions are an enterprise deployment concern and must allow the executing computer account or an appropriate domain computer group to write.
+
+The MSI source is reproducibly built with pinned WiX Toolset 5.0.2. Public enterprise release requires the final launcher and MSI artifacts to be digitally signed and verified, and GitHub/kraugh.it documentation to pass the normal release-alignment gate.
+
+### Reason
+
+Separating installation from scheduling lets administrators update MT independently from task policy, avoids competing Scheduled Tasks and provides a conventional AD/GPO deployment model without changing the portable technician workflow.
+
+---
+
+## 2026-09-10 — Future MT uses one engine with three presentation modes
+
+### Decision
+
+Future Maintenance Toolkit development preserves a single maintenance/diagnostic core with three presentation modes: headless automation, the existing console/semi-textual technician interface, and a future graphical interactive interface.
+
+The headless mode remains fully non-interactive and suitable for Scheduled Task, GPO and `SYSTEM`. The console interface remains a supported technical interface rather than a temporary UI to be discarded. The future GUI renders the same structured results and invokes the same underlying modules; diagnostic or maintenance logic must not be independently reimplemented in the GUI.
+
+### Reason
+
+A single engine prevents behavioural divergence between enterprise automation, technician use and less technical interactive use. Structured module results also allow the same evidence to feed JSON, reports and graphical presentation.
+
+---
+
+## 2026-09-10 — Local Port & Service Analyzer belongs in MT, but not in the current release gate
+
+### Decision
+
+A future MT release will add local analysis of listening TCP/UDP endpoints, with process/service correlation where reliable and structured/exportable output. The implementation may reuse design lessons from DMT's pre-installation port/service conflict checker, but MT remains independently usable and does not depend on DMT runtime components.
+
+This feature is explicitly deferred from the current enterprise MSI publication so that an already validated release is not delayed by new diagnostic scope.
+
+### Reason
+
+The information is valuable both for unattended inventory/diagnostics and for the future GUI, but introducing it while closing the enterprise distribution release would mix stabilization with feature expansion.
