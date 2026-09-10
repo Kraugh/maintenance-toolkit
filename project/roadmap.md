@@ -201,7 +201,8 @@ The MT 4.0 Network Diagnostics foundation is released. Future work is tracked as
 - [x] Public Maintenance Toolkit pages and documentation on kraugh.it.
 - [x] Enterprise MSI packaging source with reproducible WiX 5.0.2 build.
 - [x] MSI/GPO deployment guide and separate task-ownership model.
-- [ ] Publish the signed MSI artifact and align GitHub/kraugh.it release material before enterprise rollout.
+- [x] Publish the signed MSI artifact and SHA-256 checksum in the GitHub 4.0.0 release.
+- [ ] Align kraugh.it release/download material with the published MSI before enterprise rollout.
 - [ ] Evaluate opening the official download page directly from MT.
 - [ ] Consider automatic self-update only after the manual update workflow remains proven and the trust/security model is explicitly designed.
 - [ ] Consider release-history and video material as documentation improvements, not release blockers unless explicitly selected for a release.

@@ -7,6 +7,22 @@ software version.
 
 ## 4.0.0 — 17 August 2026
 
+### Distribution update — 10 September 2026
+
+- added the signed per-machine Windows x64 MSI as an official 4.0.0 release
+  artifact alongside the existing portable ZIP;
+- added reproducible MSI packaging based on pinned WiX Toolset 5.0.2;
+- added optional MSI-owned scheduling through `CREATE_TASK=1`;
+- documented centrally managed Active Directory/GPO deployment with
+  `CREATE_TASK=0`, keeping Scheduled Task ownership separate from the MSI;
+- validated `SYSTEM` execution and graceful Winget `SKIP` behaviour when the
+  dependency is unavailable;
+- fixed UTF-8 handling of captured Winget snapshots to prevent mojibake in
+  native Winget output;
+- validated the final signed MSI after signing with silent install and
+  uninstall tests, including clean removal and no MSI-managed task when
+  installed with `CREATE_TASK=0`.
+
 ### Stable release
 
 - promoted Maintenance Toolkit 4.0.0 from release candidate to stable;

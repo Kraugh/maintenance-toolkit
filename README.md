@@ -45,12 +45,24 @@ Download the current stable release from the GitHub **Releases** page:
 
 **Maintenance Toolkit 4.0.0**
 
-The release ZIP is accompanied by its SHA-256 checksum.
+Two official distribution formats are available:
+
+- `Maintenance-Toolkit-4.0.0.zip` — portable package for manual and field use;
+- `MaintenanceToolkit-4.0.0-x64.msi` — signed per-machine Windows x64 installer
+  for standalone or centrally managed deployment.
+
+Both artifacts are accompanied by SHA-256 checksum files. The MSI is digitally
+signed and timestamped and supports silent installation. For Active Directory
+and Group Policy deployment, use `CREATE_TASK=0` and let Group Policy own the
+Scheduled Task and runtime arguments. See the
+[Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
 Release packages contain the runtime only. Development files, generated logs,
 reports and optional third-party executables are not bundled.
 
 ## First run
+
+### Portable ZIP
 
 1. Download `Maintenance-Toolkit-4.0.0.zip` from the official GitHub release.
 2. Verify the SHA-256 checksum when appropriate.
@@ -60,6 +72,13 @@ reports and optional third-party executables are not bundled.
 4. Extract the complete archive.
 5. Run `MaintenanceToolkit.exe`.
 6. Accept the administrative elevation request.
+
+### MSI installer
+
+For a normal per-machine installation, run
+`MaintenanceToolkit-4.0.0-x64.msi` with administrative privileges. Silent and
+centrally managed deployment options are documented in the
+[Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
 `MaintenanceToolkit.exe` is digitally signed with an Authenticode code-signing
 certificate issued by Certum and includes a trusted RFC 3161 timestamp.
