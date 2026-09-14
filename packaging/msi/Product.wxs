@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package
       Name="Maintenance Toolkit"
@@ -9,6 +9,8 @@
       InstallerVersion="500">
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of Maintenance Toolkit is already installed." />
+
+    <MediaTemplate EmbedCab="yes" />
 
     <!-- Public MSI properties for unattended/GPO deployment. -->
     <Property Id="CREATE_TASK" Value="0" Secure="yes" />
