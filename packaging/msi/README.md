@@ -45,13 +45,13 @@ packaging\msi\out\MaintenanceToolkit-<canonical-version>-x64.msi
 Standalone MSI example with MSI-owned scheduling:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.1-x64.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 Silent standalone example:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 Enterprise/GPO deployment must use `CREATE_TASK=0` (the default). Group Policy
@@ -80,7 +80,7 @@ MaintenanceToolkit.exe -RunAll
 or, when configured:
 
 ```text
-MaintenanceToolkit.exe -RunAll -InventoryShare "\\SERVER\DMT\incoming"
+MaintenanceToolkit.exe -RunAll -InventoryShare "\\SERVER\MT"
 ```
 
 under `SYSTEM`, with highest privileges, whether or not a user is logged on.

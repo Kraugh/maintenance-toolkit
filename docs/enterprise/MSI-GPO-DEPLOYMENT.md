@@ -37,7 +37,7 @@ msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00
 Optional DMT publication:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 ## Task ownership
