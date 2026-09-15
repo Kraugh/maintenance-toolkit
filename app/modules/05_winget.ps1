@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0 - Winget module
+# Maintenance Toolkit 4.0.1 - Winget module
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -12,47 +12,57 @@ function Get-WingetCommand {
     return Get-Command winget.exe -ErrorAction SilentlyContinue
 }
 
+function Get-WingetTimeoutSeconds {
+    param(
+        [string]$Key,
+        [int]$DefaultMinutes
+    )
+
+    $Minutes = [int](Get-IniValue $Config "Winget" $Key $DefaultMinutes)
+    if ($Minutes -lt 1) {
+        $Minutes = $DefaultMinutes
+    }
+
+    return ($Minutes * 60)
+}
 
 function Save-WingetSnapshot {
     param(
         [string]$WingetPath,
-        [string]$DestinationPath
+        [string]$DestinationPath,
+        [int]$TimeoutSeconds
     )
 
-    $ErrorPath = "$DestinationPath.err"
+    $Run = Invoke-LoggedProcessWithHeartbeat `
+        -FilePath $WingetPath `
+        -ArgumentList @(
+            "upgrade",
+            "--accept-source-agreements",
+            "--disable-interactivity"
+        ) `
+        -Label (Get-MTRuntimeText "WINGET_SNAPSHOT_LABEL") `
+        -Module $Module `
+        -SuccessCodes @(0) `
+        -HeartbeatSeconds 0 `
+        -OutputEncoding "UTF8" `
+        -ShowProgressOutput $false `
+        -TimeoutSeconds $TimeoutSeconds
 
-    try {
-        $Process = Start-Process `
-            -FilePath $WingetPath `
-            -ArgumentList @(
-                "upgrade",
-                "--accept-source-agreements",
-                "--disable-interactivity"
-            ) `
-            -Wait `
-            -PassThru `
-            -NoNewWindow `
-            -RedirectStandardOutput $DestinationPath `
-            -RedirectStandardError $ErrorPath
-
-        $CombinedOutput = @(
-            Read-ProcessOutput -Path $DestinationPath -Encoding "UTF8"
-        )
-        $CombinedOutput += Read-ProcessOutput -Path $ErrorPath -Encoding "UTF8"
-        $CombinedOutput | Set-Content -LiteralPath $DestinationPath -Encoding UTF8
-
-        return [int]$Process.ExitCode
+    $CombinedOutput = @()
+    foreach ($File in @($Run.OutputPath, $Run.ErrorPath)) {
+        $CombinedOutput += Read-ProcessOutput -Path $File -Encoding "UTF8"
     }
-    finally {
-        Remove-Item -LiteralPath $ErrorPath -Force -ErrorAction SilentlyContinue
-    }
+    $CombinedOutput | Set-Content -LiteralPath $DestinationPath -Encoding UTF8
+
+    return $Run
 }
 
 function Invoke-WingetUpgradePass {
     param(
         [int]$Pass,
         [string]$WingetPath,
-        [string[]]$Arguments
+        [string[]]$Arguments,
+        [int]$TimeoutSeconds
     )
 
     $RawLog = Join-Path $env:MT_SESSION_DIR (
@@ -75,17 +85,16 @@ function Invoke-WingetUpgradePass {
         -SuccessCodes @(0) `
         -HeartbeatSeconds 60 `
         -OutputEncoding "UTF8" `
-        -ShowProgressOutput $true
+        -ShowProgressOutput $true `
+        -TimeoutSeconds $TimeoutSeconds
 
     $CombinedOutput = @()
-
     foreach ($File in @($Run.OutputPath, $Run.ErrorPath)) {
         $CombinedOutput += Read-ProcessOutput -Path $File -Encoding "UTF8"
     }
-
     $CombinedOutput | Set-Content -LiteralPath $RawLog -Encoding UTF8
 
-    return [int]$Run.ExitCode
+    return $Run
 }
 
 try {
@@ -101,14 +110,29 @@ try {
         exit 10
     }
 
+    $SnapshotTimeoutSeconds = Get-WingetTimeoutSeconds `
+        -Key "SnapshotTimeoutMinutes" `
+        -DefaultMinutes 5
+    $SourceTimeoutSeconds = Get-WingetTimeoutSeconds `
+        -Key "SourceTimeoutMinutes" `
+        -DefaultMinutes 5
+    $PassTimeoutSeconds = Get-WingetTimeoutSeconds `
+        -Key "PassTimeoutMinutes" `
+        -DefaultMinutes 60
+
     $BeforePath = Join-Path $env:MT_SESSION_DIR "winget_prima.txt"
     $AfterPath = Join-Path $env:MT_SESSION_DIR "winget_dopo.txt"
 
     Write-Main (Get-MTRuntimeText "WINGET_GET_AVAILABLE")
 
-    $null = Save-WingetSnapshot `
+    $BeforeRun = Save-WingetSnapshot `
         -WingetPath $Winget.Source `
-        -DestinationPath $BeforePath
+        -DestinationPath $BeforePath `
+        -TimeoutSeconds $SnapshotTimeoutSeconds
+
+    if ($BeforeRun.TimedOut) {
+        Write-WarnLog (Get-MTRuntimeText "WINGET_SNAPSHOT_TIMEOUT") $Module
+    }
 
     Write-Main (Get-MTRuntimeText "WINGET_UPDATE_SOURCES")
 
@@ -118,7 +142,8 @@ try {
         -Label (Get-MTRuntimeText "WINGET_SOURCE_LABEL") `
         -Module $Module `
         -OutputEncoding "UTF8" `
-        -CopyOutputToMainLog $false
+        -CopyOutputToMainLog $false `
+        -TimeoutSeconds $SourceTimeoutSeconds
 
     if ($SourceResult -ne 0) {
         Write-WarnLog (
@@ -142,56 +167,36 @@ try {
         $Arguments += "--include-unknown"
     }
 
-    $FirstResult = Invoke-WingetUpgradePass `
+    # One bounded pass only. A generic retry after any non-zero exit code can
+    # simply reproduce the same hung third-party installer unattended.
+    $PassRun = Invoke-WingetUpgradePass `
         -Pass 1 `
         -WingetPath $Winget.Source `
-        -Arguments $Arguments
+        -Arguments $Arguments `
+        -TimeoutSeconds $PassTimeoutSeconds
 
-    $FinalResult = $FirstResult
-    $SecondPassUsed = $false
+    $FinalResult = [int]$PassRun.ExitCode
 
-    if ($FirstResult -ne 0) {
-        $WaitSeconds = [int](Get-IniValue `
-            $Config `
-            "Winget" `
-            "RetryAfterSelfUpdateSeconds" `
-            12
-        )
+    $AfterRun = Save-WingetSnapshot `
+        -WingetPath $Winget.Source `
+        -DestinationPath $AfterPath `
+        -TimeoutSeconds $SnapshotTimeoutSeconds
 
-        Write-WarnLog (
-            Get-MTRuntimeText "WINGET_FIRST_PASS_RETRY" @(
-                $FirstResult,
-                $WaitSeconds
-            )
-        ) $Module
-
-        Start-Sleep -Seconds $WaitSeconds
-
-        $Winget = Get-WingetCommand
-
-        if (-not $Winget) {
-            throw (Get-MTRuntimeText "WINGET_NOT_AVAILABLE_AFTER_FIRST")
-        }
-
-        $SecondPassUsed = $true
-        $FinalResult = Invoke-WingetUpgradePass `
-            -Pass 2 `
-            -WingetPath $Winget.Source `
-            -Arguments $Arguments
+    if ($AfterRun.TimedOut) {
+        Write-WarnLog (Get-MTRuntimeText "WINGET_SNAPSHOT_TIMEOUT") $Module
     }
 
-    $null = Save-WingetSnapshot `
-        -WingetPath $Winget.Source `
-        -DestinationPath $AfterPath
+    if ($PassRun.TimedOut) {
+        $Detail = Get-MTRuntimeText "WINGET_TIMEOUT_DETAIL" @(
+            [int]($PassTimeoutSeconds / 60)
+        )
+        Write-WarnLog (Get-MTRuntimeText "WINGET_TIMEOUT_WARN") $Module
+        Set-ModuleResult (Get-MTRuntimeText "MODULE_WINGET") "WARN" $Detail
+        exit 20
+    }
 
     if ($FinalResult -eq 0) {
-        $Detail = if ($SecondPassUsed) {
-            Get-MTRuntimeText "WINGET_DETAIL_SECOND_PASS"
-        }
-        else {
-            Get-MTRuntimeText "WINGET_DETAIL_FIRST_PASS"
-        }
-
+        $Detail = Get-MTRuntimeText "WINGET_DETAIL_FIRST_PASS"
         Write-Ok (Get-MTRuntimeText "WINGET_COMPLETED") $Module
         Set-ModuleResult (Get-MTRuntimeText "MODULE_WINGET") "OK" $Detail
         exit 0
@@ -201,7 +206,6 @@ try {
 
     if ($FinalHex -eq "0x8A15002C") {
         $Detail = Get-MTRuntimeText "WINGET_PARTIAL_DETAIL" @(
-            $FirstResult,
             $FinalResult,
             $FinalHex
         )
@@ -212,7 +216,6 @@ try {
     }
 
     $Detail = Get-MTRuntimeText "WINGET_FAILED_DETAIL" @(
-        $FirstResult,
         $FinalResult,
         $FinalHex
     )

@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$Version
 )
@@ -95,6 +95,12 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
 New-Item -ItemType Directory -Path $ToolRoot -Force | Out-Null
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 
+# The output directory contains disposable build artifacts only. Clean it before
+# every build so an old external cabinet can never be mistaken for a dependency
+# of a newly embedded-cab MSI.
+Get-ChildItem -LiteralPath $OutputRoot -File -ErrorAction SilentlyContinue |
+    Remove-Item -Force
+
 if (-not (Test-Path -LiteralPath $WixExe)) {
     Write-Host "Installing local WiX Toolset 5.0.2..."
     & dotnet tool install wix --tool-path $ToolRoot --version 5.0.2
@@ -125,6 +131,15 @@ try {
         throw "WiX build failed."
     }
 
+    $ExternalCabinets = @(Get-ChildItem -LiteralPath $OutputRoot -Filter "*.cab" -File)
+    if ($ExternalCabinets.Count -gt 0) {
+        throw (
+            "MSI build produced external cabinet(s): {0}. Release MSI must be self-contained." -f
+            (($ExternalCabinets.Name) -join ", ")
+        )
+    }
+
+    Write-Host "Self-contained MSI check: no external cabinet produced."
     Write-Host ""
     Write-Host "MSI created:"
     Write-Host $OutputMsi

@@ -5,6 +5,19 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 4.0.1 — 15 September 2026
+
+### Patch release
+
+- embedded the MSI cabinet so the MSI is self-contained for fresh and GPO deployment;
+- cleaned disposable MSI output before each build and fail the build if an external cabinet is produced;
+- added ARP install-location metadata for the per-machine MSI;
+- bounded unattended Winget snapshots, source updates and upgrade execution with configurable timeouts;
+- terminate the process tree of a timed-out native operation so a hung third-party installer cannot block the remaining maintenance modules indefinitely;
+- removed the unconditional second Winget pass after any non-zero exit code;
+- report a Winget upgrade timeout as `WARN` so the maintenance session can continue;
+- corrected inventory collector metadata from the development placeholder `5.0.0-dev` to `4.0.1`.
+
 ## 4.0.0 — 17 August 2026
 
 ### Distribution update — 10 September 2026

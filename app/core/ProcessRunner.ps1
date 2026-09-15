@@ -187,6 +187,49 @@ function Clear-LiveStatus {
         [Console]::Write("`r" + (" " * $Length) + "`r")
     }
 }
+function Stop-MTProcessTree {
+    param([int]$ProcessId)
+
+    # Take repeated snapshots because installers can spawn children while the
+    # tree is being stopped. Children are terminated before their parents.
+    for ($Pass = 0; $Pass -lt 3; $Pass++) {
+        $Processes = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue)
+        $ChildrenByParent = @{}
+
+        foreach ($Item in $Processes) {
+            $ParentId = [int]$Item.ParentProcessId
+            if (-not $ChildrenByParent.ContainsKey($ParentId)) {
+                $ChildrenByParent[$ParentId] = New-Object System.Collections.ArrayList
+            }
+            [void]$ChildrenByParent[$ParentId].Add([int]$Item.ProcessId)
+        }
+
+        $Ordered = New-Object System.Collections.Generic.List[int]
+        $Visit = $null
+        $Visit = {
+            param([int]$Id)
+            if ($ChildrenByParent.ContainsKey($Id)) {
+                foreach ($ChildId in @($ChildrenByParent[$Id])) {
+                    & $Visit $ChildId
+                }
+            }
+            if ($Id -ne $ProcessId) {
+                $Ordered.Add($Id)
+            }
+        }
+        & $Visit $ProcessId
+
+        foreach ($Id in $Ordered) {
+            Stop-Process -Id $Id -Force -ErrorAction SilentlyContinue
+        }
+        Stop-Process -Id $ProcessId -Force -ErrorAction SilentlyContinue
+
+        Start-Sleep -Milliseconds 250
+        if (-not (Get-Process -Id $ProcessId -ErrorAction SilentlyContinue)) {
+            break
+        }
+    }
+}
 function Invoke-LoggedProcessWithHeartbeat {
     param(
         [string]$FilePath,
@@ -197,7 +240,8 @@ function Invoke-LoggedProcessWithHeartbeat {
         [int]$HeartbeatSeconds = 60,
         [ValidateSet("Default", "UTF8", "Unicode", "OEM")]
         [string]$OutputEncoding = "Default",
-        [bool]$ShowProgressOutput = $false
+        [bool]$ShowProgressOutput = $false,
+        [int]$TimeoutSeconds = 0
     )
 
     $Out = Join-Path $env:MT_SESSION_DIR (
@@ -236,6 +280,7 @@ function Invoke-LoggedProcessWithHeartbeat {
         $StatusLength = 0
         $DinnerMessageShown = $false
         $HydrationMessageShown = $false
+        $TimedOut = $false
 
         if (-not $Process.Start()) {
             throw "Impossibile avviare $Label."
@@ -244,6 +289,19 @@ function Invoke-LoggedProcessWithHeartbeat {
         while (-not $Process.WaitForExit(1000)) {
             $Now = Get-Date
             $Elapsed = $Now - $Started
+
+            if ($TimeoutSeconds -gt 0 -and $Elapsed.TotalSeconds -ge $TimeoutSeconds) {
+                $TimedOut = $true
+                Clear-LiveStatus -Length $StatusLength
+                Add-Log "WARN" (
+                    Get-MTRuntimeText "PROCESS_TIMEOUT" @(
+                        $Label,
+                        $Elapsed.ToString("hh\:mm\:ss")
+                    )
+                ) $Module
+                Stop-MTProcessTree -ProcessId $Process.Id
+                break
+            }
 
             $Status = Get-LongOperationStatus `
                 -Label $Label `
@@ -276,8 +334,7 @@ function Invoke-LoggedProcessWithHeartbeat {
                 Clear-LiveStatus -Length $StatusLength
                 Write-Host ""
                 Write-Host (
-                    "Suggerimento: questa operazione è in corso da 30 minuti. " +
-                    "Se qualcuno ti sta aspettando per cena, forse è il momento di avvisarlo."
+                    Get-MTRuntimeText "PROCESS_DINNER_HINT"
                 ) -ForegroundColor DarkYellow
                 Write-Host ""
                 $StatusLength = 0
@@ -288,7 +345,7 @@ function Invoke-LoggedProcessWithHeartbeat {
                 Clear-LiveStatus -Length $StatusLength
                 Write-Host ""
                 Write-Host (
-                    "È trascorsa un'ora. Questo è un buon momento per bere un bicchiere d'acqua."
+                    Get-MTRuntimeText "PROCESS_HYDRATION_HINT"
                 ) -ForegroundColor DarkYellow
                 Write-Host ""
                 $StatusLength = 0
@@ -298,7 +355,7 @@ function Invoke-LoggedProcessWithHeartbeat {
 
         $Process.WaitForExit()
         Clear-LiveStatus -Length $StatusLength
-        $ExitCode = [int]$Process.ExitCode
+        $ExitCode = if ($TimedOut) { 9002 } else { [int]$Process.ExitCode }
 
         $StdOut = Read-SharedTextFile -Path $Out -Encoding $OutputEncoding
         $StdErr = Read-SharedTextFile -Path $Err -Encoding $OutputEncoding
@@ -317,7 +374,12 @@ function Invoke-LoggedProcessWithHeartbeat {
 
         $Duration = ((Get-Date) - $Started).ToString("hh\:mm\:ss")
 
-        if ($ExitCode -in $SuccessCodes) {
+        if ($TimedOut) {
+            Write-WarnLog (
+                Get-MTRuntimeText "PROCESS_TIMEOUT_RESULT" @($Label, $TimeoutSeconds)
+            ) $Module
+        }
+        elseif ($ExitCode -in $SuccessCodes) {
             Write-Ok (
                 Get-MTRuntimeText "PROCESS_COMPLETED_DURATION" @(
                     $Label,
@@ -341,6 +403,7 @@ function Invoke-LoggedProcessWithHeartbeat {
             OutputPath = $Out
             ErrorPath = $Err
             Duration = $Duration
+            TimedOut = $TimedOut
         }
     }
     catch {
@@ -353,6 +416,7 @@ function Invoke-LoggedProcessWithHeartbeat {
             OutputPath = $Out
             ErrorPath = $Err
             Duration = "00:00:00"
+            TimedOut = $false
         }
     }
 }
@@ -365,7 +429,8 @@ function Invoke-LoggedProcess {
         [int[]]$SuccessCodes = @(0),
         [ValidateSet("Default", "UTF8", "Unicode", "OEM")]
         [string]$OutputEncoding = "Default",
-        [bool]$CopyOutputToMainLog = $true
+        [bool]$CopyOutputToMainLog = $true,
+        [int]$TimeoutSeconds = 0
     )
 
     $Out = Join-Path $env:MT_SESSION_DIR (
@@ -379,11 +444,33 @@ function Invoke-LoggedProcess {
         $Process = Start-Process `
             -FilePath $FilePath `
             -ArgumentList $ArgumentList `
-            -Wait `
             -PassThru `
             -NoNewWindow `
             -RedirectStandardOutput $Out `
             -RedirectStandardError $Err
+
+        $Started = Get-Date
+        $TimedOut = $false
+
+        while (-not $Process.WaitForExit(1000)) {
+            if (
+                $TimeoutSeconds -gt 0 -and
+                ((Get-Date) - $Started).TotalSeconds -ge $TimeoutSeconds
+            ) {
+                $TimedOut = $true
+                Add-Log "WARN" (
+                    Get-MTRuntimeText "PROCESS_TIMEOUT" @(
+                        $Label,
+                        ((Get-Date) - $Started).ToString("hh\:mm\:ss")
+                    )
+                ) $Module
+                Stop-MTProcessTree -ProcessId $Process.Id
+                break
+            }
+        }
+
+        $Process.WaitForExit()
+        $ExitCode = if ($TimedOut) { 9002 } else { [int]$Process.ExitCode }
 
         if ($CopyOutputToMainLog) {
             foreach ($File in @($Out, $Err)) {
@@ -396,24 +483,23 @@ function Invoke-LoggedProcess {
             }
         }
 
-        if ($Process.ExitCode -in $SuccessCodes) {
+        if ($TimedOut) {
+            Write-WarnLog (
+                Get-MTRuntimeText "PROCESS_TIMEOUT_RESULT" @($Label, $TimeoutSeconds)
+            ) $Module
+        }
+        elseif ($ExitCode -in $SuccessCodes) {
             Write-Ok (
-                Get-MTRuntimeText "PROCESS_COMPLETED" @(
-                    $Label,
-                    $Process.ExitCode
-                )
+                Get-MTRuntimeText "PROCESS_COMPLETED" @($Label, $ExitCode)
             ) $Module
         }
         else {
             Write-ErrorLog (
-                Get-MTRuntimeText "PROCESS_FAILED" @(
-                    $Label,
-                    $Process.ExitCode
-                )
+                Get-MTRuntimeText "PROCESS_FAILED" @($Label, $ExitCode)
             ) $Module
         }
 
-        return $Process.ExitCode
+        return $ExitCode
     }
     catch {
         Write-ErrorLog "${Label}: $($_.Exception.Message)" $Module

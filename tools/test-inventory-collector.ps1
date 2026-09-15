@@ -1,9 +1,9 @@
-# Development test for MT 5.0 Inventory Schema 1.0 collector.
+﻿# Development test for MT 5.0 Inventory Schema 1.0 collector.
 # Run from an elevated Windows PowerShell 5.1 session at repository root.
 
 [CmdletBinding()]
 param(
-    [string]$CollectorVersion = "5.0.0-dev"
+    [string]$CollectorVersion = "4.0.1-test"
 )
 
 $ErrorActionPreference = "Stop"

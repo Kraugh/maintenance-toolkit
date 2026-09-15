@@ -1,4 +1,4 @@
-# Maintenance Toolkit — MSI packaging
+﻿# Maintenance Toolkit — MSI packaging
 
 This directory contains the enterprise MSI packaging source.
 
@@ -45,20 +45,20 @@ packaging\msi\out\MaintenanceToolkit-<canonical-version>-x64.msi
 Standalone MSI example with MSI-owned scheduling:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.0-x64.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
 ```
 
 Silent standalone example:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.0-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
 ```
 
 Enterprise/GPO deployment must use `CREATE_TASK=0` (the default). Group Policy
 owns and configures its separately named Scheduled Task:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.0-x64.msi /qn CREATE_TASK=0
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=0
 ```
 
 ## Scheduled Task ownership

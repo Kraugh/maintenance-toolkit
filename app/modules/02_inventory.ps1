@@ -15,7 +15,7 @@ $Module = "INVENTORY"
 try {
     $ReportsPath = Join-Path $MTCompatibilityRoot "reports"
 
-    $Snapshot = Get-MTInventorySnapshot -CollectorVersion "5.0.0-dev"
+    $Snapshot = Get-MTInventorySnapshot -CollectorVersion "4.0.1"
 
     $PublishParameters = @{
         Snapshot       = $Snapshot

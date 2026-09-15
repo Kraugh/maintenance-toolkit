@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$InventoryShare
 )
@@ -16,7 +16,7 @@ $reportsPath = Join-Path $repoRoot "reports"
 
 $totalWatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-$snapshot = Get-MTInventorySnapshot -CollectorVersion "5.0.0-dev"
+$snapshot = Get-MTInventorySnapshot -CollectorVersion "4.0.1-test"
 
 $result = Publish-MTInventorySnapshot `
     -Snapshot $snapshot `

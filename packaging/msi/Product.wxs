@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package
       Name="Maintenance Toolkit"
@@ -16,6 +16,7 @@
     <Property Id="CREATE_TASK" Value="0" Secure="yes" />
     <Property Id="TASK_TIME" Value="03:00" Secure="yes" />
     <Property Id="INVENTORY_SHARE" Secure="yes" />
+    <SetProperty Id="ARPINSTALLLOCATION" Value="[INSTALLFOLDER]" After="CostFinalize" />
 
     <StandardDirectory Id="ProgramFiles6432Folder">
       <Directory Id="KraughFolder" Name="Kraugh">

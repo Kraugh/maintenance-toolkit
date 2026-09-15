@@ -1,9 +1,9 @@
-# Maintenance Toolkit 4.0
+﻿# Maintenance Toolkit 4.0
 
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
 
-**Release stabile corrente:** `4.0.0`
+**Release stabile corrente:** `4.0.1`
 
 La serie 4.0 integra il nuovo core bilingue, Network Diagnostics, regole
 automatiche di analisi, diagnostica VPN avanzata e report tecnici di rete,
@@ -58,7 +58,7 @@ riestrarre il contenuto.
 Da PowerShell:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.0.zip
+Unblock-File .\Maintenance-Toolkit-4.0.1.zip
 ```
 
 ## Impostazioni prudenti
@@ -108,7 +108,7 @@ rimuovere eventuali informazioni che non si desidera rendere pubbliche.
 
 ## Esecuzione automatizzata
 
-La release 4.0.0 supporta:
+La release 4.0.1 supporta:
 
 ```powershell
 .\MaintenanceToolkit.exe -RunAll

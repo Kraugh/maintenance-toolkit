@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.0",
+  "Version": "4.0.1",
   "Channel": "stable",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "4.0.0 - stable release"
+  "Milestone": "4.0.1 - stable patch release"
 }

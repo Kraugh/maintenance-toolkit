@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>
 
@@ -7,7 +7,7 @@
 Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
 maintenance, diagnostics and technical reporting.
 
-**Current stable release:** `4.0.0`
+**Current stable release:** `4.0.1`
 
 Maintenance Toolkit 4.0 introduces a bilingual application core, integrated
 Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
@@ -43,12 +43,12 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 
 Download the current stable release from the GitHub **Releases** page:
 
-**Maintenance Toolkit 4.0.0**
+**Maintenance Toolkit 4.0.1**
 
 Two official distribution formats are available:
 
-- `Maintenance-Toolkit-4.0.0.zip` — portable package for manual and field use;
-- `MaintenanceToolkit-4.0.0-x64.msi` — signed per-machine Windows x64 installer
+- `Maintenance-Toolkit-4.0.1.zip` — portable package for manual and field use;
+- `MaintenanceToolkit-4.0.1-x64.msi` — signed per-machine Windows x64 installer
   for standalone or centrally managed deployment.
 
 Both artifacts are accompanied by SHA-256 checksum files. The MSI is digitally
@@ -64,7 +64,7 @@ reports and optional third-party executables are not bundled.
 
 ### Portable ZIP
 
-1. Download `Maintenance-Toolkit-4.0.0.zip` from the official GitHub release.
+1. Download `Maintenance-Toolkit-4.0.1.zip` from the official GitHub release.
 2. Verify the SHA-256 checksum when appropriate.
 3. If Windows marks the downloaded ZIP as coming from the Internet, verify that
    it came from the official project release and use **Properties → Unblock**
@@ -76,7 +76,7 @@ reports and optional third-party executables are not bundled.
 ### MSI installer
 
 For a normal per-machine installation, run
-`MaintenanceToolkit-4.0.0-x64.msi` with administrative privileges. Silent and
+`MaintenanceToolkit-4.0.1-x64.msi` with administrative privileges. Silent and
 centrally managed deployment options are documented in the
 [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
@@ -100,7 +100,7 @@ from the official project release and have verified its origin, unblock the ZIP
 before extracting it. From PowerShell you may also use:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.0.zip
+Unblock-File .\Maintenance-Toolkit-4.0.1.zip
 ```
 
 Then extract the archive again.
@@ -188,9 +188,9 @@ available, and `20` if the update check itself cannot be completed normally.
 For unattended execution and Task Scheduler, see the
 [System Administrator Guide](docs/eng/System-Administrator-Guide.md).
 
-## 4.0.0 release status
+## 4.0.1 release status
 
-Maintenance Toolkit 4.0.0 is the current stable release.
+Maintenance Toolkit 4.0.1 is the current stable release.
 
 The 4.0 release line has been exercised on:
 

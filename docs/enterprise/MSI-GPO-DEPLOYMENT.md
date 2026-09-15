@@ -1,4 +1,4 @@
-# Enterprise deployment — MSI and Group Policy
+﻿# Enterprise deployment — MSI and Group Policy
 
 ## Architecture
 
@@ -25,19 +25,19 @@ The MSI is per-machine and is intended for unattended deployment.
 Example:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.0-x64.msi /qn
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn
 ```
 
 Optional automatic daily maintenance:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.0-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00
 ```
 
 Optional DMT publication:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.0-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
+msiexec /i MaintenanceToolkit-4.0.1-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\DMT\incoming"
 ```
 
 ## Task ownership
@@ -105,7 +105,7 @@ A practical layout is:
 
 ```text
 \\SERVER\Software\MaintenanceToolkit\
-    4.0.0\MaintenanceToolkit-4.0.0-x64.msi
+    4.0.1\MaintenanceToolkit-4.0.1-x64.msi
     <next-version>\MaintenanceToolkit-<next-version>-x64.msi
 ```
 

@@ -1,7 +1,7 @@
-# Manuale tecnico — Maintenance Toolkit 4.0
+﻿# Manuale tecnico — Maintenance Toolkit 4.0
 
 **Versione documento:** 2.1
-**Compatibile con:** Maintenance Toolkit `4.0.0`
+**Compatibile con:** Maintenance Toolkit `4.0.1`
 **Aggiornato:** 29 agosto 2026
 
 ## 1. Scopo
@@ -46,7 +46,7 @@ Non avviare direttamente `app/MaintenanceToolkit.ps1` o i singoli script sotto
 Dopo avere verificato che lo ZIP provenga dalla release ufficiale:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.0.zip
+Unblock-File .\Maintenance-Toolkit-4.0.1.zip
 ```
 
 Riestrarre quindi l'archivio.
@@ -56,7 +56,7 @@ Riestrarre quindi l'archivio.
 La struttura essenziale della release è:
 
 ```text
-Maintenance-Toolkit-4.0.0/
+Maintenance-Toolkit-4.0.1/
 ├── Avvia_Manutenzione.bat
 ├── app/
 ├── config/
@@ -172,7 +172,7 @@ per la durata del processo MT.
 ## 11. Riga di comando ed esecuzione pianificata
 
 Il launcher firmato `MaintenanceToolkit.exe` inoltra al runtime PowerShell i
-parametri ricevuti. Le opzioni disponibili in Maintenance Toolkit 4.0.0 sono:
+parametri ricevuti. Le opzioni disponibili in Maintenance Toolkit 4.0.1 sono:
 
 | Parametro | Funzione |
 |---|---|
@@ -364,7 +364,7 @@ funzionano, il warning può essere dovuto al filtraggio degli echo request.
 Controllare i messaggi di avanzamento. Aggiornamenti Windows e installer
 applicativi possono richiedere molto tempo.
 
-## 14. Validazione 4.0.0
+## 14. Validazione 4.0.1
 
 La serie 4.0 è stata provata su:
 
