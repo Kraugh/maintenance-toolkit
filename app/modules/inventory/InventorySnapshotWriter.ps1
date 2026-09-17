@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 function ConvertTo-MTInventorySafeFileComponent {
     param(
@@ -168,5 +168,48 @@ function Publish-MTInventorySnapshot {
         remotePath       = $remotePath
         remoteDurationMs = $remoteDurationMs
         warningCode      = $warningCode
+    }
+}
+
+function Update-MTInventoryWindowsUpdateStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [bool]$Attempted,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("ok", "error", "not_run")]
+        [string]$Status,
+
+        [AllowNull()]
+        [AllowEmptyString()]
+        [ValidateScript({ [string]::IsNullOrWhiteSpace($_) -or $_ -in @("update_scan_failed", "update_download_failed", "update_install_failed") })]
+        [string]$ErrorCode
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "Inventory snapshot not found: $Path"
+    }
+
+    $snapshot = Get-Content -LiteralPath $Path -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
+    $snapshot.maintenance.data.windowsUpdate.attempted = $Attempted
+    $snapshot.maintenance.data.windowsUpdate.status = $Status
+    $snapshot.maintenance.data.windowsUpdate.errorCode = if ([string]::IsNullOrWhiteSpace($ErrorCode)) { $null } else { $ErrorCode }
+
+    $json = ConvertTo-MTInventoryJson -Snapshot $snapshot
+    $tempPath = $Path + ".tmp"
+
+    try {
+        Write-MTInventoryUtf8NoBom -Path $tempPath -Content $json
+        Move-Item -LiteralPath $tempPath -Destination $Path -Force -ErrorAction Stop
+    }
+    catch {
+        if (Test-Path -LiteralPath $tempPath) {
+            Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue
+        }
+        throw
     }
 }

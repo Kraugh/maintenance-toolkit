@@ -12,6 +12,9 @@ $WriterPath = Join-Path $PSScriptRoot "inventory\InventorySnapshotWriter.ps1"
 
 $Module = "INVENTORY"
 
+Remove-Item Env:MT_INVENTORY_LOCAL_PATH -ErrorAction SilentlyContinue
+Remove-Item Env:MT_INVENTORY_REMOTE_PATH -ErrorAction SilentlyContinue
+
 try {
     $ReportsPath = Join-Path $MTCompatibilityRoot "reports"
 
@@ -27,6 +30,11 @@ try {
     }
 
     $PublishResult = Publish-MTInventorySnapshot @PublishParameters
+
+    $env:MT_INVENTORY_LOCAL_PATH = $PublishResult.localPath
+    if (-not [string]::IsNullOrWhiteSpace([string]$PublishResult.remotePath)) {
+        $env:MT_INVENTORY_REMOTE_PATH = $PublishResult.remotePath
+    }
 
     $ModuleStatus = switch ($Snapshot.collection.status) {
         "ok"      { "OK" }

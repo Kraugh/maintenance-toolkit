@@ -52,6 +52,7 @@ else {
 }
 
 . (Join-Path $ModulesDir "00_common.ps1")
+. (Join-Path $ModulesDir "inventory\InventorySnapshotWriter.ps1")
 . (Join-Path $AppDir "core\PowerManagement.ps1")
 $Config = Read-IniFile $IniPath
 $MTSystemAwakeEnabled = Enable-MTSystemAwake
@@ -700,6 +701,12 @@ function Invoke-ToolkitSession {
     $env:MT_SESSION_DIR = $SessionDir
     $env:MT_RESULT = Join-Path $SessionDir "module_result.json"
 
+    Remove-Item Env:MT_INVENTORY_LOCAL_PATH -ErrorAction SilentlyContinue
+    Remove-Item Env:MT_INVENTORY_REMOTE_PATH -ErrorAction SilentlyContinue
+    $env:MT_WINDOWS_UPDATE_ATTEMPTED = "0"
+    $env:MT_WINDOWS_UPDATE_STATUS = "not_run"
+    Remove-Item Env:MT_WINDOWS_UPDATE_ERROR_CODE -ErrorAction SilentlyContinue
+
     # Inizializza i percorsi dei log solo dopo aver creato la sessione.
     Initialize-LogPaths
 
@@ -763,6 +770,9 @@ function Invoke-ToolkitSession {
             }
         }
 
+        # module_result.json is a compatibility hand-off, not a session artifact.
+        Remove-Item $env:MT_RESULT -Force -ErrorAction SilentlyContinue
+
         $Results.Add([pscustomobject]@{
             Module = $Module.Name
             Status = $Result.Status
@@ -776,6 +786,54 @@ function Invoke-ToolkitSession {
             -not (Get-IniBool $Config "General" "ContinueOnError" $true)
         ) {
             break
+        }
+    }
+
+    # Finalize the maintenance section of the already collected inventory
+    # without repeating the expensive hardware/software collection.
+    if (-not [string]::IsNullOrWhiteSpace($env:MT_INVENTORY_LOCAL_PATH)) {
+        $WuAttempted = $env:MT_WINDOWS_UPDATE_ATTEMPTED -eq "1"
+        $WuStatus = if ($env:MT_WINDOWS_UPDATE_STATUS -in @("ok", "error", "not_run")) {
+            $env:MT_WINDOWS_UPDATE_STATUS
+        }
+        else {
+            "not_run"
+        }
+        $WuErrorCode = if ([string]::IsNullOrWhiteSpace($env:MT_WINDOWS_UPDATE_ERROR_CODE)) {
+            $null
+        }
+        else {
+            $env:MT_WINDOWS_UPDATE_ERROR_CODE
+        }
+
+        $InventoryFinalizeWarnings = [System.Collections.Generic.List[string]]::new()
+        foreach ($InventoryPath in @($env:MT_INVENTORY_LOCAL_PATH, $env:MT_INVENTORY_REMOTE_PATH)) {
+            if ([string]::IsNullOrWhiteSpace($InventoryPath)) {
+                continue
+            }
+
+            try {
+                Update-MTInventoryWindowsUpdateStatus `
+                    -Path $InventoryPath `
+                    -Attempted $WuAttempted `
+                    -Status $WuStatus `
+                    -ErrorCode $WuErrorCode
+            }
+            catch {
+                $InventoryFinalizeWarnings.Add($_.Exception.Message)
+                Write-WarnLog ("Inventory finalization failed: {0}" -f $_.Exception.Message) "INVENTORY"
+            }
+        }
+
+        if ($InventoryFinalizeWarnings.Count -gt 0) {
+            $InventoryModuleName = ($Catalog | Where-Object Key -eq "Inventory" | Select-Object -First 1).Name
+            $InventoryResult = $Results | Where-Object Module -eq $InventoryModuleName | Select-Object -First 1
+            if ($null -ne $InventoryResult) {
+                if ($InventoryResult.Status -ne "ERROR") {
+                    $InventoryResult.Status = "WARN"
+                }
+                $InventoryResult.Detail = "{0} | inventory_finalization_failed" -f $InventoryResult.Detail
+            }
         }
     }
 

@@ -8,6 +8,12 @@ $Config = Read-IniFile $env:MT_INI
 $Module = "MSUPDATE"
 $ErrorActionPreference = "Stop"
 
+# Runtime hand-off used to finalize the Inventory 1.0 maintenance section.
+$env:MT_WINDOWS_UPDATE_ATTEMPTED = "0"
+$env:MT_WINDOWS_UPDATE_STATUS = "not_run"
+Remove-Item Env:MT_WINDOWS_UPDATE_ERROR_CODE -ErrorAction SilentlyContinue
+$InventoryFailureCode = "update_scan_failed"
+
 function Get-WuaResultText {
     param([int]$Code)
 
@@ -202,6 +208,7 @@ function Get-WuaHResultExplanation {
 }
 
 try {
+    $env:MT_WINDOWS_UPDATE_ATTEMPTED = "1"
     $MicrosoftUpdateServiceId = "7971f918-a847-4430-9279-4a52d1efe18d"
 
     Write-Main "Microsoft Update: apertura Windows Update Agent."
@@ -244,6 +251,7 @@ try {
     }
 
     if ($SearchTypes.Count -eq 0) {
+        $env:MT_WINDOWS_UPDATE_ATTEMPTED = "0"
         Write-Skip "Microsoft Update: software e driver disabilitati." $Module
         Set-ModuleResult "Microsoft Update" "SKIP" "Software e driver disabilitati"
         exit 10
@@ -272,6 +280,7 @@ try {
     }
 
     $SearchDuration = (Get-Date) - $SearchStarted
+    $InventoryFailureCode = "update_download_failed"
 
     Write-Main (
         "Microsoft Update: ricerca terminata in {0}. Aggiornamenti trovati: {1}." -f
@@ -281,6 +290,7 @@ try {
 
     if ($SearchResult.Updates.Count -eq 0) {
         Write-Ok "Nessun aggiornamento Microsoft disponibile." $Module
+        $env:MT_WINDOWS_UPDATE_STATUS = "ok"
         Set-ModuleResult "Microsoft Update" "OK" "Sistema aggiornato"
         exit 0
     }
@@ -372,6 +382,7 @@ try {
         $UpdatesToInstall.Count
     )
 
+    $InventoryFailureCode = "update_install_failed"
     $InstallStarted = Get-Date
     $UpdateInstaller = $UpdateSession.CreateUpdateInstaller()
     $UpdateInstaller.Updates = $UpdatesToInstall
@@ -444,6 +455,17 @@ try {
             $InstallFailures
         )
 
+        $env:MT_WINDOWS_UPDATE_STATUS = "error"
+        $env:MT_WINDOWS_UPDATE_ERROR_CODE = if ($InstallFailures -gt 0) {
+            "update_install_failed"
+        }
+        elseif ($DownloadFailures -gt 0) {
+            "update_download_failed"
+        }
+        else {
+            "update_install_failed"
+        }
+
         Set-ModuleResult `
             "Microsoft Update" `
             "ERROR" `
@@ -454,6 +476,7 @@ try {
     }
 
     $Detail = "Installati $InstalledCount aggiornamenti Microsoft"
+    $env:MT_WINDOWS_UPDATE_STATUS = "ok"
 
     if ($RebootRequired) {
         Set-ModuleResult `
@@ -474,6 +497,8 @@ try {
     exit 0
 }
 catch {
+    $env:MT_WINDOWS_UPDATE_STATUS = "error"
+    $env:MT_WINDOWS_UPDATE_ERROR_CODE = $InventoryFailureCode
     Write-ErrorLog $_.Exception.Message $Module
     Write-ErrorLog $_.InvocationInfo.PositionMessage $Module
 
