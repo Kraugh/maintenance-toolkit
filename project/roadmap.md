@@ -18,14 +18,14 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 
 ## Current stable baseline / Stato stabile attuale
 
-- [x] Maintenance Toolkit **4.0.0** stable release
+- [x] Maintenance Toolkit **4.0.2** stable release
 - [x] Native `MaintenanceToolkit.exe` launcher
 - [x] Authenticode-signed and timestamped launcher
 - [x] Windows 10 and Windows 11 validation
 - [x] Interactive and non-interactive execution
 - [x] `-RunAll`, `-Only`, `-SelfTest`, `-CheckUpdates`
 - [x] Windows Task Scheduler documentation and validation
-- [x] JSON-based EN/IT runtime localization with English fallback
+- [x] JSON-based EN/IT/SV runtime localization with English fallback
 - [x] Network Diagnostics integrated into MT
 - [x] Network technical reports and correlated JSON artifacts
 - [x] Initial deterministic Network Diagnostics Rules Engine
@@ -35,6 +35,18 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 - [x] Public GitHub release package and checksum workflow
 - [x] Public Maintenance Toolkit documentation on kraugh.it
 - [x] Mandatory pre-release documentation gate
+
+### Current development — Maintenance Toolkit 4.0.3
+
+- [x] Add signed HP Image Assistant acquisition and validation.
+- [x] Install eligible non-BIOS HP updates silently with bounded execution.
+- [x] Never install BIOS updates during headless, scheduled, GPO or `SYSTEM` execution.
+- [x] Report critical BIOS recommendations as structured urgent actions for DMT.
+- [x] Provide an explicit guided BIOS decision in interactive console mode.
+- [x] Require and verify a timestamped restore point before OEM software or driver updates.
+- [x] Suppress repeated HP SoftPaq recommendations already satisfied by an equal or newer installed component.
+- [ ] Validate the hardened Dell Command Update path on representative current Dell hardware.
+- [ ] Validate 4.0.3 through the enterprise AD/GPO pilot before release.
 
 ---
 
@@ -52,40 +64,40 @@ MT must remain independently usable and must not become an RMM agent. DMT-specif
 
 The approved work for this release is grouped in the GitHub milestone **5.0.0**. The operational issues are:
 
-- **#14** — Define Inventory Schema 1.0.
-- **#15** — Implement Windows inventory data collector.
-- **#16** — Implement inventory snapshot writer and optional remote publishing.
+- **#14** — Define Inventory Schema 1.0. Completed.
+- **#15** — Implement Windows inventory data collector. Completed.
+- **#16** — Implement inventory snapshot writer and optional remote publishing. Completed.
 - **#17** — Define inventory reliability, status and error model.
 - **#18** — Profile and benchmark Inventory performance.
 - **#19** — Validate Inventory across representative Windows environments.
-- **#20** — Expand JSON localization to six official languages.
+- **#20** — Expand JSON localization to seven official languages.
 - **#21** — Align documentation, schema examples and public release material.
 
 Existing enhancement issues **#5**, **#9**, **#11** and **#12** remain valid future work but are intentionally outside the 5.0.0 milestone unless a later planning decision explicitly changes the release scope.
 
 ### Inventory Schema 1.0 — #14
 
-- [ ] Define and document a stable **Inventory Schema 1.0**, versioned independently from the MT application version.
-- [ ] Include collector metadata, `snapshotId`, timezone-aware `collectedAt` and overall collection status.
-- [ ] Define required, optional, unavailable and partial-data semantics.
-- [ ] Keep schema field names and machine-to-machine identifiers stable and language-independent.
-- [ ] Produce at least one anonymized real-world example JSON before the contract is considered stable.
+- [x] Define and document a stable **Inventory Schema 1.0**, versioned independently from the MT application version.
+- [x] Include collector metadata, `snapshotId`, timezone-aware `collectedAt` and overall collection status.
+- [x] Define required, optional, unavailable and partial-data semantics.
+- [x] Keep schema field names and machine-to-machine identifiers stable and language-independent.
+- [x] Produce at least one anonymized real-world example JSON before the contract is considered stable.
 
 ### Inventory collection — #15
 
-- [ ] Collect multiple device identifiers: hostname, SMBIOS UUID, BIOS serial, manufacturer/model, asset tag and other reliable chassis/baseboard identifiers where available.
-- [ ] Collect OS, build/UBR, architecture, locale, boot/uptime and other reliable operating-system metadata.
-- [ ] Collect BIOS/UEFI, Secure Boot and TPM/security-hardware information where supported.
-- [ ] Collect CPU information with multi-socket support.
-- [ ] Collect total RAM and DIMM details.
-- [ ] Collect physical storage, volumes and filesystems.
-- [ ] Collect GPU information.
-- [ ] Collect network adapters, addressing, gateways, DNS, DHCP, MAC, link speed, adapter type and physical/virtual classification without collecting secrets.
-- [ ] Collect installed Win32 software from uninstall registry sources; do **not** use `Win32_Product`.
-- [ ] Keep Winget as an additional source rather than the only canonical software source.
-- [ ] Evaluate AppX/MSIX collection and system-component noise.
-- [ ] Collect detected local users/profiles and domain/workgroup/Entra/hybrid-join facts without treating them as DMT assignment data.
-- [ ] Evaluate Windows Update state, BitLocker state, relevant drivers and additional firmware data as later inventory increments where sustainable.
+- [x] Collect multiple device identifiers: hostname, SMBIOS UUID, BIOS serial, manufacturer/model, asset tag and other reliable chassis/baseboard identifiers where available.
+- [x] Collect OS, build/UBR, architecture, locale, boot/uptime and other reliable operating-system metadata.
+- [x] Collect BIOS/UEFI, Secure Boot and TPM/security-hardware information where supported.
+- [x] Collect CPU information with multi-socket support.
+- [x] Collect total RAM and DIMM details.
+- [x] Collect physical storage, volumes and filesystems.
+- [x] Collect GPU information.
+- [x] Collect network adapters, addressing, gateways, DNS, DHCP, MAC, link speed, adapter type and physical/virtual classification without collecting secrets.
+- [x] Collect installed Win32 software from uninstall registry sources; do **not** use `Win32_Product`.
+- [x] Keep Winget as an additional source rather than the only canonical software source.
+- [x] Evaluate AppX/MSIX collection and system-component noise.
+- [x] Collect detected local users/profiles and domain/workgroup/Entra/hybrid-join facts without treating them as DMT assignment data.
+- [x] Evaluate Windows Update state, BitLocker state, relevant drivers and additional firmware data as later inventory increments where sustainable.
 
 ### Reliability and status model — #17
 
@@ -100,12 +112,12 @@ Existing enhancement issues **#5**, **#9**, **#11** and **#12** remain valid fut
 
 ### Snapshot output and optional publication — #16
 
-- [ ] Every inventory execution creates a new snapshot; do not suppress output merely because the machine appears unchanged.
-- [ ] Always save a complete inventory JSON locally.
-- [ ] Define the final CLI/configuration contract for an optional remote inventory destination.
-- [ ] Make remote publication best-effort: remote failure is logged as a warning and does not destroy the valid local snapshot.
-- [ ] Use an atomic remote-write strategy such as temporary file plus final rename so consumers never import incomplete JSON.
-- [ ] Use sanitized descriptive filenames without treating the filename itself as device identity.
+- [x] Every inventory execution creates a new snapshot; do not suppress output merely because the machine appears unchanged.
+- [x] Always save a complete inventory JSON locally.
+- [x] Define the final CLI/configuration contract for an optional remote inventory destination.
+- [x] Make remote publication best-effort: remote failure is logged as a warning and does not destroy the valid local snapshot.
+- [x] Use an atomic remote-write strategy such as temporary file plus final rename so consumers never import incomplete JSON.
+- [x] Use sanitized descriptive filenames without treating the filename itself as device identity.
 
 ### Validation — #19
 
@@ -125,12 +137,14 @@ Internationalization is a project-wide architectural requirement, not an optiona
 - [x] Automatic system-language detection exists for the currently supported languages.
 - [x] English fallback exists.
 - [x] Explicit language override exists.
-- [ ] Make the official MT language set: **Italian, English, German, French, Japanese and Simplified Chinese**.
+- [ ] Make the official MT language set: **Italian, English, Swedish, German, French, Japanese and Simplified Chinese**.
 - [ ] Ensure all MT-generated user-facing UI text is loaded from external language JSON resources; no user-facing string may be hard-coded in application logic.
 - [ ] Allow a supported language to be added by adding a language JSON resource without changing application logic.
 - [ ] Define validation for missing keys, invalid language files and fallback behaviour.
 - [ ] Keep technical identifiers, schema field names, exit codes and machine-to-machine contracts language-independent.
 - [ ] Review documentation language coverage as each public release requires it.
+- [ ] Apply language precedence consistently: explicit CLI/GPO override, saved user choice, operating-system detection, then English fallback.
+- [ ] Keep headless execution non-interactive; manual language selection belongs to console and graphical modes.
 
 See `docs/LOCALIZATION.md` for the project-wide localization contract.
 
@@ -213,8 +227,9 @@ The MT 4.0 Network Diagnostics foundation is released. Future work is tracked as
 
 Possible future improvements remain subject to issue selection and validation:
 
-- [ ] Improve HP integration.
-- [ ] Improve Dell integration.
+- [x] Add the initial HP Image Assistant integration with silent non-BIOS updates and structured BIOS reporting.
+- [x] Add mandatory verified restore points and bounded execution to HP and Dell update paths.
+- [ ] Validate the hardened Dell integration on representative current hardware.
 - [ ] Add Lenovo support.
 - [ ] Separate OEM application, driver and firmware update responsibilities more clearly.
 - [ ] Evaluate Windows Update history analysis.
@@ -233,6 +248,15 @@ A future MT release will preserve one diagnostic/maintenance engine and expose i
 3. **Graphical UI** — a future friendly interactive frontend for manual workstation analysis. It consumes the same structured results as the other modes and must not duplicate collector or maintenance logic.
 
 The core rule is: **collect once, render many ways**. Modules should increasingly expose structured results that can feed console presentation, JSON/report artifacts and the future GUI.
+
+Approved presentation requirements:
+
+- Headless mode must never prompt and must remain suitable for Scheduled Task, GPO, AD and `SYSTEM` execution.
+- Console mode remains a first-class technician interface launched through the existing BAT/EXE path; it should gain explicit language selection and clearer explanations of module purpose, risk and expected behaviour.
+- Graphical mode should follow an elegant, restrained high-tech visual language compatible with DMT rather than becoming a simple text console inside a window.
+- The graphical interface should provide real controls such as buttons, language dropdowns, module cards, informative boxes, progress presentation and clearly differentiated `OK`, `WARN`, `ERROR` and `SKIP` states.
+- BIOS and firmware actions require especially prominent risk communication and explicit user decisions.
+- All three modes must consume the same structured engine results; presentation code must not reimplement maintenance logic.
 
 ### Local ports and services analysis
 
