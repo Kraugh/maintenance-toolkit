@@ -1,6 +1,6 @@
-﻿ENGLISH
+ENGLISH
 
-MAINTENANCE TOOLKIT 4.0.1
+MAINTENANCE TOOLKIT 4.0.2
 ==============================
 
 RECOMMENDED STARTUP
@@ -24,7 +24,7 @@ runtime are available in the public project repository.
 
 ITALIANO
 
-MAINTENANCE TOOLKIT 4.0.1
+MAINTENANCE TOOLKIT 4.0.2
 ==============================
 
 AVVIO CONSIGLIATO

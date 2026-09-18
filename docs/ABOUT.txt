@@ -5,10 +5,10 @@ Strumento gratuito e open source per la manutenzione, la diagnostica
 e il reporting tecnico dei sistemi Microsoft Windows.
 
 Release stabile corrente:
-    3.7.2
+    4.0.2
 
-Pre-release corrente:
-    4.0.0-rc.1
+Data di rilascio:
+    18 settembre 2026
 
 Autore:
     Luca Miselli

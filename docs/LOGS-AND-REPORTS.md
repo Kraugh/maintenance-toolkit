@@ -1,4 +1,4 @@
-﻿# Logs and reports
+# Logs and reports
 
 This document defines the distinction between **logs** and **reports/output artifacts** in Maintenance Toolkit.
 
@@ -59,7 +59,7 @@ Typical questions answered by reports are:
 - What software or hardware is installed?
 - What data should another application import?
 
-Maintenance Toolkit 4.0.1 already uses the repository/runtime `reports\` area for Network Diagnostics reports.
+Maintenance Toolkit 4.0.2 already uses the repository/runtime `reports\` area for Network Diagnostics reports.
 
 A report does not become a log merely because it is JSON. For example, a topology or diagnostic JSON intended to describe collected machine/network information is a report. Conversely, a JSON file that records module execution results is a log.
 

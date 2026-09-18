@@ -37,6 +37,7 @@ $ChecksumPath = $ZipPath + ".sha256"
 $RuntimeDirectories = @(
     "app",
     "config",
+    "kraugh_it",
     "languages",
     "rules",
     "themes"
@@ -269,7 +270,7 @@ try {
         }
     }
 
-    foreach ($DocLanguage in @("eng", "ita")) {
+    foreach ($DocLanguage in @("eng", "ita", "enterprise")) {
         $Source = Join-Path $RepositoryRoot ("docs\" + $DocLanguage)
 
         if (Test-Path -LiteralPath $Source -PathType Container) {
@@ -287,10 +288,14 @@ try {
         'LEGGIMI-READ-ME.txt',
         'app\MaintenanceToolkit.ps1',
         'config\version.json',
+        'kraugh_it\version.json',
         'docs\README.md',
         'docs\LICENSE',
         'docs\ABOUT.txt',
-        'docs\CHANGELOG.md'
+        'docs\CHANGELOG.md',
+        'docs\enterprise\MSI-GPO-DEPLOYMENT.md',
+        'docs\enterprise\MSI-GPO-DEPLOYMENT.it.md',
+        'docs\enterprise\DIAGNOSTIC-COMMANDS.md'
     )) {
         $RequiredPackagePath = Join-Path $PackageRoot $RequiredPackageFile
 

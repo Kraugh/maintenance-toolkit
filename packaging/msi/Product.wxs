@@ -36,6 +36,19 @@
     <File Id="MaintenanceToolkitExe"
           Source="$(SourceRoot)\MaintenanceToolkit.exe"
           Directory="INSTALLFOLDER" />
+    <File Id="MaintenanceToolkitBat"
+          Source="$(SourceRoot)\Avvia_Manutenzione.bat"
+          Directory="INSTALLFOLDER" />
+
+    <!-- Runtime metadata required by the built-in self-test. -->
+    <File Id="MaintenanceToolkitAbout"
+          Source="$(SourceRoot)\docs\ABOUT.txt"
+          Directory="INSTALLFOLDER"
+          Subdirectory="docs" />
+    <File Id="MaintenanceToolkitLocalManifest"
+          Source="$(SourceRoot)\kraugh_it\version.json"
+          Directory="INSTALLFOLDER"
+          Subdirectory="kraugh_it" />
 
     <!-- Preserve the public property without embedding it in a command line. -->
     <Component Id="MsiConfiguration" Directory="INSTALLFOLDER">

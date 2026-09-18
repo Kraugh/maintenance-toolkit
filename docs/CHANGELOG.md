@@ -5,18 +5,31 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
-## 4.0.1 — 15 September 2026
+## 4.0.2 — 18 September 2026
 
 ### Patch release
 
+- finalized the corrected portable and MSI payloads under a new immutable release version;
+- reserved 4.0.1 as an internal validation build that was not publicly released;
+- established that any distributed artifact whose content and hash change must receive a new version number.
+
+## 4.0.1 — 18 September 2026
+
+### Internal validation build — not publicly released
+
 - embedded the MSI cabinet so the MSI is self-contained for fresh and GPO deployment;
-- cleaned disposable MSI output before each build and fail the build if an external cabinet is produced;
+- cleaned disposable MSI output before each build and failed the build if an external cabinet was produced;
 - added ARP install-location metadata for the per-machine MSI;
 - bounded unattended Winget snapshots, source updates and upgrade execution with configurable timeouts;
-- terminate the process tree of a timed-out native operation so a hung third-party installer cannot block the remaining maintenance modules indefinitely;
+- terminated the process tree of a timed-out native operation so a hung third-party installer cannot block the remaining maintenance modules indefinitely;
 - removed the unconditional second Winget pass after any non-zero exit code;
-- report a Winget upgrade timeout as `WARN` so the maintenance session can continue;
-- corrected inventory collector metadata from the development placeholder `5.0.0-dev` to `4.0.1`.
+- reported a Winget upgrade timeout as `WARN` so the maintenance session can continue;
+- corrected inventory collector metadata from the development placeholder `5.0.0-dev` to `4.0.1`;
+- collected hardware and software inventory once, then finalized its maintenance section after the maintenance run;
+- recorded the real Microsoft Update attempt, status and failure code in the final Inventory Schema 1.0 snapshot;
+- updated both the local and remotely published inventory snapshot during finalization;
+- removed the temporary `module_result.json` compatibility hand-off after each module result was acquired;
+- aligned portable and MSI self-test payloads by including the compatibility launcher, runtime About file and local release manifest where required.
 
 ## 4.0.0 — 17 August 2026
 

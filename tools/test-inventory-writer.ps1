@@ -16,7 +16,7 @@ $reportsPath = Join-Path $repoRoot "reports"
 
 $totalWatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-$snapshot = Get-MTInventorySnapshot -CollectorVersion "4.0.1-test"
+$snapshot = Get-MTInventorySnapshot -CollectorVersion "4.0.2-test"
 
 $result = Publish-MTInventorySnapshot `
     -Snapshot $snapshot `

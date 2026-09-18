@@ -16,12 +16,15 @@ $LauncherPath = Join-Path $RepoRoot "MaintenanceToolkit.exe"
 
 $Required = @(
     $LauncherPath,
+    (Join-Path $RepoRoot "Avvia_Manutenzione.bat"),
     (Join-Path $RepoRoot "app"),
     (Join-Path $RepoRoot "config"),
     (Join-Path $RepoRoot "languages"),
     (Join-Path $RepoRoot "themes"),
     (Join-Path $RepoRoot "rules"),
     (Join-Path $RepoRoot "reports\README.md"),
+    (Join-Path $RepoRoot "docs\ABOUT.txt"),
+    (Join-Path $RepoRoot "kraugh_it\version.json"),
     $VersionManifestPath,
     $RuntimeEntryPoint,
     (Join-Path $MsiRoot "Product.wxs"),

@@ -1,4 +1,4 @@
-# MT 5.0 Inventory source probe - read-only development utility
+﻿# MT 5.0 Inventory source probe - read-only development utility
 # Run from an elevated Windows PowerShell session.
 
 $ErrorActionPreference = 'Continue'

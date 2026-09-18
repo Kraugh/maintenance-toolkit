@@ -1,4 +1,4 @@
-# Maintenance Toolkit 5.0 - Inventory Schema 1.0 collector
+﻿# Maintenance Toolkit 5.0 - Inventory Schema 1.0 collector
 # Core collector only: no UI, no remote publishing, no report-file writer.
 # Windows PowerShell 5.1 compatible.
 

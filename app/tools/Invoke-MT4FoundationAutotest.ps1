@@ -2624,13 +2624,13 @@ try {
         )
     }
 
-    if ($RuntimeVersion -notmatch '^4\.0\.0-(dev\.[0-9]+[a-z]?|rc\.[0-9]+)$') {
-        throw "Unexpected MT4 pre-release version format: $RuntimeVersion"
+    if ($RuntimeVersion -notmatch '^4\.[0-9]+\.[0-9]+(?:-(?:dev\.[0-9]+[a-z]?|rc\.[0-9]+))?$') {
+        throw "Unexpected MT4 version format: $RuntimeVersion"
     }
 }
 catch {
     Add-MT4AutotestError (
-        'RC1 preparation validation failed: {0}' -f $_.Exception.Message
+        'Release preparation validation failed: {0}' -f $_.Exception.Message
     )
 }
 

@@ -1,7 +1,7 @@
-﻿# Maintenance Toolkit 4.0 — System Administrator Guide
+# Maintenance Toolkit 4.0 — System Administrator Guide
 
 **Document version:** 1.0
-**Compatible with:** Maintenance Toolkit `4.0.1`
+**Compatible with:** Maintenance Toolkit `4.0.2`
 **Updated:** 29 August 2026
 
 ## Purpose
