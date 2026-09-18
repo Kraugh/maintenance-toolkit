@@ -1,8 +1,8 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.0.2",
-  "Channel": "stable",
+  "Version": "4.0.3-dev.1",
+  "Channel": "development",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "4.0.2 - stable patch release"
+  "Milestone": "4.0.3 - OEM update safety and guided HP BIOS workflow"
 }

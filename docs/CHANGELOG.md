@@ -5,6 +5,19 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 4.0.3 — in development
+
+### OEM update safety and guided HP BIOS workflow
+
+- integrated signed HP Image Assistant acquisition and silent analysis for supported HP systems;
+- separated BIOS recommendations from unattended driver, firmware and software installation;
+- reported critical BIOS recommendations as urgent structured OEM maintenance data for DMT;
+- added a strongly guided, explicitly confirmed BIOS update path for interactive sessions;
+- blocked automatic BIOS installation during scheduled, GPO and other unattended runs;
+- required a verified, timestamped restore point before Dell or HP updates;
+- added OEM process timeouts and preserved the no-automatic-reboot policy;
+- cached HP SoftPaq results reported as already installed to avoid repeated downgrade attempts.
+
 ## 4.0.2 — 18 September 2026
 
 ### Patch release

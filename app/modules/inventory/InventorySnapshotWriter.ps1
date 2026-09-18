@@ -213,3 +213,43 @@ function Update-MTInventoryWindowsUpdateStatus {
         throw
     }
 }
+
+function Update-MTInventoryOemStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [object]$OemStatus
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "Inventory snapshot not found: $Path"
+    }
+
+    $snapshot = Get-Content -LiteralPath $Path -Raw -ErrorAction Stop |
+        ConvertFrom-Json -ErrorAction Stop
+
+    if ($null -eq $snapshot.maintenance.data.PSObject.Properties["oem"]) {
+        $snapshot.maintenance.data |
+            Add-Member -NotePropertyName oem -NotePropertyValue $OemStatus
+    }
+    else {
+        $snapshot.maintenance.data.oem = $OemStatus
+    }
+
+    $json = ConvertTo-MTInventoryJson -Snapshot $snapshot
+    $tempPath = $Path + ".tmp"
+
+    try {
+        Write-MTInventoryUtf8NoBom -Path $tempPath -Content $json
+        Move-Item -LiteralPath $tempPath -Destination $Path -Force -ErrorAction Stop
+    }
+    catch {
+        if (Test-Path -LiteralPath $tempPath) {
+            Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue
+        }
+        throw
+    }
+}

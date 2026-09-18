@@ -18,7 +18,7 @@ Remove-Item Env:MT_INVENTORY_REMOTE_PATH -ErrorAction SilentlyContinue
 try {
     $ReportsPath = Join-Path $MTCompatibilityRoot "reports"
 
-    $Snapshot = Get-MTInventorySnapshot -CollectorVersion "4.0.2"
+    $Snapshot = Get-MTInventorySnapshot -CollectorVersion "4.0.3-dev.1"
 
     $PublishParameters = @{
         Snapshot       = $Snapshot

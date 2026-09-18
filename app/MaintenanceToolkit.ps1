@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.2
+# Maintenance Toolkit 4.0.3-dev.1
 #
 # Autore:
 #   Luca Miselli
@@ -20,7 +20,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.2"
+$Version = "4.0.3-dev.1"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -40,6 +40,8 @@ $env:MT_MODULES = $ModulesDir
 $env:MT_LOGS = $ComputerLogsDir
 $env:MT_COMPUTER_LOG_NAME = $ComputerLogName
 $env:MT_INI = $IniPath
+$env:MT_VERSION = $Version
+$env:MT_INTERACTIVE = if ($RunAll -or ($Only -and $Only.Count -gt 0)) { "0" } else { "1" }
 
 # Optional DMT publication destination for Inventory snapshots.
 # Modules run in the same PowerShell process, so the environment variable is
@@ -676,10 +678,10 @@ if ($Choice -match '^[Ii]$') {
             Where-Object { $_ -match '^\d+$' } |
             ForEach-Object { [int]$_ }
 
-        if ($Ids.Count -gt 0) {
+        if (@($Ids).Count -gt 0) {
             $Selected = @($Catalog | Where-Object Id -in $Ids)
 
-            if ($Selected.Count -gt 0) {
+            if (@($Selected).Count -gt 0) {
                 return $Selected
             }
         }
@@ -706,6 +708,7 @@ function Invoke-ToolkitSession {
     $env:MT_WINDOWS_UPDATE_ATTEMPTED = "0"
     $env:MT_WINDOWS_UPDATE_STATUS = "not_run"
     Remove-Item Env:MT_WINDOWS_UPDATE_ERROR_CODE -ErrorAction SilentlyContinue
+    Remove-Item Env:MT_OEM_STATUS_PATH -ErrorAction SilentlyContinue
 
     # Inizializza i percorsi dei log solo dopo aver creato la sessione.
     Initialize-LogPaths
@@ -833,6 +836,32 @@ function Invoke-ToolkitSession {
                     $InventoryResult.Status = "WARN"
                 }
                 $InventoryResult.Detail = "{0} | inventory_finalization_failed" -f $InventoryResult.Detail
+            }
+        }
+
+        if (
+            -not [string]::IsNullOrWhiteSpace($env:MT_OEM_STATUS_PATH) -and
+            (Test-Path -LiteralPath $env:MT_OEM_STATUS_PATH -PathType Leaf)
+        ) {
+            try {
+                $OemStatus = Get-Content `
+                    -LiteralPath $env:MT_OEM_STATUS_PATH `
+                    -Raw `
+                    -Encoding UTF8 |
+                    ConvertFrom-Json
+
+                foreach ($InventoryPath in @($env:MT_INVENTORY_LOCAL_PATH, $env:MT_INVENTORY_REMOTE_PATH)) {
+                    if (-not [string]::IsNullOrWhiteSpace($InventoryPath)) {
+                        Update-MTInventoryOemStatus `
+                            -Path $InventoryPath `
+                            -OemStatus $OemStatus
+                    }
+                }
+            }
+            catch {
+                Write-WarnLog `
+                    ("OEM inventory finalization failed: {0}" -f $_.Exception.Message) `
+                    "OEM"
             }
         }
     }
@@ -987,7 +1016,7 @@ $(T "INFO_THANKS")
 
     Write-Host ""
     Write-Host ("{0}:" -f (T "SESSION_NOT_EXECUTED"))
-    if ($NotExecuted.Count -eq 0) { Write-Host ("  {0}" -f (T "SESSION_NONE")) }
+    if (@($NotExecuted).Count -eq 0) { Write-Host ("  {0}" -f (T "SESSION_NONE")) }
     else { foreach ($Missing in $NotExecuted) { Write-Host "  [ ] $($Missing.Name)" } }
 
     Write-Host ""
@@ -1055,7 +1084,7 @@ if ($RunAll -or ($Only -and $Only.Count -gt 0)) {
         @($Catalog | Where-Object Key -in $Only)
     }
 
-    if ($Selected.Count -eq 0) {
+    if (@($Selected).Count -eq 0) {
         exit 0
     }
 
@@ -1080,7 +1109,7 @@ while ($true) {
         exit 0
     }
 
-    if ($Selected.Count -eq 0) {
+    if (@($Selected).Count -eq 0) {
         continue
     }
 

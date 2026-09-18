@@ -887,6 +887,15 @@ function Get-MTInventorySnapshot {
                 status    = "not_run"
                 errorCode = $null
             }
+            oem = [ordered]@{
+                attempted    = $false
+                manufacturer = $null
+                status       = "not_run"
+                tool         = $null
+                biosUpdate   = $null
+                updates      = @()
+                errorCode    = $null
+            }
         }
     }
 
@@ -897,6 +906,10 @@ function Get-MTInventorySnapshot {
             status    = [string]$wu.status
             errorCode = if ($null -ne $wu.errorCode) { [string]$wu.errorCode } else { $null }
         }
+    }
+
+    if ($null -ne $MaintenanceData -and $MaintenanceData.ContainsKey("oem")) {
+        $maintenance.data.oem = $MaintenanceData.oem
     }
 
     $overallWatch.Stop()
