@@ -12,6 +12,10 @@ software version.
 - integrated signed HP Image Assistant acquisition and silent analysis for supported HP systems;
 - separated BIOS recommendations from unattended driver, firmware and software installation;
 - reported critical BIOS recommendations as urgent structured OEM maintenance data for DMT;
+- added signed Dell Command Update integration with separate BIOS and non-BIOS scans;
+- excluded BIOS explicitly from unattended Dell installation while reporting it as urgent structured data for DMT;
+- required a verified timestamped restore point before Dell driver, firmware, application or utility updates;
+- disabled Dell-initiated restarts unconditionally and treated DCU code 500 as a successful no-updates result;
 - added a strongly guided, explicitly confirmed BIOS update path for interactive sessions;
 - blocked automatic BIOS installation during scheduled, GPO and other unattended runs;
 - required a verified, timestamped restore point before Dell or HP updates;

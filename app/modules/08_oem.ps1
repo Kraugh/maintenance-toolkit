@@ -1,5 +1,6 @@
 ﻿. "$PSScriptRoot\00_common.ps1"
 . "$PSScriptRoot\oem\HPImageAssistant.ps1"
+. "$PSScriptRoot\oem\DellCommandUpdate.ps1"
 
 $Module = "OEM"
 $Manufacturer = (Get-CimInstance Win32_ComputerSystem).Manufacturer.Trim()
@@ -8,63 +9,109 @@ $Interactive = $env:MT_INTERACTIVE -eq "1"
 Write-Main (Get-MTRuntimeText "OEM_DETECTED" @($Manufacturer))
 
 if ($Manufacturer -match "Dell") {
-    $Candidates = @(
-        "$env:ProgramFiles\Dell\CommandUpdate\dcu-cli.exe",
-        "${env:ProgramFiles(x86)}\Dell\CommandUpdate\dcu-cli.exe"
-    )
-    $Tool = $Candidates |
-        Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
-        Select-Object -First 1
-
-    if (-not $Tool) {
-        Set-ModuleResult `
-            (Get-MTRuntimeText "MODULE_OEM") `
-            "SKIP" `
-            (Get-MTRuntimeText "OEM_DELL_NOT_INSTALLED")
-        exit 10
+    $Status = [ordered]@{
+        attempted = $true
+        manufacturer = "Dell"
+        detectedAt = (Get-Date).ToString("o")
+        status = "analyzing"
+        tool = $null
+        biosUpdate = $null
+        updates = @()
+        errorCode = $null
     }
 
     try {
-        $null = Get-MTVerifiedRestorePoint -Manufacturer "Dell"
-    }
-    catch {
-        $Detail = $_.Exception.Message
-        Write-ErrorLog $Detail $Module
-        Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "ERROR" $Detail
-        exit 1
-    }
+        $Tool = Get-MTDellCommandUpdate
+        if (-not $Tool) {
+            Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "SKIP" (Get-MTRuntimeText "OEM_DELL_NOT_INSTALLED")
+            exit 10
+        }
 
-    $Result = Invoke-LoggedProcess `
-        -FilePath $Tool `
-        -ArgumentList @(
-            "/applyUpdates",
-            "-silent",
-            "-reboot=disable",
-            "-autoSuspendBitLocker=enable"
-        ) `
-        -Label "Dell Command Update" `
-        -Module $Module `
-        -SuccessCodes @(0, 1, 500) `
-        -TimeoutSeconds 7200
+        $Status.tool = [ordered]@{
+            name = "Dell Command Update"
+            version = [string](Get-Item -LiteralPath $Tool).VersionInfo.FileVersion
+            path = $Tool
+        }
+        $BiosScan = Invoke-MTDcuScan -Executable $Tool -UpdateType "bios" -Purpose "bios"
+        $SafeScan = Invoke-MTDcuScan `
+            -Executable $Tool `
+            -UpdateType "firmware,driver,application,utility,others" `
+            -Purpose "safe"
 
-    if ($Result -in @(0, 1, 500)) {
-        $NeedsReboot = $Result -eq 1
-        $Status = if ($NeedsReboot) { "WARN" } else { "OK" }
-        $Detail = Get-MTRuntimeText "OEM_DELL_RESULT" @($Result)
+        $Bios = @($BiosScan.Updates) | Select-Object -First 1
+        $CurrentBios = (Get-CimInstance Win32_BIOS).SMBIOSBIOSVersion
+        if ($null -ne $Bios) {
+            $Status.biosUpdate = [ordered]@{
+                status = "urgent_action_required"
+                severity = if ([string]::IsNullOrWhiteSpace($Bios.severity)) { "unknown" } else { ([string]$Bios.severity).ToLowerInvariant() }
+                currentVersion = [string]$CurrentBios
+                targetVersion = [string]$Bios.targetVersion
+                releaseId = [string]$Bios.id
+                name = [string]$Bios.name
+                automaticInstall = $false
+                reason = "blocked_by_unattended_bios_policy"
+                detectedAt = (Get-Date).ToString("o")
+            }
+            Write-WarnLog (Get-MTRuntimeText "OEM_DELL_BIOS_URGENT" @($Bios.targetVersion, $CurrentBios)) $Module
+        }
+
+        $Installable = @($SafeScan.Updates)
+        $ApplyCode = 500
+        if ($Installable.Count -gt 0) {
+            $null = Get-MTVerifiedRestorePoint -Manufacturer "Dell"
+            $ApplyCode = Invoke-MTDcuSafeUpdates -Executable $Tool
+            if ($ApplyCode -notin @(0, 1, 500)) {
+                throw (Get-MTRuntimeText "OEM_DELL_UPDATES_FAILED" @($ApplyCode))
+            }
+        }
+
+        $Status.updates = @(
+            foreach ($Update in $Installable) {
+                [pscustomobject][ordered]@{
+                    id = $Update.id
+                    name = $Update.name
+                    type = $Update.type
+                    currentVersion = $Update.currentVersion
+                    targetVersion = $Update.targetVersion
+                    severity = $Update.severity
+                    status = if ($ApplyCode -eq 500) { "not_required" } else { "installation_attempted" }
+                    rebootRequired = $Update.rebootRequired
+                }
+            }
+        )
+
+        $NeedsReboot = $ApplyCode -eq 1
+        $Status.status = if ($null -ne $Bios) { "action_required" } elseif ($NeedsReboot) { "restart_required" } else { "ok" }
+        Save-MTOemStatus -Status $Status
+
+        if ($null -ne $Bios) {
+            $Detail = Get-MTRuntimeText "OEM_DELL_BIOS_URGENT" @($Bios.targetVersion, $CurrentBios)
+            Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "WARN" $Detail $NeedsReboot
+            exit 20
+        }
+
+        $Detail = if ($Installable.Count -eq 0) {
+            Get-MTRuntimeText "OEM_DELL_NO_UPDATES"
+        }
+        else {
+            Get-MTRuntimeText "OEM_DELL_UPDATES_COMPLETED" @($Installable.Count, $ApplyCode)
+        }
         Set-ModuleResult `
             (Get-MTRuntimeText "MODULE_OEM") `
-            $Status `
+            $(if ($NeedsReboot) { "WARN" } else { "OK" }) `
             $Detail `
             $NeedsReboot
         if ($NeedsReboot) { exit 20 }
         exit 0
     }
-
-    Set-ModuleResult `
-        (Get-MTRuntimeText "MODULE_OEM") `
-        "ERROR" `
-        (Get-MTRuntimeText "OEM_DELL_RESULT" @($Result))
-    exit 1
+    catch {
+        $Status.status = "error"
+        $Status.errorCode = $_.Exception.Message
+        Save-MTOemStatus -Status $Status
+        Write-ErrorLog $_.Exception.Message $Module
+        Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "ERROR" $_.Exception.Message
+        exit 1
+    }
 }
 
 if ($Manufacturer -match "HP|Hewlett") {

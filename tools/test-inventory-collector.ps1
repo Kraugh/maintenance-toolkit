@@ -3,7 +3,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$CollectorVersion = "4.0.3-dev.1-test"
+    [string]$CollectorVersion = "4.0.3-dev.4-test"
 )
 
 $ErrorActionPreference = "Stop"
