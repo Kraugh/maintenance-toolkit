@@ -9,6 +9,10 @@ maintenance, diagnostics and technical reporting.
 
 **Current stable release:** `4.0.2`
 
+**Opt-in production pilot:** `4.0.3-rc.3` portable release candidate. It adds
+the hardened Dell and HP OEM workflow. The stable update channel remains on
+4.0.2 until the pilot is complete; the signed MSI will accompany final 4.0.3.
+
 Maintenance Toolkit 4.0 introduces a bilingual application core, integrated
 Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
 technical network reports, a native Windows launcher and Authenticode code
@@ -38,6 +42,8 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 - Authenticode digital signature with trusted timestamp;
 - automatic prevention of system sleep while Maintenance Toolkit is running,
   without forcing the display to remain on.
+- guarded Dell and HP OEM updates with separate BIOS handling, mandatory
+  restore-point verification and no automatic reboot (`4.0.3-rc.3`).
 
 ## Download
 
@@ -188,6 +194,9 @@ available, and `20` if the update check itself cannot be completed normally.
 For unattended execution and Task Scheduler, see the
 [System Administrator Guide](docs/eng/System-Administrator-Guide.md).
 
+For vendor-update safety, the required System Restore GPO and pilot procedure,
+see [OEM updates](docs/eng/OEM-UPDATES.md).
+
 ## 4.0.2 release status
 
 Maintenance Toolkit 4.0.2 is the current stable release.
@@ -228,6 +237,8 @@ builds, when available, remain opt-in through GitHub Releases.
 - [Italian technical guide](docs/ita/manuale-tecnico.md)
 - [English field technician guide](docs/eng/field-technician-guide.md)
 - [English system administrator guide](docs/eng/System-Administrator-Guide.md)
+- [English OEM update guide](docs/eng/OEM-UPDATES.md)
+- [Italian OEM update guide](docs/ita/AGGIORNAMENTI-OEM.md)
 - [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md)
 - [Guida enterprise MSI/GPO in italiano](docs/enterprise/MSI-GPO-DEPLOYMENT.it.md)
 - [Enterprise diagnostic commands](docs/enterprise/DIAGNOSTIC-COMMANDS.md)

@@ -1,7 +1,7 @@
 # Manuale tecnico — Maintenance Toolkit 4.0
 
 **Versione documento:** 2.1
-**Compatibile con:** Maintenance Toolkit `4.0.2`
+**Compatibile con:** Maintenance Toolkit `4.0.2` e `4.0.3-rc.3`
 **Aggiornato:** 29 agosto 2026
 
 ## 1. Scopo
@@ -81,12 +81,20 @@ le modalità offerte dal menu. Tra le principali funzioni:
 - Winget;
 - Microsoft Update;
 - Microsoft Defender;
+- aggiornamenti OEM Dell e HP protetti;
 - punto di ripristino;
 - DISM e SFC;
 - stato dischi;
 - pulizie opzionali.
 
 Le impostazioni più invasive sono disattivate di default.
+
+Il modulo OEM richiede un punto di ripristino verificato prima di installare
+aggiornamenti non-BIOS e non riavvia automaticamente Windows. Il BIOS viene
+controllato separatamente e non viene installato nelle esecuzioni non
+interattive. Prima del pilot in produzione seguire la
+[guida aggiornamenti OEM](AGGIORNAMENTI-OEM.md), inclusa la configurazione GPO
+per Ripristino configurazione di sistema.
 
 ## 6. Network Diagnostics
 

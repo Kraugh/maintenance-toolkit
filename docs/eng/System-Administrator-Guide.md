@@ -1,7 +1,7 @@
 # Maintenance Toolkit 4.0 — System Administrator Guide
 
 **Document version:** 1.0
-**Compatible with:** Maintenance Toolkit `4.0.2`
+**Compatible with:** Maintenance Toolkit `4.0.2` and `4.0.3-rc.3`
 **Updated:** 29 August 2026
 
 ## Purpose
@@ -78,6 +78,13 @@ uses `NeverReboot=1` by default so that reboot decisions remain under
 administrative control.
 
 ## Active Directory / Group Policy
+
+When the OEM module is enabled on domain computers, the managing computer GPO
+must explicitly allow System Restore. Configure **Turn off System Restore =
+Disabled** and ensure it wins over inherited policies. MT refuses to apply OEM
+updates when it cannot create and verify the mandatory restore point. BIOS is
+never installed in scheduled, GPO or `SYSTEM` execution. See the complete
+[OEM update guide](OEM-UPDATES.md) before starting a pilot.
 
 A practical domain deployment model is to distribute a Scheduled Task through
 Group Policy Preferences:

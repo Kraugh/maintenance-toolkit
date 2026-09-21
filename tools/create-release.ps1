@@ -50,6 +50,15 @@ $ExcludedReleaseDirectories = @(
     "reports"
 )
 
+# Disposable editor and merge artifacts must never enter a public package.
+$ForbiddenReleaseFilePatterns = @(
+    '*.bak',
+    '*.tmp',
+    '*.old',
+    '*.orig',
+    '*~'
+)
+
 function Assert-ReleaseSource {
     param(
         [Parameter(Mandatory)]
@@ -131,6 +140,53 @@ function Test-ZipForExcludedDirectories {
                         )
                     )
                 }
+            }
+        }
+    }
+    finally {
+        $Archive.Dispose()
+    }
+}
+
+function Assert-NoForbiddenReleaseFiles {
+    param(
+        [Parameter(Mandatory)]
+        [string]$RootPath,
+        [Parameter(Mandatory)]
+        [string[]]$Patterns
+    )
+
+    $ForbiddenFiles = @(
+        Get-ChildItem -LiteralPath $RootPath -Recurse -File | Where-Object {
+            $Name = $_.Name
+            @($Patterns | Where-Object { $Name -like $_ }).Count -gt 0
+        }
+    )
+
+    if ($ForbiddenFiles.Count -gt 0) {
+        throw (
+            "Release validation failed: disposable file(s) found: {0}" -f
+            (($ForbiddenFiles.FullName | Sort-Object) -join ', ')
+        )
+    }
+}
+
+function Test-ZipForForbiddenFiles {
+    param(
+        [Parameter(Mandatory)]
+        [string]$ArchivePath,
+        [Parameter(Mandatory)]
+        [string[]]$Patterns
+    )
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $Archive = [System.IO.Compression.ZipFile]::OpenRead($ArchivePath)
+
+    try {
+        foreach ($Entry in $Archive.Entries) {
+            $Name = [System.IO.Path]::GetFileName($Entry.FullName)
+            if ($Name -and @($Patterns | Where-Object { $Name -like $_ }).Count -gt 0) {
+                throw "Release validation failed: disposable ZIP entry '$($Entry.FullName)'."
             }
         }
     }
@@ -316,6 +372,10 @@ try {
         }
     }
 
+    Assert-NoForbiddenReleaseFiles `
+        -RootPath $PackageRoot `
+        -Patterns $ForbiddenReleaseFilePatterns
+
     $AllowedRootFiles = @(
         "MaintenanceToolkit.exe",
         "Avvia_Manutenzione.bat",
@@ -351,6 +411,10 @@ try {
     Test-ZipForExcludedDirectories `
         -ArchivePath $ZipPath `
         -ExcludedDirectoryNames $ExcludedReleaseDirectories
+
+    Test-ZipForForbiddenFiles `
+        -ArchivePath $ZipPath `
+        -Patterns $ForbiddenReleaseFilePatterns
 
     $Hash = (
         Get-FileHash `

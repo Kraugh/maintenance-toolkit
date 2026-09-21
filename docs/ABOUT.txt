@@ -4,11 +4,14 @@ MAINTENANCE TOOLKIT 4.0
 Strumento gratuito e open source per la manutenzione, la diagnostica
 e il reporting tecnico dei sistemi Microsoft Windows.
 
+Versione del pacchetto:
+    4.0.3-rc.3 (release candidate portabile, pilot opt-in)
+
 Release stabile corrente:
     4.0.2
 
-Data di rilascio:
-    18 settembre 2026
+Data della candidate:
+    21 settembre 2026
 
 Autore:
     Luca Miselli

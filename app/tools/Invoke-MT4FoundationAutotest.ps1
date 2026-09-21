@@ -107,17 +107,65 @@ try {
         -Encoding UTF8 |
         ConvertFrom-Json
 
-    $Italian = Get-Content `
-        (Join-Path $ProjectRoot 'languages/it-IT.json') `
-        -Raw `
-        -Encoding UTF8 |
-        ConvertFrom-Json
-
     $EnglishKeys = @($English.PSObject.Properties.Name | Sort-Object)
-    $ItalianKeys = @($Italian.PSObject.Properties.Name | Sort-Object)
 
-    if (Compare-Object $EnglishKeys $ItalianKeys) {
-        Add-MT4AutotestError 'Language key mismatch between en-US and it-IT.'
+    Get-ChildItem -LiteralPath (Join-Path $ProjectRoot 'languages') -Filter *.json -File |
+        Where-Object { $_.Name -ne 'en-US.json' } |
+        ForEach-Object {
+            $Language = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json
+            $LanguageKeys = @($Language.PSObject.Properties.Name | Sort-Object)
+            if (Compare-Object $EnglishKeys $LanguageKeys) {
+                Add-MT4AutotestError (
+                    'Language key mismatch between en-US and {0}.' -f $_.Name
+                )
+            }
+        }
+}
+catch {
+    Add-MT4AutotestError $_.Exception.Message
+}
+
+try {
+    $DellHelperPath = Join-Path $ProjectRoot 'app/modules/oem/DellCommandUpdate.ps1'
+    $DellModulePath = Join-Path $ProjectRoot 'app/modules/08_oem.ps1'
+    $DellHelperText = Get-Content $DellHelperPath -Raw -Encoding UTF8
+    $DellModuleText = Get-Content $DellModulePath -Raw -Encoding UTF8
+
+    foreach ($RequiredToken in @(
+        'Test-MTDcuSelfUpdateStarted',
+        'Wait-MTDcuSelfUpdate',
+        'Install-MTDellCommandUpdate',
+        'Dell.CommandUpdate',
+        '--disable-interactivity',
+        'OEM_DELL_SELF_UPDATE_TIMEOUT',
+        'OEM_DELL_SCAN_VERIFICATION',
+        'OEM_DELL_APPLY_SAFE',
+        'VerificationDeadline'
+    )) {
+        if ($DellHelperText -notmatch [regex]::Escape($RequiredToken)) {
+            throw "Dell helper safety token missing: $RequiredToken"
+        }
+    }
+
+    foreach ($RequiredToken in @(
+        'still_applicable',
+        'verification_failed',
+        'installed_by_mt',
+        'Save-MTOemStatus',
+        'OEM_DELL_VERIFICATION_INCOMPLETE',
+        'rebootRequired'
+    )) {
+        if ($DellModuleText -notmatch [regex]::Escape($RequiredToken)) {
+            throw "Dell module verification token missing: $RequiredToken"
+        }
+    }
+
+    if ($DellHelperText -notmatch '(?s)-updateType=firmware,driver,application,utility,others.*-reboot=disable') {
+        throw 'Dell unattended update arguments do not preserve BIOS exclusion and reboot blocking.'
+    }
+
+    if ($DellHelperText -match '(?i)/applyUpdates(?s:.*?)\bbios\b') {
+        throw 'Dell unattended apply command includes BIOS.'
     }
 }
 catch {

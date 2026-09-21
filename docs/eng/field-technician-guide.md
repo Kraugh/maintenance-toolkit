@@ -1,7 +1,7 @@
 # Maintenance Toolkit 4.0 — Field Technician Guide
 
 **Document version:** 2.1
-**Compatible with:** Maintenance Toolkit `4.0.2`
+**Compatible with:** Maintenance Toolkit `4.0.2` and `4.0.3-rc.3`
 **Updated:** 29 August 2026
 
 ## Overview
@@ -52,12 +52,18 @@ The main menu provides the established maintenance functions, including:
 - Winget;
 - Microsoft Update;
 - Microsoft Defender;
+- guarded Dell and HP OEM updates;
 - restore point creation;
 - DISM and SFC;
 - disk health;
 - optional cleanup actions.
 
 Potentially invasive actions remain disabled by default.
+
+The OEM module requires a verified restore point before installing non-BIOS
+updates and never restarts Windows automatically. BIOS is scanned separately
+and is not installed unattended. Before a production pilot, follow the
+[OEM update guide](OEM-UPDATES.md), including its System Restore GPO setting.
 
 
 ## Command-line and unattended execution

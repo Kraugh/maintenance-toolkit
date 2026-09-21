@@ -32,6 +32,14 @@ Maintenance Toolkit must not run as a Domain Administrator and never reboots the
 
 Before production deployment, validate the exact MSI, policy, execution account and share permissions on a test computer or pilot OU.
 
+### OEM updates and System Restore policy (4.0.3+)
+
+The OEM module requires a restore point that MT can create and verify before it applies non-BIOS updates. In the same computer GPO used to manage MT, configure:
+
+**Computer Configuration → Policies → Administrative Templates → System → System Restore → Turn off System Restore = Disabled**
+
+Make sure this setting wins over any inherited GPO that enables **Turn off System Restore**. Use the target child OU or the winning link order, then validate the resultant set of policy on a pilot computer. MT stops the OEM update operation if the restore point cannot be verified; it does not bypass a domain prohibition. See [OEM updates](../eng/OEM-UPDATES.md).
+
 ## 3. Verify the installer
 
 In File Explorer, open **Properties → Digital Signatures** and verify that the signature is valid and belongs to the expected Maintenance Toolkit publisher.

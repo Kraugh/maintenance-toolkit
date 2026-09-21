@@ -17,20 +17,36 @@ if ($Manufacturer -match "Dell") {
         tool = $null
         biosUpdate = $null
         updates = @()
+        rebootRequired = $false
         errorCode = $null
     }
 
     try {
+        $InstalledByMt = $false
         $Tool = Get-MTDellCommandUpdate
         if (-not $Tool) {
-            Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "SKIP" (Get-MTRuntimeText "OEM_DELL_NOT_INSTALLED")
-            exit 10
+            $Status.status = "preparing_tool"
+            $Status.tool = [ordered]@{
+                name = "Dell Command Update"
+                version = $null
+                path = $null
+                installationStatus = "required"
+            }
+            $null = Get-MTVerifiedRestorePoint -Manufacturer "Dell"
+            $Tool = Install-MTDellCommandUpdate
+            $InstalledByMt = $true
         }
 
         $Status.tool = [ordered]@{
             name = "Dell Command Update"
             version = [string](Get-Item -LiteralPath $Tool).VersionInfo.FileVersion
             path = $Tool
+            installationStatus = if ($InstalledByMt) {
+                "installed_by_mt"
+            }
+            else {
+                "already_installed"
+            }
         }
         $BiosScan = Invoke-MTDcuScan -Executable $Tool -UpdateType "bios" -Purpose "bios"
         $SafeScan = Invoke-MTDcuScan `
@@ -57,31 +73,97 @@ if ($Manufacturer -match "Dell") {
 
         $Installable = @($SafeScan.Updates)
         $ApplyCode = 500
+        $Status.updates = @()
         if ($Installable.Count -gt 0) {
             $null = Get-MTVerifiedRestorePoint -Manufacturer "Dell"
-            $ApplyCode = Invoke-MTDcuSafeUpdates -Executable $Tool
+            $ApplyResult = Invoke-MTDcuSafeUpdates -Executable $Tool
+            $ApplyCode = [int]$ApplyResult.ExitCode
+            $Status.rebootRequired = $ApplyCode -eq 1
             if ($ApplyCode -notin @(0, 1, 500)) {
                 throw (Get-MTRuntimeText "OEM_DELL_UPDATES_FAILED" @($ApplyCode))
             }
+
+            try {
+                if ($ApplyResult.SelfUpdateStarted) {
+                    Write-Main (Get-MTRuntimeText "OEM_DELL_SELF_UPDATE_WAIT")
+                    $UpdatedTool = Wait-MTDcuSelfUpdate `
+                        -PreviousVersion $ApplyResult.PreviousToolVersion `
+                        -TimeoutSeconds 900
+                    $Tool = $UpdatedTool.Executable
+                    $Status.tool.version = $UpdatedTool.Version
+                    $Status.tool.path = $UpdatedTool.Executable
+                    Write-Main (
+                        Get-MTRuntimeText "OEM_DELL_SELF_UPDATE_COMPLETED" @(
+                            $ApplyResult.PreviousToolVersion,
+                            $UpdatedTool.Version
+                        )
+                    )
+                }
+
+                $VerificationScan = Invoke-MTDcuScan `
+                    -Executable $Tool `
+                    -UpdateType "firmware,driver,application,utility,others" `
+                    -Purpose "verification"
+                $RemainingIds = @(
+                    $VerificationScan.Updates |
+                        ForEach-Object { [string]$_.id }
+                )
+                $Status.updates = @(
+                    foreach ($Update in $Installable) {
+                        [pscustomobject][ordered]@{
+                            id = $Update.id
+                            name = $Update.name
+                            type = $Update.type
+                            currentVersion = $Update.currentVersion
+                            targetVersion = $Update.targetVersion
+                            severity = $Update.severity
+                            status = if ($RemainingIds -contains [string]$Update.id) {
+                                "still_applicable"
+                            }
+                            else {
+                                "installed"
+                            }
+                            rebootRequired = $Update.rebootRequired
+                        }
+                    }
+                )
+            }
+            catch {
+                $Status.updates = @(
+                    foreach ($Update in $Installable) {
+                        [pscustomobject][ordered]@{
+                            id = $Update.id
+                            name = $Update.name
+                            type = $Update.type
+                            currentVersion = $Update.currentVersion
+                            targetVersion = $Update.targetVersion
+                            severity = $Update.severity
+                            status = "verification_failed"
+                            rebootRequired = $Update.rebootRequired
+                        }
+                    }
+                )
+                throw
+            }
         }
 
-        $Status.updates = @(
-            foreach ($Update in $Installable) {
-                [pscustomobject][ordered]@{
-                    id = $Update.id
-                    name = $Update.name
-                    type = $Update.type
-                    currentVersion = $Update.currentVersion
-                    targetVersion = $Update.targetVersion
-                    severity = $Update.severity
-                    status = if ($ApplyCode -eq 500) { "not_required" } else { "installation_attempted" }
-                    rebootRequired = $Update.rebootRequired
-                }
-            }
+        $NeedsReboot = [bool]$Status.rebootRequired
+        $StillApplicable = @(
+            $Status.updates |
+                Where-Object { $_.status -eq "still_applicable" }
         )
-
-        $NeedsReboot = $ApplyCode -eq 1
-        $Status.status = if ($null -ne $Bios) { "action_required" } elseif ($NeedsReboot) { "restart_required" } else { "ok" }
+        $Status.status = if ($null -ne $Bios) {
+            "action_required"
+        }
+        elseif ($NeedsReboot) {
+            "restart_required"
+        }
+        elseif ($StillApplicable.Count -gt 0) {
+            "verification_failed"
+        }
+        else {
+            "ok"
+        }
         Save-MTOemStatus -Status $Status
 
         if ($null -ne $Bios) {
@@ -93,15 +175,23 @@ if ($Manufacturer -match "Dell") {
         $Detail = if ($Installable.Count -eq 0) {
             Get-MTRuntimeText "OEM_DELL_NO_UPDATES"
         }
+        elseif ($StillApplicable.Count -gt 0) {
+            Get-MTRuntimeText "OEM_DELL_VERIFICATION_INCOMPLETE" @(
+                $Installable.Count,
+                $StillApplicable.Count,
+                $ApplyCode
+            )
+        }
         else {
             Get-MTRuntimeText "OEM_DELL_UPDATES_COMPLETED" @($Installable.Count, $ApplyCode)
         }
+        $HasWarning = $NeedsReboot -or $StillApplicable.Count -gt 0
         Set-ModuleResult `
             (Get-MTRuntimeText "MODULE_OEM") `
-            $(if ($NeedsReboot) { "WARN" } else { "OK" }) `
+            $(if ($HasWarning) { "WARN" } else { "OK" }) `
             $Detail `
             $NeedsReboot
-        if ($NeedsReboot) { exit 20 }
+        if ($HasWarning) { exit 20 }
         exit 0
     }
     catch {
@@ -414,6 +504,17 @@ if ($Manufacturer -match "HP|Hewlett") {
 }
 
 if ($Manufacturer -match "Lenovo") {
+    Save-MTOemStatus -Status ([ordered]@{
+        attempted = $true
+        manufacturer = "Lenovo"
+        detectedAt = (Get-Date).ToString("o")
+        status = "skipped"
+        reason = "repository_not_configured"
+        tool = $null
+        biosUpdate = $null
+        updates = @()
+        errorCode = $null
+    })
     Set-ModuleResult `
         (Get-MTRuntimeText "MODULE_OEM") `
         "SKIP" `
@@ -422,6 +523,17 @@ if ($Manufacturer -match "Lenovo") {
 }
 
 $Detail = Get-MTRuntimeText "OEM_UNSUPPORTED" @($Manufacturer)
+Save-MTOemStatus -Status ([ordered]@{
+    attempted = $true
+    manufacturer = $Manufacturer
+    detectedAt = (Get-Date).ToString("o")
+    status = "skipped"
+    reason = "unsupported_manufacturer"
+    tool = $null
+    biosUpdate = $null
+    updates = @()
+    errorCode = $null
+})
 Write-Skip $Detail $Module
 Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "SKIP" $Detail
 exit 10

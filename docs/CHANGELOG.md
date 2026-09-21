@@ -1,11 +1,38 @@
-﻿# Changelog
+# Changelog
 
 All notable released changes to Maintenance Toolkit are documented here.
 
 Repository-only documentation changes may be committed without changing the
 software version.
 
-## 4.0.3 — in development
+## 4.0.3-rc.3 — 21 September 2026
+
+### Dell self-update and restart-state correction
+
+- retried the post-install verification scan while Dell Command Update still returned its internal self-update state without producing an XML report;
+- preserved the effective DCU apply code and exposed `rebootRequired` at the top level of `oem-status.json`, including when final verification fails;
+- corrected Winget output decoding and the Italian bootstrap operation label;
+- retained the strict prohibition on unattended BIOS installation and automatic Windows restart.
+
+## 4.0.3-rc.2 — 21 September 2026
+
+### Dell production-pilot hardening
+
+- detected Dell hardware independently of Dell Command Update availability;
+- automatically installed Dell Command Update from the Winget source when absent, only after creating and verifying the mandatory restore point;
+- re-detected the installed CLI and validated its Dell Authenticode signature before any scan;
+- recorded whether DCU was already present or installed by MT in structured OEM status;
+- generated `oem-status.json` also for Lenovo and unsupported-manufacturer `SKIP` outcomes;
+- extended the foundation autotest with Dell bootstrap and structured-status safeguards.
+
+## 4.0.3-rc.1 — 21 September 2026
+
+### Release candidate
+
+- promoted the validated Dell OEM implementation to a portable release candidate for production-pilot testing;
+- added complete English and Italian OEM operating guidance, including the required System Restore Group Policy setting;
+- prevented editor backups and other disposable files from entering release archives;
+- kept the public stable update channel on 4.0.2 until the release candidate completes its production pilot.
 
 ### OEM update safety and guided HP BIOS workflow
 
@@ -16,6 +43,8 @@ software version.
 - excluded BIOS explicitly from unattended Dell installation while reporting it as urgent structured data for DMT;
 - required a verified timestamped restore point before Dell driver, firmware, application or utility updates;
 - disabled Dell-initiated restarts unconditionally and treated DCU code 500 as a successful no-updates result;
+- waited for Dell Command Update self-updates to finish without terminating installers or restarting Windows;
+- verified every attempted Dell update with a fresh non-BIOS scan and recorded installed, still-applicable or verification-failed status;
 - added a strongly guided, explicitly confirmed BIOS update path for interactive sessions;
 - blocked automatic BIOS installation during scheduled, GPO and other unattended runs;
 - required a verified, timestamped restore point before Dell or HP updates;

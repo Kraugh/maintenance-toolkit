@@ -45,7 +45,7 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 - [x] Provide an explicit guided BIOS decision in interactive console mode.
 - [x] Require and verify a timestamped restore point before OEM software or driver updates.
 - [x] Suppress repeated HP SoftPaq recommendations already satisfied by an equal or newer installed component.
-- [ ] Validate the hardened Dell Command Update path on representative current Dell hardware.
+- [x] Validate the hardened Dell Command Update path on representative current Dell hardware.
 - [ ] Validate 4.0.3 through the enterprise AD/GPO pilot before release.
 
 ---

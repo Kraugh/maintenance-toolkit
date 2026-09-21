@@ -5,6 +5,10 @@ la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
 
 **Release stabile corrente:** `4.0.2`
 
+**Pilot di produzione opt-in:** release candidate portabile `4.0.3-rc.3`, con
+il flusso OEM Dell e HP rafforzato. Il canale stabile resta sulla 4.0.2 fino al
+termine del pilot; l'MSI firmato accompagnerà la versione finale 4.0.3.
+
 La serie 4.0 integra il nuovo core bilingue, Network Diagnostics, regole
 automatiche di analisi, diagnostica VPN avanzata e report tecnici di rete,
 mantenendo i moduli di manutenzione già validati nella serie 3.7.x.
@@ -29,6 +33,8 @@ mantenendo i moduli di manutenzione già validati nella serie 3.7.x.
 - integrazione opzionale con Ookla Speedtest CLI;
 - log separati per computer e sessione;
 - interfaccia bilingue italiano/inglese.
+- aggiornamenti OEM Dell e HP protetti da gestione separata del BIOS, punto di
+  ripristino verificato e divieto di riavvio automatico (`4.0.3-rc.3`).
 
 ## Download e primo avvio
 
@@ -126,6 +132,7 @@ trattati separatamente nel manuale e nella System Administrator Guide.
 
 ## Documentazione
 
+- [Guida aggiornamenti OEM](AGGIORNAMENTI-OEM.md)
 - [Manuale tecnico italiano](manuale-tecnico.md)
 - [Guida inglese per tecnici](../eng/field-technician-guide.md)
 - [System Administrator Guide](../eng/System-Administrator-Guide.md)

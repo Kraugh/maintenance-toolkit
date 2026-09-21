@@ -32,6 +32,14 @@ Maintenance Toolkit non deve essere eseguito come Domain Administrator e non ria
 
 Prima della produzione, validare MSI, policy, account di esecuzione e permessi della share su un computer o una OU pilota.
 
+### Aggiornamenti OEM e policy Ripristino configurazione di sistema (4.0.3+)
+
+Il modulo OEM richiede un punto di ripristino che MT possa creare e verificare prima di applicare gli aggiornamenti non-BIOS. Nella stessa GPO computer usata per gestire MT configurare:
+
+**Configurazione computer → Criteri → Modelli amministrativi → Sistema → Ripristino configurazione di sistema → Disattiva Ripristino configurazione di sistema = Disabilitata**
+
+Questa impostazione deve prevalere su eventuali GPO ereditate che abilitano **Disattiva Ripristino configurazione di sistema**. Usare la OU figlia interessata oppure l'ordine di collegamento vincente, quindi verificare il gruppo di criteri risultante su un computer pilota. MT interrompe gli aggiornamenti OEM se il punto non può essere verificato e non aggira un divieto imposto dal dominio. Consultare la [guida aggiornamenti OEM](../ita/AGGIORNAMENTI-OEM.md).
+
 ## 3. Verificare il pacchetto
 
 In Esplora file aprire **Proprietà → Firme digitali** e verificare che la firma sia valida e appartenga all'editore previsto.
