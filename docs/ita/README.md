@@ -3,11 +3,11 @@
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
 
-**Release stabile corrente:** `4.0.2`
+**Release stabile corrente:** `4.0.3`
 
-**Pilot di produzione opt-in:** release candidate portabile `4.0.3-rc.3`, con
-il flusso OEM Dell e HP rafforzato. Il canale stabile resta sulla 4.0.2 fino al
-termine del pilot; l'MSI firmato accompagnerà la versione finale 4.0.3.
+La versione 4.0.3 aggiunge il flusso OEM Dell e HP collaudato in produzione,
+lo stato OEM strutturato per DMT, la verifica obbligatoria del punto di
+ripristino e il divieto rigoroso di installazione BIOS o riavvio automatici.
 
 La serie 4.0 integra il nuovo core bilingue, Network Diagnostics, regole
 automatiche di analisi, diagnostica VPN avanzata e report tecnici di rete,
@@ -34,7 +34,7 @@ mantenendo i moduli di manutenzione già validati nella serie 3.7.x.
 - log separati per computer e sessione;
 - interfaccia bilingue italiano/inglese.
 - aggiornamenti OEM Dell e HP protetti da gestione separata del BIOS, punto di
-  ripristino verificato e divieto di riavvio automatico (`4.0.3-rc.3`).
+  ripristino verificato e divieto di riavvio automatico.
 
 ## Download e primo avvio
 
@@ -64,7 +64,7 @@ riestrarre il contenuto.
 Da PowerShell:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.2.zip
+Unblock-File .\Maintenance-Toolkit-4.0.3.zip
 ```
 
 ## Impostazioni prudenti
@@ -114,7 +114,7 @@ rimuovere eventuali informazioni che non si desidera rendere pubbliche.
 
 ## Esecuzione automatizzata
 
-La release 4.0.2 supporta:
+La release 4.0.3 supporta:
 
 ```powershell
 .\MaintenanceToolkit.exe -RunAll

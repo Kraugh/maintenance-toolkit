@@ -1,6 +1,6 @@
 # Aggiornamenti OEM
 
-**Compatibile con:** Maintenance Toolkit `4.0.3-rc.3` e versioni successive
+**Compatibile con:** Maintenance Toolkit `4.0.3` e versioni successive
 
 Il modulo OEM installa gli aggiornamenti idonei del produttore mantenendo tre vincoli di sicurezza: il BIOS non viene mai installato automaticamente, Windows non viene mai riavviato automaticamente e gli aggiornamenti non-BIOS non possono iniziare senza un punto di ripristino verificato.
 
@@ -8,7 +8,7 @@ Il modulo OEM installa gli aggiornamenti idonei del produttore mantenendo tre vi
 
 | Produttore | Integrazione | Comportamento |
 |---|---|---|
-| Dell | CLI Dell Command Update già installata e con firma Authenticode valida | Controlla separatamente il BIOS; installa soltanto le categorie non-BIOS. |
+| Dell | CLI Dell Command Update con firma Authenticode valida, installata automaticamente tramite Winget quando assente | Controlla separatamente il BIOS; installa soltanto le categorie non-BIOS. |
 | HP | Pacchetto HP Image Assistant firmato e acquisito da HP | Analizza le raccomandazioni e installa gli aggiornamenti non-BIOS idonei. Il BIOS richiede una conferma esplicita e interattiva. |
 
 Un produttore non supportato viene indicato come `SKIP`, non come errore.
@@ -57,6 +57,8 @@ Controllare il riepilogo finale, il log dettagliato della sessione e `oem-status
 
 Prima di un pilot in produzione verificare che il dispositivo abbia un backup, che la chiave BitLocker sia depositata, che non vi siano riavvii pendenti e che sia attiva una finestra di manutenzione.
 
+Dopo l'installazione di driver o firmware, il riavvio può lasciare il computer senza rete e non raggiungibile da RDP per diversi minuti. Non interrompere l'alimentazione durante questa fase. Se viene richiesto un aggiornamento BIOS, eseguirlo separatamente in una finestra controllata, con alimentazione stabile e chiave di ripristino BitLocker disponibile.
+
 ## Canali di rilascio
 
-`4.0.3-rc.3` è una release candidate portabile e opt-in destinata al pilot finale in produzione. Non sostituisce il manifest stabile `4.0.2`. L'MSI firmato viene prodotto quando la candidate collaudata viene promossa alla versione finale `4.0.3`.
+`4.0.3` è la release stabile che introduce il flusso OEM protetto. È distribuita come archivio portabile e come MSI x64 firmato; entrambi gli artefatti pubblici sono accompagnati dal relativo checksum SHA-256.

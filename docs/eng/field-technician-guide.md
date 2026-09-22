@@ -1,8 +1,8 @@
 # Maintenance Toolkit 4.0 — Field Technician Guide
 
 **Document version:** 2.1
-**Compatible with:** Maintenance Toolkit `4.0.2` and `4.0.3-rc.3`
-**Updated:** 29 August 2026
+**Compatible with:** Maintenance Toolkit `4.0.3`
+**Updated:** 22 September 2026
 
 ## Overview
 
@@ -39,7 +39,7 @@ After verifying that the archive is the official project release, the ZIP can
 be unblocked before extraction:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.2.zip
+Unblock-File .\Maintenance-Toolkit-4.0.3.zip
 ```
 
 Extract the archive again afterwards.
@@ -185,7 +185,7 @@ MT displays periodic status messages while long operations are running.
 During a Maintenance Toolkit session, MT asks Windows to keep the system awake
 without forcing the display to remain on. The request lasts for the MT process.
 
-## 4.0.2 validation
+## 4.0.3 validation
 
 The 4.0 series has been exercised on:
 

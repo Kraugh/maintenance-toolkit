@@ -5,6 +5,15 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 4.0.3 — 22 September 2026
+
+### Stable release
+
+- promoted the production-tested `4.0.3-rc.3` codebase without functional changes;
+- finalized the signed portable and MSI distribution paths and stable-channel documentation;
+- documented the System Restore GPO prerequisite and the Dell/HP OEM safety model in Italian and English;
+- retained structured OEM status for DMT, mandatory restore-point verification, unattended BIOS blocking and the no-automatic-restart policy.
+
 ## 4.0.3-rc.3 — 21 September 2026
 
 ### Dell self-update and restart-state correction

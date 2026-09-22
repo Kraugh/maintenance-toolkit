@@ -1,6 +1,6 @@
 # OEM updates
 
-**Compatible with:** Maintenance Toolkit `4.0.3-rc.3` and later
+**Compatible with:** Maintenance Toolkit `4.0.3` and later
 
 The OEM module installs eligible vendor updates while preserving three safety boundaries: BIOS updates are never installed unattended, Windows is never restarted automatically, and non-BIOS installation cannot begin without a verified restore point.
 
@@ -8,7 +8,7 @@ The OEM module installs eligible vendor updates while preserving three safety bo
 
 | Vendor | Integration | Behaviour |
 |---|---|---|
-| Dell | Locally installed, Authenticode-valid Dell Command Update CLI | Scans BIOS separately; installs only non-BIOS categories. |
+| Dell | Authenticode-valid Dell Command Update CLI, installed automatically through Winget when absent | Scans BIOS separately; installs only non-BIOS categories. |
 | HP | Signed HP Image Assistant package acquired from HP | Analyses recommendations; installs eligible non-BIOS updates. BIOS requires an interactive, explicit confirmation. |
 
 Unsupported manufacturers are reported as `SKIP`, not as an error.
@@ -57,6 +57,8 @@ Review the final session summary, the detailed session log and `oem-status.json`
 
 For a production pilot, confirm beforehand that the device is backed up, BitLocker recovery information is escrowed, there is no pending reboot, and a maintenance window is active.
 
+After driver or firmware installation, a restart may leave the computer offline and unreachable through RDP for several minutes. Do not interrupt power during this phase. If a BIOS update is reported, perform it separately in a controlled maintenance window with stable AC power and the BitLocker recovery key available.
+
 ## Release channels
 
-`4.0.3-rc.3` is an opt-in portable release candidate intended for the final production pilot. It does not replace the stable `4.0.2` update manifest. The signed MSI is produced when the tested candidate is promoted to final `4.0.3`.
+`4.0.3` is the stable release that introduces the guarded OEM workflow. It is distributed as a portable archive and a signed x64 MSI; both public artifacts are accompanied by their SHA-256 checksum.

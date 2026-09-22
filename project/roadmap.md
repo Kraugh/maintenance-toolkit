@@ -18,7 +18,7 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 
 ## Current stable baseline / Stato stabile attuale
 
-- [x] Maintenance Toolkit **4.0.2** stable release
+- [x] Maintenance Toolkit **4.0.3** stable release
 - [x] Native `MaintenanceToolkit.exe` launcher
 - [x] Authenticode-signed and timestamped launcher
 - [x] Windows 10 and Windows 11 validation
@@ -36,7 +36,7 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 - [x] Public Maintenance Toolkit documentation on kraugh.it
 - [x] Mandatory pre-release documentation gate
 
-### Current development — Maintenance Toolkit 4.0.3
+### Completed — Maintenance Toolkit 4.0.3
 
 - [x] Add signed HP Image Assistant acquisition and validation.
 - [x] Install eligible non-BIOS HP updates silently with bounded execution.
@@ -46,7 +46,8 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 - [x] Require and verify a timestamped restore point before OEM software or driver updates.
 - [x] Suppress repeated HP SoftPaq recommendations already satisfied by an equal or newer installed component.
 - [x] Validate the hardened Dell Command Update path on representative current Dell hardware.
-- [ ] Validate 4.0.3 through the enterprise AD/GPO pilot before release.
+- [x] Validate the complete 4.0.3 OEM workflow on representative production Dell hardware.
+- [ ] Expand 4.0.3 through a staged enterprise AD/GPO rollout and collect operational feedback.
 
 ---
 

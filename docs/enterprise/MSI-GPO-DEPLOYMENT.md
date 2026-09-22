@@ -1,6 +1,6 @@
 # Enterprise deployment — MSI and Group Policy
 
-This guide describes the supported installation path for Maintenance Toolkit 4.0.2. It covers standalone MSI installation and centrally managed Active Directory deployment without attempting to catalogue environment-specific troubleshooting cases.
+This guide describes the supported installation path for Maintenance Toolkit 4.0.3. It covers standalone MSI installation and centrally managed Active Directory deployment without attempting to catalogue environment-specific troubleshooting cases.
 
 ## 1. Deployment model
 
@@ -26,7 +26,7 @@ Maintenance Toolkit must not run as a Domain Administrator and never reboots the
 
 - Windows x64 supported by the organisation;
 - local administrative rights or a computer-assigned software deployment policy;
-- the signed `MaintenanceToolkit-4.0.2-x64.msi` from the official release;
+- the signed `MaintenanceToolkit-4.0.3-x64.msi` from the official release;
 - network access required by the enabled MT modules;
 - for inventory publication, a dedicated SMB destination writable by computer accounts.
 
@@ -47,13 +47,13 @@ In File Explorer, open **Properties → Digital Signatures** and verify that the
 PowerShell verification:
 
 ```powershell
-$r = Get-AuthenticodeSignature '.\MaintenanceToolkit-4.0.2-x64.msi' | Select-Object Status,StatusMessage,@{N='Signer';E={$_.SignerCertificate.Subject}},@{N='Timestamp';E={$_.TimeStamperCertificate.Subject}} | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
+$r = Get-AuthenticodeSignature '.\MaintenanceToolkit-4.0.3-x64.msi' | Select-Object Status,StatusMessage,@{N='Signer';E={$_.SignerCertificate.Subject}},@{N='Timestamp';E={$_.TimeStamperCertificate.Subject}} | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
 ```
 
 SHA-256 verification:
 
 ```powershell
-$r = Get-FileHash '.\MaintenanceToolkit-4.0.2-x64.msi' -Algorithm SHA256 | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
+$r = Get-FileHash '.\MaintenanceToolkit-4.0.3-x64.msi' -Algorithm SHA256 | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
 ```
 
 Compare the resulting hash with the checksum published alongside the release asset.
@@ -65,13 +65,13 @@ For an interactive installation, start the MSI with administrative privileges.
 Default silent per-machine installation, without an MSI-managed task:
 
 ```powershell
-msiexec.exe /i ".\MaintenanceToolkit-4.0.2-x64.msi" /qn /norestart CREATE_TASK=0 /L*v "$env:TEMP\MaintenanceToolkit-4.0.2-install.log"
+msiexec.exe /i ".\MaintenanceToolkit-4.0.3-x64.msi" /qn /norestart CREATE_TASK=0 /L*v "$env:TEMP\MaintenanceToolkit-4.0.3-install.log"
 ```
 
 Standalone silent installation with the optional daily MSI-managed task:
 
 ```powershell
-msiexec.exe /i ".\MaintenanceToolkit-4.0.2-x64.msi" /qn /norestart CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT" /L*v "$env:TEMP\MaintenanceToolkit-4.0.2-install.log"
+msiexec.exe /i ".\MaintenanceToolkit-4.0.3-x64.msi" /qn /norestart CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT" /L*v "$env:TEMP\MaintenanceToolkit-4.0.3-install.log"
 ```
 
 Public MSI properties:
@@ -104,7 +104,7 @@ For GPO deployments, keep versioned source folders and assign only the approved 
 
 ```text
 \\SERVER\Software\MaintenanceToolkit\
-    4.0.2\MaintenanceToolkit-4.0.2-x64.msi
+    4.0.3\MaintenanceToolkit-4.0.3-x64.msi
     NEWVERSION\MaintenanceToolkit-NEWVERSION-x64.msi
 ```
 
@@ -115,7 +115,7 @@ Pilot the upgrade before changing the production assignment. Do not silently rep
 Use **Installed apps**, the organisation's software-management platform, or the original MSI:
 
 ```powershell
-msiexec.exe /x ".\MaintenanceToolkit-4.0.2-x64.msi" /qn /norestart /L*v "$env:TEMP\MaintenanceToolkit-4.0.2-uninstall.log"
+msiexec.exe /x ".\MaintenanceToolkit-4.0.3-x64.msi" /qn /norestart /L*v "$env:TEMP\MaintenanceToolkit-4.0.3-uninstall.log"
 ```
 
 Uninstall removes only the uniquely named MSI-managed task. A GPO-managed task remains owned by Group Policy and must be removed or disabled in that policy.

@@ -5,13 +5,13 @@ Strumento gratuito e open source per la manutenzione, la diagnostica
 e il reporting tecnico dei sistemi Microsoft Windows.
 
 Versione del pacchetto:
-    4.0.3-rc.3 (release candidate portabile, pilot opt-in)
+    4.0.3
 
 Release stabile corrente:
-    4.0.2
+    4.0.3
 
-Data della candidate:
-    21 settembre 2026
+Data di rilascio:
+    22 settembre 2026
 
 Autore:
     Luca Miselli

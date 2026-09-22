@@ -1,6 +1,6 @@
 ENGLISH
 
-MAINTENANCE TOOLKIT 4.0.3-rc.3
+MAINTENANCE TOOLKIT 4.0.3
 ==============================
 
 RECOMMENDED STARTUP
@@ -21,14 +21,14 @@ Maintenance Toolkit.
 Maintenance Toolkit is open source. Its launcher source code and PowerShell
 runtime are available in the public project repository.
 
-OEM PILOT NOTE
+OEM DEPLOYMENT NOTE
 Before OEM updates, enable System Restore through the computer GPO and verify
 the policy on the pilot PC. Full instructions: docs\eng\OEM-UPDATES.md
 
 
 ITALIANO
 
-MAINTENANCE TOOLKIT 4.0.3-rc.3
+MAINTENANCE TOOLKIT 4.0.3
 ==============================
 
 AVVIO CONSIGLIATO
@@ -51,7 +51,7 @@ Toolkit.
 Maintenance Toolkit è open source. Il codice sorgente del launcher e il runtime
 PowerShell sono disponibili nel repository pubblico del progetto.
 
-NOTA PILOT OEM
+NOTA DISTRIBUZIONE OEM
 Prima degli aggiornamenti OEM abilitare Ripristino configurazione di sistema
 nella GPO computer e verificare la policy sul PC pilota. Istruzioni complete:
 docs\ita\AGGIORNAMENTI-OEM.md

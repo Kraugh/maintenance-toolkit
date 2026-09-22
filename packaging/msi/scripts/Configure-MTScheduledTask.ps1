@@ -45,6 +45,34 @@ if ($Action -eq "Uninstall") {
         )
     }
 
+    # MSI removes only files that it installed. Runtime-generated logs and
+    # reports would otherwise leave empty or populated directories behind.
+    # Resolve and validate every cleanup target below the installation root
+    # before removing it so this action can never escape INSTALLFOLDER.
+    $NormalizedInstallDir = [System.IO.Path]::GetFullPath($InstallDir).TrimEnd(
+        [System.IO.Path]::DirectorySeparatorChar,
+        [System.IO.Path]::AltDirectorySeparatorChar
+    )
+
+    foreach ($RelativeDirectory in @("logs", "reports")) {
+        $CleanupTarget = [System.IO.Path]::GetFullPath(
+            (Join-Path $NormalizedInstallDir $RelativeDirectory)
+        )
+        $ExpectedParent = Split-Path -Parent $CleanupTarget
+
+        if ($ExpectedParent -ne $NormalizedInstallDir) {
+            Write-Warning (
+                "Refusing to remove unexpected uninstall cleanup path: {0}" -f
+                $CleanupTarget
+            )
+            continue
+        }
+
+        if (Test-Path -LiteralPath $CleanupTarget -PathType Container) {
+            Remove-Item -LiteralPath $CleanupTarget -Recurse -Force -ErrorAction Stop
+        }
+    }
+
     exit 0
 }
 

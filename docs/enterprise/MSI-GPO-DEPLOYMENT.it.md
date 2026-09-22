@@ -1,6 +1,6 @@
 # Distribuzione enterprise — MSI e Group Policy
 
-Questa guida descrive il percorso supportato per installare Maintenance Toolkit 4.0.2 manualmente o tramite Active Directory. Rimane volutamente concentrata sul percorso corretto, senza raccogliere tutti i possibili casi di troubleshooting specifici di un ambiente.
+Questa guida descrive il percorso supportato per installare Maintenance Toolkit 4.0.3 manualmente o tramite Active Directory. Rimane volutamente concentrata sul percorso corretto, senza raccogliere tutti i possibili casi di troubleshooting specifici di un ambiente.
 
 ## 1. Modello di distribuzione
 
@@ -26,7 +26,7 @@ Maintenance Toolkit non deve essere eseguito come Domain Administrator e non ria
 
 - Windows x64 supportato dall'organizzazione;
 - diritti amministrativi locali oppure distribuzione software assegnata al computer;
-- `MaintenanceToolkit-4.0.2-x64.msi` firmato e proveniente dalla release ufficiale;
+- `MaintenanceToolkit-4.0.3-x64.msi` firmato e proveniente dalla release ufficiale;
 - accesso di rete richiesto dai moduli MT abilitati;
 - per la pubblicazione dell'inventario, una destinazione SMB dedicata e scrivibile dagli account computer.
 
@@ -47,13 +47,13 @@ In Esplora file aprire **Proprietà → Firme digitali** e verificare che la fir
 Verifica PowerShell:
 
 ```powershell
-$r = Get-AuthenticodeSignature '.\MaintenanceToolkit-4.0.2-x64.msi' | Select-Object Status,StatusMessage,@{N='Signer';E={$_.SignerCertificate.Subject}},@{N='Timestamp';E={$_.TimeStamperCertificate.Subject}} | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
+$r = Get-AuthenticodeSignature '.\MaintenanceToolkit-4.0.3-x64.msi' | Select-Object Status,StatusMessage,@{N='Signer';E={$_.SignerCertificate.Subject}},@{N='Timestamp';E={$_.TimeStamperCertificate.Subject}} | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
 ```
 
 Verifica SHA-256:
 
 ```powershell
-$r = Get-FileHash '.\MaintenanceToolkit-4.0.2-x64.msi' -Algorithm SHA256 | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
+$r = Get-FileHash '.\MaintenanceToolkit-4.0.3-x64.msi' -Algorithm SHA256 | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
 ```
 
 Confrontare il risultato con il checksum pubblicato insieme all'asset della release.
@@ -65,13 +65,13 @@ Per l'installazione interattiva avviare l'MSI con privilegi amministrativi.
 Installazione silenziosa per-machine senza attività gestita dall'MSI:
 
 ```powershell
-msiexec.exe /i ".\MaintenanceToolkit-4.0.2-x64.msi" /qn /norestart CREATE_TASK=0 /L*v "$env:TEMP\MaintenanceToolkit-4.0.2-install.log"
+msiexec.exe /i ".\MaintenanceToolkit-4.0.3-x64.msi" /qn /norestart CREATE_TASK=0 /L*v "$env:TEMP\MaintenanceToolkit-4.0.3-install.log"
 ```
 
 Installazione standalone con attività giornaliera opzionale:
 
 ```powershell
-msiexec.exe /i ".\MaintenanceToolkit-4.0.2-x64.msi" /qn /norestart CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT" /L*v "$env:TEMP\MaintenanceToolkit-4.0.2-install.log"
+msiexec.exe /i ".\MaintenanceToolkit-4.0.3-x64.msi" /qn /norestart CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT" /L*v "$env:TEMP\MaintenanceToolkit-4.0.3-install.log"
 ```
 
 | Proprietà | Predefinito | Funzione |
@@ -102,7 +102,7 @@ Per GPO usare cartelle sorgente versionate:
 
 ```text
 \\SERVER\Software\MaintenanceToolkit\
-    4.0.2\MaintenanceToolkit-4.0.2-x64.msi
+    4.0.3\MaintenanceToolkit-4.0.3-x64.msi
     NUOVAVERSIONE\MaintenanceToolkit-NUOVAVERSIONE-x64.msi
 ```
 
@@ -113,7 +113,7 @@ Eseguire un pilot prima di modificare l'assegnazione in produzione. Non sostitui
 Usare **App installate**, lo strumento aziendale di gestione software oppure l'MSI originale:
 
 ```powershell
-msiexec.exe /x ".\MaintenanceToolkit-4.0.2-x64.msi" /qn /norestart /L*v "$env:TEMP\MaintenanceToolkit-4.0.2-uninstall.log"
+msiexec.exe /x ".\MaintenanceToolkit-4.0.3-x64.msi" /qn /norestart /L*v "$env:TEMP\MaintenanceToolkit-4.0.3-uninstall.log"
 ```
 
 La disinstallazione rimuove soltanto l'attività con nome univoco gestita dall'MSI. L'attività GPO resta di proprietà della Group Policy e deve essere rimossa o disabilitata nella policy.
