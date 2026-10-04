@@ -51,6 +51,46 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 
 ---
 
+## Maintenance Toolkit 4.0.4 development — NVDOK / Sviluppo 4.0.4 — NVDOK
+
+Working-tree checkpoint: **4.0.4-dev.7-NVDOK**, 4 October 2026. The downloadable stable release remains **4.0.3**. This checkpoint is a source commit, not a GitHub Release, release tag or public-manifest update.
+
+Checkpoint dei sorgenti: **4.0.4-dev.7-NVDOK**, 4 ottobre 2026. La release stabile scaricabile resta **4.0.3**. Non creare release/tag 4.0.4 e non aggiornare il manifest pubblico per questo checkpoint.
+
+### NVIDIA advisory-only checks / Controlli NVIDIA senza installazione
+
+- [x] Implement installed GPU model/version collection using inbox Windows tools.
+- [x] Add exact professional-catalogue matching, desktop/mobile distinction and per-GPU results.
+- [x] Report an available WHQL Enterprise Production driver as `WARN` with installed/available versions and official details link, like the BIOS advisory.
+- [x] Preserve native catalogue replies and `nvidia-status.json`; never report an incomplete check as up to date.
+- [x] Remove NVIDIA package download, extraction and installation from the NVDOK runtime and CLI.
+- [x] Keep every MT-generated user-facing string in EN/IT/SV JSON language files.
+- [ ] Validate this NVDOK checkpoint on Windows PowerShell 5.1 and confirm the already updated Quadro P620 on KRAUGHHQ.
+- [ ] Run read-only analysis on engineering-department workstations and record exact Quadro/RTX models, installed drivers and available catalogue candidates.
+- [ ] Validate each additional model and desktop/mobile catalogue mapping on representative hardware; catalogue support is not production validation.
+- [ ] Investigate unmatched models, catalogue changes and failed lookups before expanding guarantees.
+
+La selezione riguarda il ramo Enterprise Production: non è una raccomandazione automatica per le applicazioni CAD/ISV e non modifica i driver. Attualmente il controllo online è limitato a Windows 11 x64 e al catalogo professionale NVIDIA. AMD, Intel, GeForce e altri rami richiedono un futuro ambito approvato e hardware di prova.
+
+### Dell stabilization before 4.0.4 / Dell prima della release 4.0.4
+
+- [ ] Continue DCU SYSTEM testing, deferred installations/UserActivity handling, actual post-reboot verification and coherent summary/status propagation (issue [#29](https://github.com/Kraugh/maintenance-toolkit/issues/29)).
+- [ ] Investigate the residual SupportAssist OS Recovery Tools recommendation.
+- [ ] Complete portable/MSI regression, signing and documentation before authorizing release 4.0.4.
+
+### Future explicitly invoked GPU updates / Aggiornamenti GPU futuri espliciti
+
+- [ ] Design a separately invoked, administrator-controlled update workflow after model/ISV validation and agreed maintenance windows.
+- [ ] Handle NVIDIA restart-required evidence even when installer exit code is zero; never equate exit zero with a verified loaded driver.
+- [ ] Verify installed/loaded versions after restart and represent pending/incomplete states correctly.
+- [ ] Preserve rollback evidence and useful diagnostics; safely clean extracted payloads after completion, retaining reusable verified packages according to an explicit retention policy.
+- [ ] Require explicit owner authorization before introducing any dependency beyond Windows inbox tools and the vendor package being managed.
+- [ ] Keep remote BIOS updates as a separate manually initiated DMT/admin workflow, scheduled with users; never include unattended BIOS flashing in MT maintenance.
+
+Il test sperimentale su KRAUGHHQ ha aggiornato una Quadro P620 da 528.89 a 582.78 dopo riavvio. Questo valida quella prova, non tutte le Quadro; l'installazione sperimentale FNV non fa parte di NVDOK. Lenovo OEM resta un test futuro separato.
+
+---
+
 ## Maintenance Toolkit 5.0.0 — Inventory and DMT interoperability
 
 The next major architectural objective is a structured machine inventory that remains useful to MT itself while exposing a stable, versioned interchange contract for **Dashboard Maintenance Toolkit (DMT)**.

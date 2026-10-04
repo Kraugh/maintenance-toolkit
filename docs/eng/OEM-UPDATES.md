@@ -34,10 +34,10 @@ MT enables protection for the system drive when possible, but it does not bypass
 5. If eligible updates exist and no session restore point exists yet, create and verify it.
 6. Apply the exact non-BIOS selection with automatic reboot disabled.
 7. If Dell Command Update updates itself through its separate installer, wait up to 15 minutes and validate the resulting signed executable and version.
-8. Run a fresh verification scan; if DCU is still finalizing its self-update and produces no XML report, retry for up to 15 minutes.
+8. When DCU requests a restart, record the updates as pending restart and stop without retrying or restarting Windows. Otherwise, run a fresh verification scan; if DCU is still finalizing its self-update and produces no XML report, retry for up to 15 minutes.
 9. Classify each attempted update as installed, still applicable or verification failed, and record any required restart separately.
 
-DCU exit codes `0`, `1` and `500` are interpreted according to the operation. Code `500` during a scan means that no applicable update was found. Other codes and malformed or missing XML reports are not treated as success.
+DCU exit codes `0`, `1`, `5` and `500` are interpreted according to the operation. Code `5` means that the operation completed but Windows must be restarted; code `500` during a scan means that no applicable update was found. Other codes and malformed or missing XML reports are not treated as success.
 
 ## HP workflow
 

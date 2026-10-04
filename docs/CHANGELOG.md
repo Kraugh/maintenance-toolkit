@@ -5,6 +5,67 @@ All notable released changes to Maintenance Toolkit are documented here.
 Repository-only documentation changes may be committed without changing the
 software version.
 
+## 4.0.4-dev.7-NVDOK — 4 October 2026 (development sources only)
+
+- Add an advisory-only NVIDIA professional driver check: installed model/version, compatible WHQL Enterprise Production catalogue candidate and official details link.
+- Enable the check in the default RunAll configuration; no NVIDIA GPU produces SKIP, incomplete/ambiguous checks produce WARN.
+- Match exact catalogue models and distinguish desktop/mobile configurations; retain per-GPU JSON and raw responses.
+- Remove experimental NVIDIA package download, extraction, installer invocation and install CLI switches. Existing cached packages/logs are left untouched.
+- Keep user-facing NVIDIA text localized through EN/IT/SV JSON files and add model-mapping/advisory-only regression contracts.
+- Preserve the public stable release and download manifest at 4.0.3. Dell stabilization remains pending under issue #29.
+
+## 4.0.4-dev.7 — 29 September 2026
+
+### Dell restart-required completion
+
+- recognizes Dell Command Update exit code 5 as a successful operation that requires a Windows restart;
+- skips the post-install verification scan when the apply operation already reports that a restart is required;
+- stops verification immediately when a scan reports exit code 5 instead of retrying for 15 minutes while waiting for an XML report that cannot be generated before restart;
+- records attempted updates as `restart_required` rather than `verification_failed`;
+- propagates the required restart to the session summary while preserving the strict no-automatic-restart policy.
+
+## 4.0.4-dev.6 — 29 September 2026
+
+### Dell report workspace compatibility
+
+- runs DCU scans and apply operations in a transient `C:\Kraugh-MT-Work` workspace because DCU 5.7.2 rejects report paths below reserved Windows folders;
+- assigns a unique directory to every DCU operation to keep concurrent sessions isolated;
+- copies DCU reports and logs into the permanent Maintenance Toolkit session before removing the transient workspace;
+- removes the shared workspace root when no operation directories remain;
+- preserves exit code 500 as a successful scan with no applicable updates and no required XML report.
+
+## 4.0.4-dev.5 — 29 September 2026
+
+### Dell CDN compatibility under SYSTEM
+
+- sends an explicit Dell Command Update user agent when downloading the pinned DCU 5.7.2 installer;
+- avoids the HTTP 403 response returned by the Dell Akamai endpoint to the default Windows PowerShell user agent;
+- preserves the pinned URL, SHA-256 validation and Dell Authenticode verification before execution;
+- adds a regression contract for the verified unattended download request.
+
+## 4.0.4-dev.4 — 29 September 2026
+
+### SYSTEM bootstrap registry compatibility
+
+- reads the optional `DisplayName` and `DisplayVersion` uninstall-registry values through the PowerShell property collection;
+- skips incomplete uninstall entries instead of failing under strict mode when running as `SYSTEM`;
+- adds a regression contract for safe .NET Desktop Runtime detection before the signed DCU bootstrap.
+
+## 4.0.4-dev.3 — 28 September 2026
+
+### Dell OEM reliability corrections
+
+- passes a dedicated directory to the Dell Command Update `-report` option and reads the `DCUApplicableUpdates.xml` file that DCU 5.7 creates inside it;
+- reuses a verified Maintenance Toolkit restore point created within the last 24 hours, matching Windows restore-point throttling;
+- waits up to 90 seconds for a newly created restore point to become visible before blocking OEM maintenance;
+- added a verified DCU 5.7.2 bootstrap for scheduled and GPO executions running as `SYSTEM`, where the WinGet CLI is unsupported;
+- installed the signed Microsoft .NET Desktop Runtime 10 prerequisite when version 10.0.8 or later is not already available;
+- verified the fallback installer against both the published SHA-256 value and Dell Authenticode signature before execution;
+- retained the interactive WinGet bootstrap when the CLI is available outside the `SYSTEM` account;
+- propagated Windows Update and OEM failures into `maintenance.status`, `maintenance.errors` and the overall collection status;
+- marked BIOS action, restart and verification states as partial maintenance instead of reporting a completely healthy snapshot;
+- added regression checks for the DCU report path, signed fallback bootstrap and inventory-status propagation.
+
 ## 4.0.3 — 22 September 2026
 
 ### Stable release

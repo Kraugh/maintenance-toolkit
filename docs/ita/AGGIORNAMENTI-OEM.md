@@ -34,10 +34,10 @@ MT prova ad abilitare la protezione dell'unità di sistema, ma non aggira una po
 5. Se esistono aggiornamenti idonei e nella sessione non esiste ancora un punto di ripristino, lo crea e lo verifica.
 6. Applica l'esatta selezione non-BIOS con il riavvio automatico disabilitato.
 7. Se Dell Command Update aggiorna sé stesso tramite un installer separato, attende fino a 15 minuti e convalida firma e versione del nuovo eseguibile.
-8. Esegue un nuovo controllo; se DCU sta ancora finalizzando il proprio aggiornamento e non produce il report XML, riprova per un massimo di 15 minuti.
+8. Se DCU richiede un riavvio, registra gli aggiornamenti come in attesa di riavvio e termina senza riprovare né riavviare Windows. Altrimenti esegue un nuovo controllo; se DCU sta ancora finalizzando il proprio aggiornamento e non produce il report XML, riprova per un massimo di 15 minuti.
 9. Classifica ogni aggiornamento tentato come installato, ancora applicabile oppure non verificabile e registra separatamente l'eventuale riavvio richiesto.
 
-I codici DCU `0`, `1` e `500` vengono interpretati in base all'operazione. Il codice `500` durante un controllo indica che non è stato trovato alcun aggiornamento applicabile. Altri codici e report XML mancanti o non validi non vengono considerati un successo.
+I codici DCU `0`, `1`, `5` e `500` vengono interpretati in base all'operazione. Il codice `5` indica che l'operazione è stata completata ma richiede il riavvio di Windows; il codice `500` durante un controllo indica che non è stato trovato alcun aggiornamento applicabile. Altri codici e report XML mancanti o non validi non vengono considerati un successo.
 
 ## Flusso HP
 

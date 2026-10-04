@@ -9,6 +9,9 @@
 function Get-MTVerifiedRestorePoint {
     param([Parameter(Mandatory)][string]$Manufacturer)
 
+    $ReuseWindowHours = 24
+    $VerificationTimeoutSeconds = 90
+    $VerificationPollSeconds = 5
     $MarkerPath = Join-Path $env:MT_SESSION_DIR "restore-point.json"
     if (Test-Path -LiteralPath $MarkerPath -PathType Leaf) {
         $Marker = Get-Content -LiteralPath $MarkerPath -Raw -Encoding UTF8 |
@@ -20,7 +23,7 @@ function Get-MTVerifiedRestorePoint {
     $RecentPoint = Get-ComputerRestorePoint -ErrorAction SilentlyContinue |
         Where-Object {
             $_.Description -like "Maintenance Toolkit*" -and
-            [Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -ge (Get-Date).AddHours(-2)
+            [Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -ge (Get-Date).AddHours(-$ReuseWindowHours)
         } |
         Sort-Object SequenceNumber -Descending |
         Select-Object -First 1
@@ -54,10 +57,19 @@ function Get-MTVerifiedRestorePoint {
             -RestorePointType MODIFY_SETTINGS `
             -ErrorAction Stop
 
-        $Point = Get-ComputerRestorePoint -ErrorAction Stop |
-            Where-Object Description -eq $Description |
-            Sort-Object SequenceNumber -Descending |
-            Select-Object -First 1
+        $Point = $null
+        $VerificationDeadline = (Get-Date).AddSeconds($VerificationTimeoutSeconds)
+        do {
+            $Point = Get-ComputerRestorePoint -ErrorAction Stop |
+                Where-Object Description -eq $Description |
+                Sort-Object SequenceNumber -Descending |
+                Select-Object -First 1
+
+            if ($null -ne $Point -or (Get-Date) -ge $VerificationDeadline) {
+                break
+            }
+            Start-Sleep -Seconds $VerificationPollSeconds
+        } while ($true)
 
         if ($null -eq $Point) {
             throw (Get-MTRuntimeText "RESTORE_VERIFY_FAILED")

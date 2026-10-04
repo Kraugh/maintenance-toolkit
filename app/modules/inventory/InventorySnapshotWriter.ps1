@@ -171,6 +171,43 @@ function Publish-MTInventorySnapshot {
     }
 }
 
+function Update-MTInventoryMaintenanceSummary {
+    param([Parameter(Mandatory = $true)][object]$Snapshot)
+
+    $Errors = [System.Collections.Generic.List[object]]::new()
+    if ($Snapshot.maintenance.data.windowsUpdate.status -eq "error") {
+        $Errors.Add([pscustomobject][ordered]@{
+            source = "windowsUpdate"
+            code = $Snapshot.maintenance.data.windowsUpdate.errorCode
+        })
+    }
+
+    $Oem = $Snapshot.maintenance.data.oem
+    if ($null -ne $Oem -and $Oem.status -eq "error") {
+        $Errors.Add([pscustomobject][ordered]@{
+            source = "oem"
+            code = $Oem.errorCode
+        })
+    }
+
+    $WarningStates = @("action_required", "restart_required", "verification_failed")
+    $HasWarning = $null -ne $Oem -and $Oem.status -in $WarningStates
+    $Snapshot.maintenance.errors = @($Errors)
+    $Snapshot.maintenance.status = if ($Errors.Count -gt 0) {
+        "error"
+    }
+    elseif ($HasWarning) {
+        "partial"
+    }
+    else {
+        "ok"
+    }
+
+    if ($Snapshot.maintenance.status -ne "ok") {
+        $Snapshot.collection.status = "partial"
+    }
+}
+
 function Update-MTInventoryWindowsUpdateStatus {
     [CmdletBinding()]
     param(
@@ -198,6 +235,7 @@ function Update-MTInventoryWindowsUpdateStatus {
     $snapshot.maintenance.data.windowsUpdate.attempted = $Attempted
     $snapshot.maintenance.data.windowsUpdate.status = $Status
     $snapshot.maintenance.data.windowsUpdate.errorCode = if ([string]::IsNullOrWhiteSpace($ErrorCode)) { $null } else { $ErrorCode }
+    Update-MTInventoryMaintenanceSummary -Snapshot $snapshot
 
     $json = ConvertTo-MTInventoryJson -Snapshot $snapshot
     $tempPath = $Path + ".tmp"
@@ -238,6 +276,8 @@ function Update-MTInventoryOemStatus {
     else {
         $snapshot.maintenance.data.oem = $OemStatus
     }
+
+    Update-MTInventoryMaintenanceSummary -Snapshot $snapshot
 
     $json = ConvertTo-MTInventoryJson -Snapshot $snapshot
     $tempPath = $Path + ".tmp"

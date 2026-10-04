@@ -78,8 +78,8 @@ if ($Manufacturer -match "Dell") {
             $null = Get-MTVerifiedRestorePoint -Manufacturer "Dell"
             $ApplyResult = Invoke-MTDcuSafeUpdates -Executable $Tool
             $ApplyCode = [int]$ApplyResult.ExitCode
-            $Status.rebootRequired = $ApplyCode -eq 1
-            if ($ApplyCode -notin @(0, 1, 500)) {
+            $Status.rebootRequired = $ApplyCode -in @(1, 5)
+            if ($ApplyCode -notin @(0, 1, 5, 500)) {
                 throw (Get-MTRuntimeText "OEM_DELL_UPDATES_FAILED" @($ApplyCode))
             }
 
@@ -100,33 +100,55 @@ if ($Manufacturer -match "Dell") {
                     )
                 }
 
-                $VerificationScan = Invoke-MTDcuScan `
-                    -Executable $Tool `
-                    -UpdateType "firmware,driver,application,utility,others" `
-                    -Purpose "verification"
-                $RemainingIds = @(
-                    $VerificationScan.Updates |
-                        ForEach-Object { [string]$_.id }
-                )
-                $Status.updates = @(
-                    foreach ($Update in $Installable) {
-                        [pscustomobject][ordered]@{
-                            id = $Update.id
-                            name = $Update.name
-                            type = $Update.type
-                            currentVersion = $Update.currentVersion
-                            targetVersion = $Update.targetVersion
-                            severity = $Update.severity
-                            status = if ($RemainingIds -contains [string]$Update.id) {
-                                "still_applicable"
+                if ($Status.rebootRequired) {
+                    $Status.updates = @(
+                        foreach ($Update in $Installable) {
+                            [pscustomobject][ordered]@{
+                                id = $Update.id
+                                name = $Update.name
+                                type = $Update.type
+                                currentVersion = $Update.currentVersion
+                                targetVersion = $Update.targetVersion
+                                severity = $Update.severity
+                                status = "restart_required"
+                                rebootRequired = $true
                             }
-                            else {
-                                "installed"
-                            }
-                            rebootRequired = $Update.rebootRequired
                         }
-                    }
-                )
+                    )
+                }
+                else {
+                    $VerificationScan = Invoke-MTDcuScan `
+                        -Executable $Tool `
+                        -UpdateType "firmware,driver,application,utility,others" `
+                        -Purpose "verification"
+                    $Status.rebootRequired = [bool]$VerificationScan.RebootRequired
+                    $RemainingIds = @(
+                        $VerificationScan.Updates |
+                            ForEach-Object { [string]$_.id }
+                    )
+                    $Status.updates = @(
+                        foreach ($Update in $Installable) {
+                            [pscustomobject][ordered]@{
+                                id = $Update.id
+                                name = $Update.name
+                                type = $Update.type
+                                currentVersion = $Update.currentVersion
+                                targetVersion = $Update.targetVersion
+                                severity = $Update.severity
+                                status = if ($VerificationScan.RebootRequired) {
+                                    "restart_required"
+                                }
+                                elseif ($RemainingIds -contains [string]$Update.id) {
+                                    "still_applicable"
+                                }
+                                else {
+                                    "installed"
+                                }
+                                rebootRequired = [bool]$VerificationScan.RebootRequired
+                            }
+                        }
+                    )
+                }
             }
             catch {
                 $Status.updates = @(

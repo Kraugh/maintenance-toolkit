@@ -1,0 +1,2578 @@
+{
+  "Success": "5",
+  "IDS": [
+    {
+      "downloadInfo": {
+        "Success": "1",
+        "ID": "274521",
+        "DownloadTypeID": "1",
+        "DownloadStatusID": "3",
+        "Name": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "NameLocalized": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "ShortDescription": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "DeviceToProductFamilyName": "",
+        "Release": "580",
+        "Version": "582.78",
+        "DisplayVersion": "R580 U11 (582.78)",
+        "GFE_DisplayVersion": "",
+        "CDKitUSBEmitterDriverVersion": "",
+        "CDKitGPUDriverVersion": "",
+        "IsBeta": "0",
+        "IsWHQL": "1",
+        "IsRecommended": "0",
+        "IsFeaturePreview": "0",
+        "IsNewest": "0",
+        "IsDC": "1",
+        "IsCRD": "0",
+        "HasNetInst": "0",
+        "CudaToolkitVersion": "",
+        "IsArchive": "0",
+        "IsActive": "1",
+        "IsEmailRequired": "0",
+        "ReleaseDateTime": "Thu Jul 30, 2026",
+        "DetailsURL": "https://www.nvidia.com/en-us/drivers/details/274521/",
+        "DownloadURL": "https://us.download.nvidia.com/Windows/Quadro_Certified/582.78/582.78-quadro-rtx-desktop-notebook-win10-win11-64bit-international-dch-whql.exe",
+        "EMAN_REVRES_BD": "80-lqssm-lswfg-a2wsu-drp",
+        "EMITR_BD": "memCache:1%20rTime:0%20sTime:0",
+        "DownloadURLFileSize": "725.13 MB",
+        "BannerURL": "",
+        "BannerURLGfe": "",
+        "ReleaseNotes": "%3Cb%3ENVIDIA%20RTX%20Enterprise%20Production%20Branch%20Driver%3C/b%3E%20%3Cbr%20/%3E%20%3Cbr%20/%3E%20Release%20580%20is%20a%20Production%20Branch%20release%20of%20the%20NVIDIA%20RTX%20Enterprise%20Driver.%20Production%20Branch%20drivers%20are%20designed%20and%20tested%20to%20provide%20long-term%20stability%20and%20availability.%20These%20drivers%20are%20ideal%20for%20enterprise%20customers%20and%20professional%20users%20who%20require%20application%20and%20hardware%20certification%20and%20regular%20driver%20updates%20for%20the%20latest%20in%20driver%20enhancements%20and%20security%20improvements.%3Cbr%20/%3E%20%3Cbr%20/%3E%20In%20addition%20to%20professional%20workstation%20features%2C%20Production%20Branch%20drivers%20also%20contain%20the%20features%20and%20enhancements%20of%20NVIDIA%20Studio%20Drivers%20of%20the%20same%20version%20number.%3Cbr%20/%3E%20%3Cbr%20/%3E%20%3Cb%3EFixed%20Issues%20in%20Version%20R580%20U11%3C/b%3E%3Cbr%20/%3E%20%3Cul%3E%20%3Cli%3EOngoing%20bug%20fixes%20and%20enhancements.%3C/li%3E%20%3C/ul%3E%20%20%20%20%20%3Cbr%20/%3E%20%20%20%20%20%3Cbr%20/%3E%20%20%20%20%20%3Cp%3EIf%20you%20would%20like%20to%20be%20notified%20of%20upcoming%20drivers%20for%20Windows%2C%20please%20%3Ca%20href%3D%22https%3A//www.nvidia.com/en-us/preferences/email-signup/%22%3Esubscribe%20here%3C/a%3E.%3C/p%3E",
+        "OtherNotes": "%09%20%3Cul%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.78/582.78-win10-win11-nvidia-rtx-quadro-release-notes.pdf%22%20title%3D%22NVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.78%29%22%3ENVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.78%29%3C/a%3E%3C/li%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.78/582.78-nvidia-rtx-quadro-control-panel-quick-start-guide.pdf%22%20title%3D%22Control%20Panel%20User%27s%20Guide%22%3EControl%20Panel%20User%27s%20Guide%3C/a%3E%3C/li%3E%20%20%3C/ul%3E%20%20%20%09",
+        "InstallationNotes": "",
+        "Overview": "",
+        "LanguageName": "English%20(US)",
+        "OSName": "Windows%2011",
+        "OsCode": "10.0",
+        "OSList": [
+          {
+            "OSName": "Windows%2010%2064-bit",
+            "OsCode": "10.0"
+          },
+          {
+            "OSName": "Windows%2011",
+            "OsCode": "10.0"
+          }
+        ],
+        "Is64Bit": "1",
+        "Messaging": [
+          {
+            "MessageCode": "DownloadIDDetailsFound",
+            "MessageValue": "The Driver DownloadID details found"
+          }
+        ],
+        "series": [
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Max-Q%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2072GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204500%20Blackwell%20Workstation%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20SFF%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%203000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%201000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%20500%20Blackwell%20Laptop%20GPU"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%206000D"
+              },
+              {
+                "productName": "NVIDIA%20RTX%206000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205880%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204500%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20SFF%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000E%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A6000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000H"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%2012GB"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A400"
+              },
+              {
+                "productName": "NVIDIA%20A800%2040GB%20Active"
+              },
+              {
+                "productName": "NVIDIA%20T1000%208GB"
+              },
+              {
+                "productName": "NVIDIA%20T1000"
+              },
+              {
+                "productName": "NVIDIA%20T600"
+              },
+              {
+                "productName": "NVIDIA%20T400%204GB"
+              },
+              {
+                "productName": "NVIDIA%20T400"
+              },
+              {
+                "productName": "NVIDIA%20T400E"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%201000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%2012GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%208GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%206GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T1200%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T600%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T550%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T500"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%208000"
+              },
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20GV100"
+              },
+              {
+                "productName": "Quadro%20GP100"
+              },
+              {
+                "productName": "Quadro%20P6000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P2200"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P400"
+              },
+              {
+                "productName": "Quadro%20M6000%2024GB"
+              },
+              {
+                "productName": "Quadro%20M6000"
+              },
+              {
+                "productName": "Quadro%20M5000"
+              },
+              {
+                "productName": "Quadro%20M4000"
+              },
+              {
+                "productName": "Quadro%20M2000"
+              },
+              {
+                "productName": "Quadro%20K2200"
+              },
+              {
+                "productName": "Quadro%20K1200"
+              },
+              {
+                "productName": "Quadro%20K620"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4200"
+              },
+              {
+                "productName": "Quadro%20P3200"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P520"
+              },
+              {
+                "productName": "Quadro%20P500"
+              },
+              {
+                "productName": "Quadro%20M2200"
+              },
+              {
+                "productName": "Quadro%20M1200"
+              },
+              {
+                "productName": "Quadro%20M620"
+              },
+              {
+                "productName": "Quadro%20M520"
+              },
+              {
+                "productName": "Quadro%20M5500"
+              },
+              {
+                "productName": "Quadro%20M5000M"
+              },
+              {
+                "productName": "Quadro%20M4000M"
+              },
+              {
+                "productName": "Quadro%20M3000M"
+              },
+              {
+                "productName": "Quadro%20M2000M"
+              },
+              {
+                "productName": "Quadro%20M1000M"
+              },
+              {
+                "productName": "Quadro%20M600M"
+              },
+              {
+                "productName": "Quadro%20M500M"
+              },
+              {
+                "productName": "Quadro%20K2200M"
+              },
+              {
+                "productName": "Quadro%20K620M"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Blade/Embedded%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              },
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20M5000%20SE"
+              },
+              {
+                "productName": "Quadro%20M3000%20SE"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "downloadInfo": {
+        "Success": "1",
+        "ID": "273164",
+        "DownloadTypeID": "1",
+        "DownloadStatusID": "3",
+        "Name": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "NameLocalized": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "ShortDescription": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "DeviceToProductFamilyName": "",
+        "Release": "580",
+        "Version": "582.70",
+        "DisplayVersion": "R580 U10 (582.70)",
+        "GFE_DisplayVersion": "",
+        "CDKitUSBEmitterDriverVersion": "",
+        "CDKitGPUDriverVersion": "",
+        "IsBeta": "0",
+        "IsWHQL": "1",
+        "IsRecommended": "0",
+        "IsFeaturePreview": "0",
+        "IsNewest": "0",
+        "IsDC": "1",
+        "IsCRD": "0",
+        "HasNetInst": "0",
+        "CudaToolkitVersion": "",
+        "IsArchive": "0",
+        "IsActive": "1",
+        "IsEmailRequired": "0",
+        "ReleaseDateTime": "Thu Jun 25, 2026",
+        "DetailsURL": "https://www.nvidia.com/en-us/drivers/details/273164/",
+        "DownloadURL": "https://us.download.nvidia.com/Windows/Quadro_Certified/582.70/582.70-quadro-rtx-desktop-notebook-win10-win11-64bit-international-dch-whql.exe",
+        "EMAN_REVRES_BD": "61-lqssm-lswfg-a2wsu-drp",
+        "EMITR_BD": "memCache:1%20rTime:0%20sTime:0",
+        "DownloadURLFileSize": "725.13 MB",
+        "BannerURL": "",
+        "BannerURLGfe": "",
+        "ReleaseNotes": "%3Cb%3ENVIDIA%20RTX%20Enterprise%20Production%20Branch%20Driver%3C/b%3E%20%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0ARelease%20580%20is%20a%20Production%20Branch%20release%20of%20the%20NVIDIA%20RTX%20Enterprise%20Driver.%20Production%20Branch%20drivers%20are%20designed%20and%20tested%20to%20provide%20long-term%20stability%20and%20availability.%20These%20drivers%20are%20ideal%20for%20enterprise%20customers%20and%20professional%20users%20who%20require%20application%20and%20hardware%20certification%20and%20regular%20driver%20updates%20for%20the%20latest%20in%20driver%20enhancements%20and%20security%20improvements.%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0AIn%20addition%20to%20professional%20workstation%20features%2C%20Production%20Branch%20drivers%20also%20contain%20the%20features%20and%20enhancements%20of%20NVIDIA%20Studio%20Drivers%20of%20the%20same%20version%20number.%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cb%3EFixed%20Issues%20in%20Version%20R580%20U10%3C/b%3E%3Cbr%20/%3E%0D%0A%3Cul%3E%0D%0A%3Cli%3E%5BDassault%5D%20%5B3DEXPERIENCE%5D%20resizing%20or%20maximizing%20the%20main%20window%20may%20cause%20temporary%20visual%20corruption.%20%3C/li%3E%0D%0A%3Cli%3E%5BMosaic%5D%20on%20some%20configurations%20may%20output%2060.00%20Hz%20instead%20of%2059.94%20Hz.%3C/li%3E%0D%0A%3Cli%3EOngoing%20bug%20fixes%20and%20enhancements.%3C/li%3E%0D%0A%3C/ul%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cp%3EIf%20you%20would%20like%20to%20be%20notified%20of%20upcoming%20drivers%20for%20Windows%2C%20please%20%3Ca%20href%3D%22https%3A//www.nvidia.com/en-us/preferences/email-signup/%22%3Esubscribe%20here%3C/a%3E.%3C/p%3E%0D%0A",
+        "OtherNotes": "%09%20%3Cul%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.70/582.70-win10-win11-nvidia-rtx-quadro-release-notes.pdf%22%20title%3D%22NVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.70%29%22%3ENVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.70%29%3C/a%3E%3C/li%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.70/582.70-nvidia-rtx-quadro-control-panel-quick-start-guide.pdf%22%20title%3D%22Control%20Panel%20User%27s%20Guide%22%3EControl%20Panel%20User%27s%20Guide%3C/a%3E%3C/li%3E%20%20%3C/ul%3E%20%20%20%09",
+        "InstallationNotes": "",
+        "Overview": "",
+        "LanguageName": "English%20(US)",
+        "OSName": "Windows%2011",
+        "OsCode": "10.0",
+        "OSList": [
+          {
+            "OSName": "Windows%2010%2064-bit",
+            "OsCode": "10.0"
+          },
+          {
+            "OSName": "Windows%2011",
+            "OsCode": "10.0"
+          }
+        ],
+        "Is64Bit": "1",
+        "Messaging": [
+          {
+            "MessageCode": "DownloadIDDetailsFound",
+            "MessageValue": "The Driver DownloadID details found"
+          }
+        ],
+        "series": [
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Max-Q%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2072GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204500%20Blackwell%20Workstation%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20SFF%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%203000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%201000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%20500%20Blackwell%20Laptop%20GPU"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%206000D"
+              },
+              {
+                "productName": "NVIDIA%20RTX%206000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205880%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204500%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20SFF%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000E%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A6000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000H"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%2012GB"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A400"
+              },
+              {
+                "productName": "NVIDIA%20A800%2040GB%20Active"
+              },
+              {
+                "productName": "NVIDIA%20T1000%208GB"
+              },
+              {
+                "productName": "NVIDIA%20T1000"
+              },
+              {
+                "productName": "NVIDIA%20T600"
+              },
+              {
+                "productName": "NVIDIA%20T400%204GB"
+              },
+              {
+                "productName": "NVIDIA%20T400"
+              },
+              {
+                "productName": "NVIDIA%20T400E"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%201000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%2012GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%208GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%206GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T1200%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T600%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T550%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T500"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%208000"
+              },
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20GV100"
+              },
+              {
+                "productName": "Quadro%20GP100"
+              },
+              {
+                "productName": "Quadro%20P6000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P2200"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P400"
+              },
+              {
+                "productName": "Quadro%20M6000%2024GB"
+              },
+              {
+                "productName": "Quadro%20M6000"
+              },
+              {
+                "productName": "Quadro%20M5000"
+              },
+              {
+                "productName": "Quadro%20M4000"
+              },
+              {
+                "productName": "Quadro%20M2000"
+              },
+              {
+                "productName": "Quadro%20K2200"
+              },
+              {
+                "productName": "Quadro%20K1200"
+              },
+              {
+                "productName": "Quadro%20K620"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4200"
+              },
+              {
+                "productName": "Quadro%20P3200"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P520"
+              },
+              {
+                "productName": "Quadro%20P500"
+              },
+              {
+                "productName": "Quadro%20M2200"
+              },
+              {
+                "productName": "Quadro%20M1200"
+              },
+              {
+                "productName": "Quadro%20M620"
+              },
+              {
+                "productName": "Quadro%20M520"
+              },
+              {
+                "productName": "Quadro%20M5500"
+              },
+              {
+                "productName": "Quadro%20M5000M"
+              },
+              {
+                "productName": "Quadro%20M4000M"
+              },
+              {
+                "productName": "Quadro%20M3000M"
+              },
+              {
+                "productName": "Quadro%20M2000M"
+              },
+              {
+                "productName": "Quadro%20M1000M"
+              },
+              {
+                "productName": "Quadro%20M600M"
+              },
+              {
+                "productName": "Quadro%20M500M"
+              },
+              {
+                "productName": "Quadro%20K2200M"
+              },
+              {
+                "productName": "Quadro%20K620M"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Blade/Embedded%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              },
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20M5000%20SE"
+              },
+              {
+                "productName": "Quadro%20M3000%20SE"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "downloadInfo": {
+        "Success": "1",
+        "ID": "267394",
+        "DownloadTypeID": "1",
+        "DownloadStatusID": "3",
+        "Name": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "NameLocalized": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "ShortDescription": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "DeviceToProductFamilyName": "",
+        "Release": "580",
+        "Version": "582.53",
+        "DisplayVersion": "R580 U9 (582.53)",
+        "GFE_DisplayVersion": "",
+        "CDKitUSBEmitterDriverVersion": "",
+        "CDKitGPUDriverVersion": "",
+        "IsBeta": "0",
+        "IsWHQL": "1",
+        "IsRecommended": "0",
+        "IsFeaturePreview": "0",
+        "IsNewest": "0",
+        "IsDC": "1",
+        "IsCRD": "0",
+        "HasNetInst": "0",
+        "CudaToolkitVersion": "",
+        "IsArchive": "0",
+        "IsActive": "1",
+        "IsEmailRequired": "0",
+        "ReleaseDateTime": "Tue Apr 28, 2026",
+        "DetailsURL": "https://www.nvidia.com/en-us/drivers/details/267394/",
+        "DownloadURL": "https://us.download.nvidia.com/Windows/Quadro_Certified/582.53/582.53-quadro-rtx-desktop-notebook-win10-win11-64bit-international-dch-whql.exe",
+        "EMAN_REVRES_BD": "B0J663C-ZAMA2CE",
+        "EMITR_BD": "memCache:1%20rTime:1%20sTime:0",
+        "DownloadURLFileSize": "724.6 MB",
+        "BannerURL": "",
+        "BannerURLGfe": "",
+        "ReleaseNotes": "%3Cb%3ENVIDIA%20RTX%20Enterprise%20Production%20Branch%20Driver%3C/b%3E%20%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0ARelease%20580%20is%20a%20Production%20Branch%20release%20of%20the%20NVIDIA%20RTX%20Enterprise%20Driver.%20Production%20Branch%20drivers%20are%20designed%20and%20tested%20to%20provide%20long-term%20stability%20and%20availability.%20These%20drivers%20are%20ideal%20for%20enterprise%20customers%20and%20professional%20users%20who%20require%20application%20and%20hardware%20certification%20and%20regular%20driver%20updates%20for%20the%20latest%20in%20driver%20enhancements%20and%20security%20improvements.%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0AIn%20addition%20to%20professional%20workstation%20features%2C%20Production%20Branch%20drivers%20also%20contain%20the%20features%20and%20enhancements%20of%20NVIDIA%20Studio%20Drivers%20of%20the%20same%20version%20number.%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cb%3EFixed%20Issues%20in%20Version%20R580%20U9%3C/b%3E%3Cbr%20/%3E%0D%0A%3Cul%3E%0D%0A%20%20%3Cli%3E%5BSiemens%5D%20Users%20could%20experience%20stuttering%20in%20NX%20and%20Teamcenter%20Visualization%20when%20an%20external%20display%20was%20connected%20on%20some%20laptop%20systems.%3C/li%3E%0D%0A%3Cli%3E%5BNVIDIA%20Control%20Panel%5D%20was%20not%20installing%20with%20the%20NVIDIA%20RTX%20Enterprise%20Driver.%3C/li%3E%0D%0A%3Cli%3EOngoing%20bug%20fixes%20and%20enhancements.%3C/li%3E%0D%0A%3C/ul%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cp%3EIf%20you%20would%20like%20to%20be%20notified%20of%20upcoming%20drivers%20for%20Windows%2C%20please%20%3Ca%20href%3D%22https%3A//www.nvidia.com/en-us/preferences/email-signup/%22%3Esubscribe%20here%3C/a%3E.%3C/p%3E%0D%0A",
+        "OtherNotes": "%09%20%3Cul%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.53/582.53-win10-win11-nvidia-rtx-quadro-release-notes.pdf%22%20title%3D%22NVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.53%29%22%3ENVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.53%29%3C/a%3E%3C/li%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.53/582.53-nvidia-rtx-quadro-control-panel-quick-start-guide.pdf%22%20title%3D%22Control%20Panel%20User%27s%20Guide%22%3EControl%20Panel%20User%27s%20Guide%3C/a%3E%3C/li%3E%20%20%3C/ul%3E%20%20%20%09",
+        "InstallationNotes": "",
+        "Overview": "",
+        "LanguageName": "English%20(US)",
+        "OSName": "Windows%2011",
+        "OsCode": "10.0",
+        "OSList": [
+          {
+            "OSName": "Windows%2010%2064-bit",
+            "OsCode": "10.0"
+          },
+          {
+            "OSName": "Windows%2011",
+            "OsCode": "10.0"
+          }
+        ],
+        "Is64Bit": "1",
+        "Messaging": [
+          {
+            "MessageCode": "DownloadIDDetailsFound",
+            "MessageValue": "The Driver DownloadID details found"
+          }
+        ],
+        "series": [
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Max-Q%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2072GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2048GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204500%20Blackwell%20Workstation%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20SFF%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%203000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%201000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%20500%20Blackwell%20Laptop%20GPU"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%206000D"
+              },
+              {
+                "productName": "NVIDIA%20RTX%206000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205880%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204500%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20SFF%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000E%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A6000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000H"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%2012GB"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A400"
+              },
+              {
+                "productName": "NVIDIA%20A800%2040GB%20Active"
+              },
+              {
+                "productName": "NVIDIA%20T1000%208GB"
+              },
+              {
+                "productName": "NVIDIA%20T1000"
+              },
+              {
+                "productName": "NVIDIA%20T600"
+              },
+              {
+                "productName": "NVIDIA%20T400%204GB"
+              },
+              {
+                "productName": "NVIDIA%20T400"
+              },
+              {
+                "productName": "NVIDIA%20T400E"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%201000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%2012GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%208GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%206GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T1200%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T600%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T550%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T500"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%208000"
+              },
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20GV100"
+              },
+              {
+                "productName": "Quadro%20GP100"
+              },
+              {
+                "productName": "Quadro%20P6000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P2200"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P400"
+              },
+              {
+                "productName": "Quadro%20M6000%2024GB"
+              },
+              {
+                "productName": "Quadro%20M6000"
+              },
+              {
+                "productName": "Quadro%20M5000"
+              },
+              {
+                "productName": "Quadro%20M4000"
+              },
+              {
+                "productName": "Quadro%20M2000"
+              },
+              {
+                "productName": "Quadro%20K2200"
+              },
+              {
+                "productName": "Quadro%20K1200"
+              },
+              {
+                "productName": "Quadro%20K620"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4200"
+              },
+              {
+                "productName": "Quadro%20P3200"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P520"
+              },
+              {
+                "productName": "Quadro%20P500"
+              },
+              {
+                "productName": "Quadro%20M2200"
+              },
+              {
+                "productName": "Quadro%20M1200"
+              },
+              {
+                "productName": "Quadro%20M620"
+              },
+              {
+                "productName": "Quadro%20M520"
+              },
+              {
+                "productName": "Quadro%20M5500"
+              },
+              {
+                "productName": "Quadro%20M5000M"
+              },
+              {
+                "productName": "Quadro%20M4000M"
+              },
+              {
+                "productName": "Quadro%20M3000M"
+              },
+              {
+                "productName": "Quadro%20M2000M"
+              },
+              {
+                "productName": "Quadro%20M1000M"
+              },
+              {
+                "productName": "Quadro%20M600M"
+              },
+              {
+                "productName": "Quadro%20M500M"
+              },
+              {
+                "productName": "Quadro%20K2200M"
+              },
+              {
+                "productName": "Quadro%20K620M"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Blade/Embedded%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              },
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20M5000%20SE"
+              },
+              {
+                "productName": "Quadro%20M3000%20SE"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "downloadInfo": {
+        "Success": "1",
+        "ID": "265578",
+        "DownloadTypeID": "1",
+        "DownloadStatusID": "3",
+        "Name": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "NameLocalized": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "ShortDescription": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "DeviceToProductFamilyName": "",
+        "Release": "580",
+        "Version": "582.41",
+        "DisplayVersion": "R580 U8 (582.41)",
+        "GFE_DisplayVersion": "",
+        "CDKitUSBEmitterDriverVersion": "",
+        "CDKitGPUDriverVersion": "",
+        "IsBeta": "0",
+        "IsWHQL": "1",
+        "IsRecommended": "0",
+        "IsFeaturePreview": "0",
+        "IsNewest": "0",
+        "IsDC": "1",
+        "IsCRD": "0",
+        "HasNetInst": "0",
+        "CudaToolkitVersion": "",
+        "IsArchive": "0",
+        "IsActive": "1",
+        "IsEmailRequired": "0",
+        "ReleaseDateTime": "Tue Mar 10, 2026",
+        "DetailsURL": "https://www.nvidia.com/en-us/drivers/details/265578/",
+        "DownloadURL": "https://us.download.nvidia.com/Windows/Quadro_Certified/582.41/582.41-quadro-rtx-desktop-notebook-win10-win11-64bit-international-dch-whql.exe",
+        "EMAN_REVRES_BD": "80-lqssm-lswfg-b2wsu-drp",
+        "EMITR_BD": "memCache:1%20rTime:1%20sTime:0",
+        "DownloadURLFileSize": "712.97 MB",
+        "BannerURL": "",
+        "BannerURLGfe": "",
+        "ReleaseNotes": "%3Cb%3ENVIDIA%20RTX%20Enterprise%20Production%20Branch%20Driver%3C/b%3E%20%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0ARelease%20580%20is%20a%20Production%20Branch%20release%20of%20the%20NVIDIA%20RTX%20Enterprise%20Driver.%20Production%20Branch%20drivers%20are%20designed%20and%20tested%20to%20provide%20long-term%20stability%20and%20availability.%20These%20drivers%20are%20ideal%20for%20enterprise%20customers%20and%20professional%20users%20who%20require%20application%20and%20hardware%20certification%20and%20regular%20driver%20updates%20for%20the%20latest%20in%20driver%20enhancements%20and%20security%20improvements.%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0AIn%20addition%20to%20professional%20workstation%20features%2C%20Production%20Branch%20drivers%20also%20contain%20the%20features%20and%20enhancements%20of%20NVIDIA%20Studio%20Drivers%20of%20the%20same%20version%20number.%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cb%3EFixed%20Issues%20in%20Version%20R580%20U8%3C/b%3E%3Cbr%20/%3E%0D%0A%3Cul%3E%0D%0A%20%20%3Cli%3EOngoing%20bug%20fixes%20and%20enhancements.%3C/li%3E%0D%0A%3C/ul%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cbr%20/%3E%0D%0A%3Cp%3EIf%20you%20would%20like%20to%20be%20notified%20of%20upcoming%20drivers%20for%20Windows%2C%20please%20%3Ca%20href%3D%22https%3A//www.nvidia.com/en-us/preferences/email-signup/%22%3Esubscribe%20here%3C/a%3E.%3C/p%3E%0D%0A",
+        "OtherNotes": "%09%20%3Cul%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.41/582.41-win10-win11-nvidia-rtx-quadro-release-notes.pdf%22%20title%3D%22NVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.41%29%22%3ENVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.41%29%3C/a%3E%3C/li%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.41/582.41-nvidia-rtx-quadro-control-panel-quick-start-guide.pdf%22%20title%3D%22Control%20Panel%20User%27s%20Guide%22%3EControl%20Panel%20User%27s%20Guide%3C/a%3E%3C/li%3E%20%20%3C/ul%3E%20%20%20%09",
+        "InstallationNotes": "",
+        "Overview": "",
+        "LanguageName": "English%20(US)",
+        "OSName": "Windows%2011",
+        "OsCode": "10.0",
+        "OSList": [
+          {
+            "OSName": "Windows%2010%2064-bit",
+            "OsCode": "10.0"
+          },
+          {
+            "OSName": "Windows%2011",
+            "OsCode": "10.0"
+          }
+        ],
+        "Is64Bit": "1",
+        "Messaging": [
+          {
+            "MessageCode": "DownloadIDDetailsFound",
+            "MessageValue": "The Driver DownloadID details found"
+          }
+        ],
+        "series": [
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Max-Q%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2072GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2048GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204500%20Blackwell%20Workstation%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20SFF%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%203000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%201000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%20500%20Blackwell%20Laptop%20GPU"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%206000D"
+              },
+              {
+                "productName": "NVIDIA%20RTX%206000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205880%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204500%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20SFF%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000E%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A6000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000H"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%2012GB"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A400"
+              },
+              {
+                "productName": "NVIDIA%20A800%2040GB%20Active"
+              },
+              {
+                "productName": "NVIDIA%20T1000%208GB"
+              },
+              {
+                "productName": "NVIDIA%20T1000"
+              },
+              {
+                "productName": "NVIDIA%20T600"
+              },
+              {
+                "productName": "NVIDIA%20T400%204GB"
+              },
+              {
+                "productName": "NVIDIA%20T400"
+              },
+              {
+                "productName": "NVIDIA%20T400E"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%201000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%2012GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%208GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%206GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T1200%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T600%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T550%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T500"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%208000"
+              },
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20GV100"
+              },
+              {
+                "productName": "Quadro%20GP100"
+              },
+              {
+                "productName": "Quadro%20P6000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P2200"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P400"
+              },
+              {
+                "productName": "Quadro%20M6000%2024GB"
+              },
+              {
+                "productName": "Quadro%20M6000"
+              },
+              {
+                "productName": "Quadro%20M5000"
+              },
+              {
+                "productName": "Quadro%20M4000"
+              },
+              {
+                "productName": "Quadro%20M2000"
+              },
+              {
+                "productName": "Quadro%20K2200"
+              },
+              {
+                "productName": "Quadro%20K1200"
+              },
+              {
+                "productName": "Quadro%20K620"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4200"
+              },
+              {
+                "productName": "Quadro%20P3200"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P520"
+              },
+              {
+                "productName": "Quadro%20P500"
+              },
+              {
+                "productName": "Quadro%20M2200"
+              },
+              {
+                "productName": "Quadro%20M1200"
+              },
+              {
+                "productName": "Quadro%20M620"
+              },
+              {
+                "productName": "Quadro%20M520"
+              },
+              {
+                "productName": "Quadro%20M5500"
+              },
+              {
+                "productName": "Quadro%20M5000M"
+              },
+              {
+                "productName": "Quadro%20M4000M"
+              },
+              {
+                "productName": "Quadro%20M3000M"
+              },
+              {
+                "productName": "Quadro%20M2000M"
+              },
+              {
+                "productName": "Quadro%20M1000M"
+              },
+              {
+                "productName": "Quadro%20M600M"
+              },
+              {
+                "productName": "Quadro%20M500M"
+              },
+              {
+                "productName": "Quadro%20K2200M"
+              },
+              {
+                "productName": "Quadro%20K620M"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Blade/Embedded%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              },
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20M5000%20SE"
+              },
+              {
+                "productName": "Quadro%20M3000%20SE"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "downloadInfo": {
+        "Success": "1",
+        "ID": "260725",
+        "DownloadTypeID": "1",
+        "DownloadStatusID": "3",
+        "Name": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "NameLocalized": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "ShortDescription": "NVIDIA%20RTX%20Driver%20Release%20580",
+        "DeviceToProductFamilyName": "",
+        "Release": "580",
+        "Version": "582.16",
+        "DisplayVersion": "R580 U7 (582.16)",
+        "GFE_DisplayVersion": "",
+        "CDKitUSBEmitterDriverVersion": "",
+        "CDKitGPUDriverVersion": "",
+        "IsBeta": "0",
+        "IsWHQL": "1",
+        "IsRecommended": "0",
+        "IsFeaturePreview": "0",
+        "IsNewest": "0",
+        "IsDC": "1",
+        "IsCRD": "0",
+        "HasNetInst": "0",
+        "CudaToolkitVersion": "",
+        "IsArchive": "0",
+        "IsActive": "1",
+        "IsEmailRequired": "0",
+        "ReleaseDateTime": "Thu Jan 08, 2026",
+        "DetailsURL": "https://www.nvidia.com/en-us/drivers/details/260725/",
+        "DownloadURL": "https://us.download.nvidia.com/Windows/Quadro_Certified/582.16/582.16-quadro-rtx-desktop-notebook-win10-win11-64bit-international-dch-whql.exe",
+        "EMAN_REVRES_BD": "B0J663C-ZAMA2CE",
+        "EMITR_BD": "memCache:1%20rTime:1%20sTime:0",
+        "DownloadURLFileSize": "713.04 MB",
+        "BannerURL": "",
+        "BannerURLGfe": "",
+        "ReleaseNotes": "%3Cb%3ENVIDIA%20RTX%20Enterprise%20Production%20Branch%20Driver%3C/b%3E%20%3Cbr%20/%3E%20%3Cbr%20/%3E%20Release%20580%20is%20a%20Production%20Branch%20release%20of%20the%20NVIDIA%20RTX%20Enterprise%20Driver.%20Production%20Branch%20drivers%20are%20designed%20and%20tested%20to%20provide%20long-term%20stability%20and%20availability.%20These%20drivers%20are%20ideal%20for%20enterprise%20customers%20and%20professional%20users%20who%20require%20application%20and%20hardware%20certification%20and%20regular%20driver%20updates%20for%20the%20latest%20in%20driver%20enhancements%20and%20security%20improvements.%3Cbr%20/%3E%20%3Cbr%20/%3E%20In%20addition%20to%20professional%20workstation%20features%2C%20Production%20Branch%20drivers%20also%20contain%20the%20features%20and%20enhancements%20of%20NVIDIA%20Studio%20Drivers%20of%20the%20same%20version%20number.%3Cbr%20/%3E%20%3Cbr%20/%3E%20%3Cb%3EFixed%20Issues%20in%20Version%20R580%20U7%3C/b%3E%3Cbr%20/%3E%20%3Cul%3E%20%20%20%3Cli%3E%5BNVIDIA%20Control%20Panel%5D%20was%20crashing%20when%20changing%20the%20primary%20display%20setting.%3C/li%3E%3Cli%3EOngoing%20bug%20fixes%20and%20enhancements.%3C/li%3E%20%3C/ul%3E%20%20%20%20%20%3Cbr%20/%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbr%20/%3E%20%20%20%20%20%20%20%20%20%3Cp%3EIf%20you%20would%20like%20to%20be%20notified%20of%20upcoming%20drivers%20for%20Windows%2C%20please%20%3Ca%20href%3D%22https%3A//www.nvidia.com/en-us/preferences/email-signup/%22%3Esubscribe%20here%3C/a%3E.%3C/p%3E",
+        "OtherNotes": "%09%20%3Cul%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.16/582.16-win10-win11-nvidia-rtx-quadro-release-notes.pdf%22%20title%3D%22NVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.16%29%22%3ENVIDIA%20RTX%20/%20Quadro%20Release%20Notes%20%28v582.16%29%3C/a%3E%3C/li%3E%20%20%20%20%3Cli%3E%3Ca%20href%3D%22https%3A//us.download.nvidia.com/Windows/Quadro_Certified/582.16/582.16-nvidia-rtx-quadro-control-panel-quick-start-guide.pdf%22%20title%3D%22Control%20Panel%20User%27s%20Guide%22%3EControl%20Panel%20User%27s%20Guide%3C/a%3E%3C/li%3E%20%20%3C/ul%3E%20%20%20%09",
+        "InstallationNotes": "",
+        "Overview": "",
+        "LanguageName": "English%20(US)",
+        "OSName": "Windows%2011",
+        "OsCode": "10.0",
+        "OSList": [
+          {
+            "OSName": "Windows%2010%2064-bit",
+            "OsCode": "10.0"
+          },
+          {
+            "OSName": "Windows%2011",
+            "OsCode": "10.0"
+          }
+        ],
+        "Is64Bit": "1",
+        "Messaging": [
+          {
+            "MessageCode": "DownloadIDDetailsFound",
+            "MessageValue": "The Driver DownloadID details found"
+          }
+        ],
+        "series": [
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%206000%20Blackwell%20Max-Q%20Workstation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2072GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%2048GB%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204500%20Blackwell%20Workstation%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20SFF%20Edition"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20PRO%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%20PRO%205000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%204000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%203000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%202000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%201000%20Blackwell%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20PRO%20500%20Blackwell%20Laptop%20GPU"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%206000D"
+              },
+              {
+                "productName": "NVIDIA%20RTX%206000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205880%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204500%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20SFF%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000E%20Ada%20Generation"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A6000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000H"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%2012GB"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A400"
+              },
+              {
+                "productName": "NVIDIA%20A800%2040GB%20Active"
+              },
+              {
+                "productName": "NVIDIA%20T1000%208GB"
+              },
+              {
+                "productName": "NVIDIA%20T1000"
+              },
+              {
+                "productName": "NVIDIA%20T600"
+              },
+              {
+                "productName": "NVIDIA%20T400%204GB"
+              },
+              {
+                "productName": "NVIDIA%20T400"
+              },
+              {
+                "productName": "NVIDIA%20T400E"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVIDIA%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "NVIDIA%20RTX%205000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%204000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%203000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%202000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%201000%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20500%20Ada%20Generation%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A5000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A4000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%2012GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A3000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%208GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A2000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%206GB%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A1000%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20RTX%20A500%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T1200%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T600%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T550%20Laptop%20GPU"
+              },
+              {
+                "productName": "NVIDIA%20T500"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%208000"
+              },
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20RTX%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%206000"
+              },
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%204000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20GV100"
+              },
+              {
+                "productName": "Quadro%20GP100"
+              },
+              {
+                "productName": "Quadro%20P6000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P2200"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P400"
+              },
+              {
+                "productName": "Quadro%20M6000%2024GB"
+              },
+              {
+                "productName": "Quadro%20M6000"
+              },
+              {
+                "productName": "Quadro%20M5000"
+              },
+              {
+                "productName": "Quadro%20M4000"
+              },
+              {
+                "productName": "Quadro%20M2000"
+              },
+              {
+                "productName": "Quadro%20K2200"
+              },
+              {
+                "productName": "Quadro%20K1200"
+              },
+              {
+                "productName": "Quadro%20K620"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Series%20(Notebooks)",
+            "products": [
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5200"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P4200"
+              },
+              {
+                "productName": "Quadro%20P3200"
+              },
+              {
+                "productName": "Quadro%20P4000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20P620"
+              },
+              {
+                "productName": "Quadro%20P600"
+              },
+              {
+                "productName": "Quadro%20P520"
+              },
+              {
+                "productName": "Quadro%20P500"
+              },
+              {
+                "productName": "Quadro%20M2200"
+              },
+              {
+                "productName": "Quadro%20M1200"
+              },
+              {
+                "productName": "Quadro%20M620"
+              },
+              {
+                "productName": "Quadro%20M520"
+              },
+              {
+                "productName": "Quadro%20M5500"
+              },
+              {
+                "productName": "Quadro%20M5000M"
+              },
+              {
+                "productName": "Quadro%20M4000M"
+              },
+              {
+                "productName": "Quadro%20M3000M"
+              },
+              {
+                "productName": "Quadro%20M2000M"
+              },
+              {
+                "productName": "Quadro%20M1000M"
+              },
+              {
+                "productName": "Quadro%20M600M"
+              },
+              {
+                "productName": "Quadro%20M500M"
+              },
+              {
+                "productName": "Quadro%20K2200M"
+              },
+              {
+                "productName": "Quadro%20K620M"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20Blade/Embedded%20Series",
+            "products": [
+              {
+                "productName": "Quadro%20RTX%205000"
+              },
+              {
+                "productName": "Quadro%20RTX%203000"
+              },
+              {
+                "productName": "Quadro%20T2000"
+              },
+              {
+                "productName": "Quadro%20T1000"
+              },
+              {
+                "productName": "Quadro%20P5000"
+              },
+              {
+                "productName": "Quadro%20P3000"
+              },
+              {
+                "productName": "Quadro%20P2000"
+              },
+              {
+                "productName": "Quadro%20P1000"
+              },
+              {
+                "productName": "Quadro%20M5000%20SE"
+              },
+              {
+                "productName": "Quadro%20M3000%20SE"
+              }
+            ]
+          },
+          {
+            "seriesname": "Quadro%20NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          },
+          {
+            "seriesname": "NVS%20Series",
+            "products": [
+              {
+                "productName": "NVS%20810"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "spcall": "EXEC NDL_usp_Download_select_by_matrix_values null,865,73,null,135,null,0, null,1033,-1,null,0,null,null,null,null,1,null,null,0,null,5,0,0,0,null,null,null,null,null,null,null,null,null,null,null,null,null,1,0",
+  "Request": [
+    {
+      "downloadID": "null",
+      "pfid": "865",
+      "psid": "73",
+      "deviceID": "null",
+      "osID": "135",
+      "osCode": "null",
+      "is64bit": "0",
+      "languageID": "null",
+      "languageCode": "1033",
+      "dltype": "-1",
+      "isArchive": "null",
+      "beta": "0",
+      "includebeta": "null",
+      "gtversion": "null",
+      "version": "null",
+      "release": "null",
+      "isWHQL": "1",
+      "isNewest": "null",
+      "locationID": "null",
+      "sort1": "0",
+      "sort2": "null",
+      "numberOfResults": "5",
+      "isNewFeature": "0",
+      "gfeExclusive": "0",
+      "webExclusive": "0",
+      "null,null,null,null,null,null,null,null,null,null,null,null,": "",
+      "cudaToolkitID": "null",
+      "theSystemIsDc": "1",
+      "theUserRequestedCRD": "0"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.3
+# Maintenance Toolkit 4.0.4-dev.7-NVDOK
 #
 # Autore:
 #   Luca Miselli
@@ -20,7 +20,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.3"
+$Version = "4.0.4-dev.7-NVDOK"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -110,7 +110,8 @@ $Catalog = @(
     [pscustomobject]@{ Id=10; Key="SFC";              NameKey="MODULE_SFC";                File="10_sfc.ps1" },
     [pscustomobject]@{ Id=11; Key="DiskHealth";       NameKey="MODULE_DISK_HEALTH";        File="11_disk_health.ps1" },
     [pscustomobject]@{ Id=12; Key="TempCleanup";      NameKey="MODULE_TEMP_CLEANUP";       File="13_temp_cleanup.ps1" },
-    [pscustomobject]@{ Id=13; Key="ComponentCleanup"; NameKey="MODULE_COMPONENT_CLEANUP";  File="14_component_cleanup.ps1" }
+    [pscustomobject]@{ Id=13; Key="ComponentCleanup"; NameKey="MODULE_COMPONENT_CLEANUP";  File="14_component_cleanup.ps1" },
+    [pscustomobject]@{ Id=14; Key="NVIDIA"; NameKey="MODULE_NVIDIA"; File="15_nvidia.ps1" }
 )
 
 foreach ($Module in $Catalog) {

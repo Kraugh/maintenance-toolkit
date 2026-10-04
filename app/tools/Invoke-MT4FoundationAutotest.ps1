@@ -135,12 +135,27 @@ try {
         'Test-MTDcuSelfUpdateStarted',
         'Wait-MTDcuSelfUpdate',
         'Install-MTDellCommandUpdate',
+        'Install-MTDellCommandUpdateDirect',
+        'Test-MTSystemIdentity',
+        'New-MTDcuWorkDirectory',
+        'Complete-MTDcuWorkDirectory',
+        'Kraugh-MT-Work',
         'Dell.CommandUpdate',
         '--disable-interactivity',
+        '-UserAgent "DellCommandUpdate/5.7.2"',
+        '5C20E1A352FDBC0A9759504DB37C7B8C694F4024F5F5313C5130C0959BE8D484',
+        'Install-MTDotNetDesktopRuntime10',
+        'Test-MTAuthenticodeOrganization',
+        '$_.PSObject.Properties[''DisplayName'']',
+        '$_.PSObject.Properties[''DisplayVersion'']',
+        'Test-MTDellSignature -Path $InstallerPath',
         'OEM_DELL_SELF_UPDATE_TIMEOUT',
         'OEM_DELL_SCAN_VERIFICATION',
         'OEM_DELL_APPLY_SAFE',
-        'VerificationDeadline'
+        'VerificationDeadline',
+        '$ExitCode -eq 5',
+        'RebootRequired = [bool]($ExitCode -eq 5)',
+        '-SuccessCodes @(0, 5, 500)'
     )) {
         if ($DellHelperText -notmatch [regex]::Escape($RequiredToken)) {
             throw "Dell helper safety token missing: $RequiredToken"
@@ -153,11 +168,31 @@ try {
         'installed_by_mt',
         'Save-MTOemStatus',
         'OEM_DELL_VERIFICATION_INCOMPLETE',
-        'rebootRequired'
+        'rebootRequired',
+        '$ApplyCode -in @(1, 5)',
+        'status = "restart_required"'
     )) {
         if ($DellModuleText -notmatch [regex]::Escape($RequiredToken)) {
             throw "Dell module verification token missing: $RequiredToken"
         }
+    }
+
+    $HpHelperPath = Join-Path $ProjectRoot 'app/modules/oem/HPImageAssistant.ps1'
+    $HpHelperText = Get-Content $HpHelperPath -Raw -Encoding UTF8
+    foreach ($RequiredToken in @(
+        '$ReuseWindowHours = 24',
+        '$VerificationTimeoutSeconds = 90',
+        '$VerificationPollSeconds = 5',
+        'AddHours(-$ReuseWindowHours)',
+        '$VerificationDeadline'
+    )) {
+        if ($HpHelperText -notmatch [regex]::Escape($RequiredToken)) {
+            throw "OEM restore-point safety token missing: $RequiredToken"
+        }
+    }
+
+    if ($HpHelperText -match [regex]::Escape('AddHours(-2)')) {
+        throw 'Legacy two-hour OEM restore-point reuse window remains.'
     }
 
     if ($DellHelperText -notmatch '(?s)-updateType=firmware,driver,application,utility,others.*-reboot=disable') {
@@ -166,6 +201,36 @@ try {
 
     if ($DellHelperText -match '(?i)/applyUpdates(?s:.*?)\bbios\b') {
         throw 'Dell unattended apply command includes BIOS.'
+    }
+
+    if ($DellHelperText -notmatch [regex]::Escape('"-report=$ReportDirectory"')) {
+        throw 'Dell scan does not pass a dedicated report directory to DCU.'
+    }
+
+    foreach ($RequiredToken in @(
+        '$ReportDirectory = Join-Path $WorkRoot "report"',
+        '$ReportPath = Join-Path $ReportDirectory "DCUApplicableUpdates.xml"'
+    )) {
+        if ($DellHelperText -notmatch [regex]::Escape($RequiredToken)) {
+            throw "Dell 5.7 report-directory contract missing: $RequiredToken"
+        }
+    }
+
+    if ($DellHelperText -match [regex]::Escape('"-report=$ReportPath"')) {
+        throw 'Dell scan incorrectly passes the XML filename to DCU 5.7.'
+    }
+
+    $InventoryWriterPath = Join-Path $ProjectRoot 'app/modules/inventory/InventorySnapshotWriter.ps1'
+    $InventoryWriterText = Get-Content $InventoryWriterPath -Raw -Encoding UTF8
+    foreach ($RequiredToken in @(
+        'Update-MTInventoryMaintenanceSummary',
+        'source = "windowsUpdate"',
+        'source = "oem"',
+        '$Snapshot.collection.status = "partial"'
+    )) {
+        if ($InventoryWriterText -notmatch [regex]::Escape($RequiredToken)) {
+            throw "Inventory maintenance propagation token missing: $RequiredToken"
+        }
     }
 }
 catch {
@@ -2672,7 +2737,7 @@ try {
         )
     }
 
-    if ($RuntimeVersion -notmatch '^4\.[0-9]+\.[0-9]+(?:-(?:dev\.[0-9]+[a-z]?|rc\.[0-9]+))?$') {
+    if ($RuntimeVersion -notmatch '^4\.[0-9]+\.[0-9]+(?:-(?:dev\.[0-9]+[a-z]?(?:-NVDOK)?|rc\.[0-9]+))?$') {
         throw "Unexpected MT4 version format: $RuntimeVersion"
     }
 }
