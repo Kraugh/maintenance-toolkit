@@ -1558,6 +1558,83 @@
                   ]
                 }
               }
+            },
+            "oem": {
+              "type": "object",
+              "description": "Optional structured OEM maintenance result."
+            },
+            "gpuDrivers": {
+              "type": "object",
+              "required": [
+                "schemaVersion",
+                "mode",
+                "status",
+                "devices",
+                "downloadAttempted",
+                "installationAttempted"
+              ],
+              "properties": {
+                "schemaVersion": {
+                  "type": "integer"
+                },
+                "mode": {
+                  "const": "advisory_only"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "devices": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "installedVersion",
+                      "windowsDriverVersion",
+                      "updateAvailable",
+                      "status"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "installedVersion": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "windowsDriverVersion": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "updateAvailable": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      },
+                      "candidate": {
+                        "type": [
+                          "object",
+                          "null"
+                        ]
+                      },
+                      "status": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "downloadAttempted": {
+                  "const": false
+                },
+                "installationAttempted": {
+                  "const": false
+                }
+              }
             }
           }
         }

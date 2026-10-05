@@ -29,3 +29,13 @@ confermato dopo riavvio, 528.89 -> 582.78. NVDOK estende la ricerca oltre la
 P620, ma ciascun modello aggiuntivo richiede prove reali. Eseguire il test
 app/tools/Test-MTNvidia.ps1 e una scansione read-only su KRAUGHHQ prima del
 checkpoint GitHub. La 4.0.4 non è ancora una release pubblica: stabile 4.0.3.
+
+## dev.8: risultati per DMT
+
+Con Inventario e NVIDIA nella stessa sessione, il JSON di inventario locale e quello pubblicato sulla share includono `maintenance.data.gpuDrivers`. NVIDIA da solo produce `NVIDIA/nvidia-status.json` nella sessione: non aggiorna inventari di sessioni precedenti.
+
+Per ogni GPU: `name`, `windowsDriverVersion`, `installedVersion`, `candidate` (versione, ramo, prodotto, URL ufficiale, data di pubblicazione), `checkedAt`, `updateAvailable` e `status`. `updateAvailable=true` evidenzia un candidato più recente compatibile; `false` significa nessun candidato più recente nel ramo verificato; `null` significa verifica non completata. Nessun downgrade viene proposto. DMT dovrà mostrare separatamente aggiornamenti disponibili e verifiche incomplete, con data e ramo della verifica.
+
+Il controllo è limitato al catalogo professionale NVIDIA Enterprise Production per Windows 11 x64 e richiede corrispondenza esatta del modello e del formato desktop/mobile. Modelli o risposte ambigui rimangono non verificati. Non si promette il massimo numero di versione fra tutti i rami NVIDIA. GeForce, AMD e Intel rimangono lavoro futuro. La certificazione di applicazioni CAD è una nota opzionale per le utenze interessate e non blocca la segnalazione.
+
+L'audit ufficio tecnico ha fornito casi anonimizzati: Quadro P2200 (538.95/582.67), RTX A1000 e RTX 4500 Ada Generation (553.62), RTX 500 Ada Generation Laptop GPU (553.62/596.71), T1000 (596.71). Sono dati installati osservati, non versioni online correnti. Non si includono nomi macchina, utenti o dominio.

@@ -380,5 +380,6 @@
   "NVIDIA_DEVICE_CURRENT": "{0}: installed driver {1}; selected catalogue proposes {2}. No newer update verified in this branch.",
   "NVIDIA_DEVICE_FAILED": "{0}: verification incomplete. {1}",
   "NVIDIA_SUMMARY": "NVIDIA: {0} updates available; {1} GPUs without a newer update in the selected branch; {2} incomplete checks.",
-  "NVIDIA_FORM_FACTOR_UNVERIFIED": "Desktop/notebook form factor cannot be verified: no catalogue model is assumed."
+  "NVIDIA_FORM_FACTOR_UNVERIFIED": "Desktop/notebook form factor cannot be verified: no catalogue model is assumed.",
+  "OEM_DELL_DEFERRED": "Dell installation deferred by user activity; installation is not verified."
 }

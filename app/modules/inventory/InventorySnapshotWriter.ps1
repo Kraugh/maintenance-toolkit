@@ -182,7 +182,8 @@ function Update-MTInventoryMaintenanceSummary {
         })
     }
 
-    $Oem = $Snapshot.maintenance.data.oem
+    $OemProperty = $Snapshot.maintenance.data.PSObject.Properties['oem']
+    $Oem = if ($null -ne $OemProperty) { $OemProperty.Value } else { $null }
     if ($null -ne $Oem -and $Oem.status -eq "error") {
         $Errors.Add([pscustomobject][ordered]@{
             source = "oem"
@@ -192,6 +193,10 @@ function Update-MTInventoryMaintenanceSummary {
 
     $WarningStates = @("action_required", "restart_required", "verification_failed")
     $HasWarning = $null -ne $Oem -and $Oem.status -in $WarningStates
+    $GpuProperty = $Snapshot.maintenance.data.PSObject.Properties['gpuDrivers']
+    if ($null -ne $GpuProperty -and $null -ne $GpuProperty.Value) {
+        $HasWarning = $HasWarning -or $GpuProperty.Value.status -in @('action_required', 'verification_incomplete')
+    }
     $Snapshot.maintenance.errors = @($Errors)
     $Snapshot.maintenance.status = if ($Errors.Count -gt 0) {
         "error"
@@ -275,6 +280,48 @@ function Update-MTInventoryOemStatus {
     }
     else {
         $snapshot.maintenance.data.oem = $OemStatus
+    }
+
+    Update-MTInventoryMaintenanceSummary -Snapshot $snapshot
+
+    $json = ConvertTo-MTInventoryJson -Snapshot $snapshot
+    $tempPath = $Path + ".tmp"
+
+    try {
+        Write-MTInventoryUtf8NoBom -Path $tempPath -Content $json
+        Move-Item -LiteralPath $tempPath -Destination $Path -Force -ErrorAction Stop
+    }
+    catch {
+        if (Test-Path -LiteralPath $tempPath) {
+            Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue
+        }
+        throw
+    }
+}
+
+function Update-MTInventoryGpuDriverStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [object]$GpuDriverStatus
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "Inventory snapshot not found: $Path"
+    }
+
+    $snapshot = Get-Content -LiteralPath $Path -Raw -ErrorAction Stop |
+        ConvertFrom-Json -ErrorAction Stop
+
+    if ($null -eq $snapshot.maintenance.data.PSObject.Properties["gpuDrivers"]) {
+        $snapshot.maintenance.data |
+            Add-Member -NotePropertyName gpuDrivers -NotePropertyValue $GpuDriverStatus
+    }
+    else {
+        $snapshot.maintenance.data.gpuDrivers = $GpuDriverStatus
     }
 
     Update-MTInventoryMaintenanceSummary -Snapshot $snapshot

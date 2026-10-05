@@ -73,11 +73,13 @@ if ($Manufacturer -match "Dell") {
 
         $Installable = @($SafeScan.Updates)
         $ApplyCode = 500
+        $ApplyResult = $null
         $Status.updates = @()
         if ($Installable.Count -gt 0) {
             $null = Get-MTVerifiedRestorePoint -Manufacturer "Dell"
             $ApplyResult = Invoke-MTDcuSafeUpdates -Executable $Tool
             $ApplyCode = [int]$ApplyResult.ExitCode
+            $Status.apply = [ordered]@{ attempted=$true; exitCode=$ApplyCode; outcome=$ApplyResult.Evidence.Outcome; deferredByUserActivity=[bool]$ApplyResult.Evidence.Deferred; logPath=$ApplyResult.LogPath }
             $Status.rebootRequired = $ApplyCode -in @(1, 5)
             if ($ApplyCode -notin @(0, 1, 5, 500)) {
                 throw (Get-MTRuntimeText "OEM_DELL_UPDATES_FAILED" @($ApplyCode))
@@ -138,8 +140,14 @@ if ($Manufacturer -match "Dell") {
                                 status = if ($VerificationScan.RebootRequired) {
                                     "restart_required"
                                 }
+                                elseif ($ApplyResult.Evidence.Deferred) {
+                                    "deferred_by_user_activity"
+                                }
                                 elseif ($RemainingIds -contains [string]$Update.id) {
                                     "still_applicable"
+                                }
+                                elseif ($ApplyCode -eq 500) {
+                                    "no_longer_applicable"
                                 }
                                 else {
                                     "installed"
@@ -172,7 +180,7 @@ if ($Manufacturer -match "Dell") {
         $NeedsReboot = [bool]$Status.rebootRequired
         $StillApplicable = @(
             $Status.updates |
-                Where-Object { $_.status -eq "still_applicable" }
+                Where-Object { $_.status -in @("still_applicable", "deferred_by_user_activity") }
         )
         $Status.status = if ($null -ne $Bios) {
             "action_required"
@@ -188,13 +196,13 @@ if ($Manufacturer -match "Dell") {
         }
         Save-MTOemStatus -Status $Status
 
-        if ($null -ne $Bios) {
-            $Detail = Get-MTRuntimeText "OEM_DELL_BIOS_URGENT" @($Bios.targetVersion, $CurrentBios)
-            Set-ModuleResult (Get-MTRuntimeText "MODULE_OEM") "WARN" $Detail $NeedsReboot
-            exit 20
-        }
-
         $Detail = if ($Installable.Count -eq 0) {
+            Get-MTRuntimeText "OEM_DELL_NO_UPDATES"
+        }
+        elseif ($null -ne $ApplyResult -and $ApplyResult.Evidence.Deferred) {
+            Get-MTRuntimeText "OEM_DELL_DEFERRED"
+        }
+        elseif ($ApplyCode -eq 500) {
             Get-MTRuntimeText "OEM_DELL_NO_UPDATES"
         }
         elseif ($StillApplicable.Count -gt 0) {
@@ -207,7 +215,10 @@ if ($Manufacturer -match "Dell") {
         else {
             Get-MTRuntimeText "OEM_DELL_UPDATES_COMPLETED" @($Installable.Count, $ApplyCode)
         }
-        $HasWarning = $NeedsReboot -or $StillApplicable.Count -gt 0
+        $HasWarning = $NeedsReboot -or $StillApplicable.Count -gt 0 -or $null -ne $Bios
+        if ($null -ne $Bios) {
+            $Detail = (Get-MTRuntimeText "OEM_DELL_BIOS_URGENT" @($Bios.targetVersion, $CurrentBios)) + " | " + $Detail
+        }
         Set-ModuleResult `
             (Get-MTRuntimeText "MODULE_OEM") `
             $(if ($HasWarning) { "WARN" } else { "OK" }) `

@@ -380,5 +380,6 @@
   "NVIDIA_DEVICE_CURRENT": "{0}: installerad drivrutin {1}; vald katalog föreslår {2}. Ingen nyare uppdatering verifierad i denna gren.",
   "NVIDIA_DEVICE_FAILED": "{0}: verifieringen är inte slutförd. {1}",
   "NVIDIA_SUMMARY": "NVIDIA: {0} uppdateringar tillgängliga; {1} GPU:er utan nyare uppdatering i vald gren; {2} ofullständiga kontroller.",
-  "NVIDIA_FORM_FACTOR_UNVERIFIED": "Datorns typ, stationär eller bärbar, kan inte verifieras: ingen katalogmodell antas."
+  "NVIDIA_FORM_FACTOR_UNVERIFIED": "Datorns typ, stationär eller bärbar, kan inte verifieras: ingen katalogmodell antas.",
+  "OEM_DELL_DEFERRED": "Dell-installationen sköts upp på grund av användaraktivitet; installationen är inte verifierad."
 }

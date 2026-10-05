@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.4-dev.7-NVDOK
+# Maintenance Toolkit 4.0.4-dev.8
 #
 # Autore:
 #   Luca Miselli
@@ -20,7 +20,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.4-dev.7-NVDOK"
+$Version = "4.0.4-dev.8"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -710,6 +710,7 @@ function Invoke-ToolkitSession {
     $env:MT_WINDOWS_UPDATE_STATUS = "not_run"
     Remove-Item Env:MT_WINDOWS_UPDATE_ERROR_CODE -ErrorAction SilentlyContinue
     Remove-Item Env:MT_OEM_STATUS_PATH -ErrorAction SilentlyContinue
+    Remove-Item Env:MT_NVIDIA_STATUS_PATH -ErrorAction SilentlyContinue
 
     # Inizializza i percorsi dei log solo dopo aver creato la sessione.
     Initialize-LogPaths
@@ -863,6 +864,37 @@ function Invoke-ToolkitSession {
                 Write-WarnLog `
                     ("OEM inventory finalization failed: {0}" -f $_.Exception.Message) `
                     "OEM"
+            }
+        }
+        if (
+            -not [string]::IsNullOrWhiteSpace($env:MT_NVIDIA_STATUS_PATH) -and
+            (Test-Path -LiteralPath $env:MT_NVIDIA_STATUS_PATH -PathType Leaf)
+        ) {
+            try {
+                $GpuDriverStatus = Get-Content `
+                    -LiteralPath $env:MT_NVIDIA_STATUS_PATH `
+                    -Raw `
+                    -Encoding UTF8 |
+                    ConvertFrom-Json
+
+                foreach ($InventoryPath in @($env:MT_INVENTORY_LOCAL_PATH, $env:MT_INVENTORY_REMOTE_PATH)) {
+                    if (-not [string]::IsNullOrWhiteSpace($InventoryPath)) {
+                        Update-MTInventoryGpuDriverStatus `
+                            -Path $InventoryPath `
+                            -GpuDriverStatus $GpuDriverStatus
+                    }
+                }
+            }
+            catch {
+                Write-WarnLog `
+                    ("NVIDIA inventory finalization failed: {0}" -f $_.Exception.Message) `
+                    "NVIDIA"
+                $InventoryModuleName = ($Catalog | Where-Object Key -eq "Inventory" | Select-Object -First 1).Name
+                $InventoryResult = $Results | Where-Object Module -eq $InventoryModuleName | Select-Object -First 1
+                if ($null -ne $InventoryResult) {
+                    if ($InventoryResult.Status -ne "ERROR") { $InventoryResult.Status = "WARN" }
+                    $InventoryResult.Detail = "{0} | nvidia_inventory_finalization_failed" -f $InventoryResult.Detail
+                }
             }
         }
     }

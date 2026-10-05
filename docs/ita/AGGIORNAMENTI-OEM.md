@@ -62,3 +62,9 @@ Dopo l'installazione di driver o firmware, il riavvio può lasciare il computer 
 ## Canali di rilascio
 
 `4.0.3` è la release stabile che introduce il flusso OEM protetto. È distribuita come archivio portabile e come MSI x64 firmato; entrambi gli artefatti pubblici sono accompagnati dal relativo checksum SHA-256.
+
+## dev.8 outcome verification
+
+The apply invocation's own persisted log is examined for UserActivity deferral. Exit 0 alone does not prove installation. Deferred updates remain warnings even alongside a BIOS notice. Exit 500 denotes no applicable updates for the selected filter; updates that disappear after that result are marked `no_longer_applicable`, not `installed`. Reboot-required results still need a later scan after the manual reboot. A cached empty scan describes the selected filter/cache at that time, not a fresh exhaustive device audit.
+
+The pilot reached zero non-BIOS applicable updates after the remaining recovery application was processed. Separate SupportAssist activity also updated the BIOS: the MT non-BIOS policy does not control other Dell applications or their schedules. MT does not disable them automatically. A complete SYSTEM test of dev.8 is still required before release.

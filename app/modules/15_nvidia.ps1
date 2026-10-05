@@ -3,11 +3,12 @@
 . "$PSScriptRoot\00_common.ps1"
 . "$PSScriptRoot\gpu\NvidiaDriver.ps1"
 $ModuleName=Get-MTRuntimeText 'MODULE_NVIDIA'
-$State=[ordered]@{schemaVersion=2;mode='advisory_only';status='analyzing';detectedAt=(Get-Date).ToString('o');devices=@();catalogue=@();installationAttempted=$false;downloadAttempted=$false;rebootRequired=$false}
+$State=[ordered]@{schemaVersion=3;mode='advisory_only';status='analyzing';detectedAt=(Get-Date).ToString('o');devices=@();catalogue=@();installationAttempted=$false;downloadAttempted=$false;rebootRequired=$false}
 $Work=Join-Path $env:MT_SESSION_DIR 'NVIDIA'
 New-Item -ItemType Directory -Path $Work -Force | Out-Null
 $LookupCache=@{}
 function Save-NvdokState {
+    $env:MT_NVIDIA_STATUS_PATH = Join-Path $Work 'nvidia-status.json'
     $State | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath (Join-Path $Work 'nvidia-status.json') -Encoding UTF8
 }
 function Get-NvdokLookup {
@@ -43,7 +44,7 @@ try {
         if ($Driver -and $Driver.DeviceName) { $DeviceName=[string]$Driver.DeviceName }
         $WindowsDriver=if ($Driver) { [string]$Driver.DriverVersion } else { $null }
         try { $DetectedVersion=(ConvertTo-MTNvidiaVersion $WindowsDriver).ToString() } catch { $DetectedVersion=$null }
-        $State.devices += [pscustomobject]@{name=$DeviceName;hardwareId=$Device.InstanceId;deviceStatus=[string]$Device.Status;windowsDriverVersion=$WindowsDriver;installedVersion=$DetectedVersion;candidate=$null;status='verification_incomplete';reason=$null}
+        $State.devices += [pscustomobject]@{name=$DeviceName;hardwareId=$Device.InstanceId;deviceStatus=[string]$Device.Status;windowsDriverVersion=$WindowsDriver;installedVersion=$DetectedVersion;candidate=$null;updateAvailable=$null;checkedAt=(Get-Date).ToString('o');status='verification_incomplete';reason=$null}
     }
     $OS=Get-CimInstance Win32_OperatingSystem -ErrorAction Stop
     $State.os=[pscustomobject]@{caption=$OS.Caption;version=$OS.Version;architecture=$OS.OSArchitecture}
@@ -89,10 +90,10 @@ try {
             if ($null -eq $Candidate) { throw (Get-MTRuntimeText 'NVIDIA_NO_CANDIDATE') }
             $Gpu.candidate=$Candidate
             if ($Installed -lt [version]$Candidate.version) {
-                $Gpu.status='update_available';$Available++;$Warnings++
+                $Gpu.updateAvailable=$true;$Gpu.status='update_available';$Available++;$Warnings++
                 Write-WarnLog (Get-MTRuntimeText 'NVIDIA_ADVISORY' @($Gpu.name,$Installed,$Candidate.version,$Candidate.detailsUrl)) 'NVIDIA'
             } else {
-                $Gpu.status='up_to_date_in_selected_catalogue';$Current++
+                $Gpu.updateAvailable=$false;$Gpu.status='up_to_date_in_selected_catalogue';$Current++
                 Write-Ok (Get-MTRuntimeText 'NVIDIA_DEVICE_CURRENT' @($Gpu.name,$Installed,$Candidate.version)) 'NVIDIA'
             }
         }

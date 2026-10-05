@@ -20,6 +20,9 @@ if ($Scenario -eq 'all') {
             $ExpectedStatus=if ($Case -eq 'current') {'OK'} elseif ($Case -eq 'none') {'SKIP'} else {'WARN'}
             if ($Result.Status -ne $ExpectedStatus -or $State.downloadAttempted -or $State.installationAttempted -or $Result.RebootRequired) { throw ('Advisory contract failed: '+$Case) }
             if ($Case -eq 'available' -and ($State.devices[0].candidate.version -ne '582.78' -or $Result.Detail -notmatch 'https://www.nvidia.com/en-us/drivers/details/274521/')) { throw 'Available-version or official-link regression.' }
+            if ($Case -eq 'available' -and $State.devices[0].updateAvailable -ne $true) { throw 'Availability flag missing.' }
+            if ($Case -eq 'current' -and $State.devices[0].updateAvailable -ne $false) { throw 'Current flag incorrect.' }
+            if ($Case -eq 'offline' -and $null -ne $State.devices[0].updateAvailable) { throw 'Unverified GPU treated as current.' }
             if ($Case -eq 'multiple' -and ($State.counts.current -ne 1 -or $State.counts.incomplete -ne 1)) { throw 'Per-GPU aggregation regression.' }
             if ($Case -eq 'offline' -and $State.devices[0].installedVersion -ne '582.78') { throw 'Installed version lost during catalogue outage.' }
             'PASS: NVIDIA advisory scenario '+$Case
@@ -29,7 +32,7 @@ if ($Scenario -eq 'all') {
     exit 0
 }
 if ($Scenario -notin @('current','available','unknown','multiple','offline','none') -or [string]::IsNullOrWhiteSpace($TestOutput)) { throw 'Invalid test scenario.' }
-$env:MT_ROOT=$Root;$env:MT_LANGUAGE='it-IT';$env:MT_VERSION='4.0.4-dev.7-NVDOK'
+$env:MT_ROOT=$Root;$env:MT_LANGUAGE='it-IT';$env:MT_VERSION=[string](Get-Content (Join-Path $Root 'config/version.json') -Raw | ConvertFrom-Json).Version
 $env:MT_LOGS=Join-Path $TestOutput $Case
 $env:MT_SESSION_DIR=$env:MT_LOGS+'/session'
 New-Item -ItemType Directory -Path $env:MT_SESSION_DIR -Force | Out-Null

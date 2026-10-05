@@ -477,9 +477,25 @@ function Invoke-MTDcuSafeUpdates {
             LogPath = $PersistentLogPath
             SelfUpdateStarted = [bool](Test-MTDcuSelfUpdateStarted -LogPath $LogPath)
             PreviousToolVersion = $PreviousVersion
+            Evidence = Get-MTDcuApplyEvidence -ExitCode $ExitCode -LogPath $LogPath
         }
     }
     finally {
         Complete-MTDcuWorkDirectory -WorkRoot $WorkRoot -PersistentRoot $PersistentRoot
     }
+}
+
+# Interpret only the log produced by this invocation, never shared service history.
+function Get-MTDcuApplyEvidence {
+    param([int]$ExitCode, [string]$LogPath)
+    $Text = if (Test-Path -LiteralPath $LogPath -PathType Leaf) {
+        Get-Content -LiteralPath $LogPath -Raw -ErrorAction Stop
+    } else { '' }
+    $Deferred = $Text -match '(?i)interrupted.*UserActivity|after UserActivity Completes'
+    $Outcome = if ($Deferred) { 'deferred_by_user_activity' }
+        elseif ($ExitCode -eq 500) { 'no_applicable_updates' }
+        elseif ($ExitCode -in @(1,5)) { 'restart_required' }
+        elseif ($ExitCode -eq 0) { 'verification_required' }
+        else { 'failed' }
+    [pscustomobject]@{ Outcome=$Outcome; Deferred=$Deferred; ExitCode=$ExitCode }
 }

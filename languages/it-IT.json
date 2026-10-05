@@ -380,5 +380,6 @@
   "NVIDIA_DEVICE_CURRENT": "{0}: driver installato {1}; versione proposta dal catalogo selezionato {2}. Nessun aggiornamento più recente verificato in questo ramo.",
   "NVIDIA_DEVICE_FAILED": "{0}: verifica non completata. {1}",
   "NVIDIA_SUMMARY": "NVIDIA: {0} aggiornamenti disponibili; {1} GPU senza aggiornamenti più recenti nel ramo selezionato; {2} verifiche non completate.",
-  "NVIDIA_FORM_FACTOR_UNVERIFIED": "Tipo di computer desktop/notebook non verificabile: nessun modello del catalogo viene assunto."
+  "NVIDIA_FORM_FACTOR_UNVERIFIED": "Tipo di computer desktop/notebook non verificabile: nessun modello del catalogo viene assunto.",
+  "OEM_DELL_DEFERRED": "Installazione Dell rinviata per attività utente; installazione non verificata."
 }

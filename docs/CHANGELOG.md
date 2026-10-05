@@ -1,3 +1,10 @@
+## 4.0.4-dev.8 — 2026-10-05 (development sources)
+
+- NVIDIA advisory results are included in `maintenance.data.gpuDrivers` when Inventory and NVIDIA run in the same session. Availability is true/false/null; null means verification incomplete, never "current".
+- Dell apply logs identify deferred UserActivity even with exit 0. Exit 500 means no applicable updates, not successful installation. Verification remains required after apply.
+- BIOS warnings no longer hide the non-BIOS result. Preserved logs support diagnosis without interpreting another application's shared service history as this invocation.
+- Anonymized office GPU regression cases and DMT integration contract documented. Stable downloadable release remains 4.0.3.
+
 # Changelog
 
 All notable released changes to Maintenance Toolkit are documented here.

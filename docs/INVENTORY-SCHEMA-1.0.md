@@ -189,3 +189,7 @@ For Windows Update the stable failure codes are:
 Storage health remains a future-release candidate. It may enter a later schema only after real validation across NVMe, SATA, USB bridges and different controllers.
 
 MT must never report `healthy` when the actual state is merely unknown.
+
+## Optional maintenance extensions in 4.0.4-dev.8
+
+`maintenance.data.oem` and `maintenance.data.gpuDrivers` are optional extensions. Older snapshots remain valid. GPU checks are advisory only; each device exposes `updateAvailable` as true, false or null, plus installed Windows/commercial driver versions and the validated candidate. Consumers must treat null or `verification_incomplete` as unknown. An update is only assessed within the selected compatible professional branch. DMT presentation is implemented in its own repository.
