@@ -1,4 +1,4 @@
-# Maintenance Toolkit — MSI packaging
+﻿# Maintenance Toolkit — MSI packaging
 
 This directory contains the enterprise MSI packaging source.
 
@@ -31,7 +31,7 @@ unreliable EXE version check.
 Output:
 
 ```text
-packaging\msi\out\MaintenanceToolkit-<canonical-version>-x64.msi
+C:\temp\MT-MSI-<timestamp>-<id>\MT-<version-with-underscores>-x64-<timestamp>-<id>.msi
 ```
 
 ## MSI properties

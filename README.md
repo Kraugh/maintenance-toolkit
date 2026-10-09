@@ -263,3 +263,7 @@ critical or centrally managed systems and follow your organization's policies.
 <https://www.kraugh.it>
 
 Developed with the indispensable help of a very patient Rubber Duck.
+
+## 4.0.4 source checkpoint
+
+Sources are frozen for 4.0.4 build and signing validation. The published release remains 4.0.3 until the release packages are verified and published.

@@ -1,0 +1,23 @@
+{
+  "baselineCommit": "002583a833d2b517effbcee1b73ab37c534355ad",
+  "developmentVersion": "4.0.4-dev.9",
+  "stableManifestUnchanged": true,
+  "windowsExecutionPending": true,
+  "changedFiles": [
+    "app/MaintenanceToolkit.ps1",
+    "app/core/ProcessRunner.ps1",
+    "app/modules/oem/DellCommandUpdate.ps1",
+    "app/modules/oem/HPImageAssistant.ps1",
+    "app/tools/Test-MTReleaseBlockers-20261009-1620-R01.ps1",
+    "config/version.json",
+    "docs/CHANGELOG.md",
+    "docs/eng/OEM-UPDATES.md",
+    "docs/ita/AGGIORNAMENTI-OEM.md",
+    "languages/en-US.json",
+    "languages/it-IT.json",
+    "languages/sv-SE.json",
+    "packaging/msi/Build-MSI.ps1",
+    "packaging/msi/README.md",
+    "tools/create-release.ps1"
+  ]
+}

@@ -182,9 +182,10 @@ try {
     foreach ($RequiredToken in @(
         '$ReuseWindowHours = 24',
         '$VerificationTimeoutSeconds = 90',
-        '$VerificationPollSeconds = 5',
+        'Start-Sleep -Seconds 5',
         'AddHours(-$ReuseWindowHours)',
-        '$VerificationDeadline'
+        '$Deadline = (Get-Date).AddSeconds($VerificationTimeoutSeconds)',
+        '[int]$_.EventType -eq 100'
     )) {
         if ($HpHelperText -notmatch [regex]::Escape($RequiredToken)) {
             throw "OEM restore-point safety token missing: $RequiredToken"

@@ -244,6 +244,7 @@ function Get-MTDcuEffectiveExitCode {
     )
 
     if (-not (Test-Path -LiteralPath $LogPath -PathType Leaf)) {
+        Add-Log "INFO" (Get-MTRuntimeText "OEM_DELL_EXIT_NATIVE_MISSING" @($ProcessExitCode)) "OEM"
         return $ProcessExitCode
     }
 
@@ -257,9 +258,14 @@ function Get-MTDcuEffectiveExitCode {
             ForEach-Object { $_.Groups[1].Value }
     )
     if ($Matches.Count -eq 0) {
+        Add-Log "INFO" (Get-MTRuntimeText "OEM_DELL_EXIT_NATIVE_MISSING" @($ProcessExitCode)) "OEM"
         return $ProcessExitCode
     }
-    return [int]$Matches[-1]
+    $NativeExitCode = [int]$Matches[-1]
+    Add-Log "INFO" (Get-MTRuntimeText "OEM_DELL_EXIT_EVIDENCE" @($ProcessExitCode, $NativeExitCode)) "OEM"
+    # A runner failure/timeout must never be hidden by a successful native log.
+    if ($ProcessExitCode -notin @(0, 1, 5, 500)) { return $ProcessExitCode }
+    return $NativeExitCode
 }
 
 function Test-MTDcuSelfUpdateStarted {
@@ -394,6 +400,7 @@ function Invoke-MTDcuScan {
                 ) `
                 -Label (Get-MTRuntimeText $LabelKey) `
                 -Module "OEM" `
+                -ProcessOutcomeOnly `
                 -SuccessCodes @(0, 5, 500) `
                 -TimeoutSeconds 1800
 
@@ -432,6 +439,7 @@ function Invoke-MTDcuScan {
         $PersistentLogPath = Join-Path $PersistentRoot "dcu-$Purpose.log"
         return [pscustomobject]@{
             ExitCode = [int]$ExitCode
+            ProcessExitCode = [int]$ProcessExitCode
             Root = $PersistentRoot
             ReportPath = $PersistentReportPath
             LogPath = $PersistentLogPath
@@ -464,6 +472,7 @@ function Invoke-MTDcuSafeUpdates {
             ) `
             -Label (Get-MTRuntimeText "OEM_DELL_APPLY_SAFE") `
             -Module "OEM" `
+            -ProcessOutcomeOnly `
             -SuccessCodes @(0, 1, 5, 500) `
             -TimeoutSeconds 7200
 
@@ -474,6 +483,7 @@ function Invoke-MTDcuSafeUpdates {
         $PersistentLogPath = Join-Path $PersistentRoot "dcu-apply-safe-updates.log"
         return [pscustomobject]@{
             ExitCode = [int]$ExitCode
+            ProcessExitCode = [int]$ProcessExitCode
             LogPath = $PersistentLogPath
             SelfUpdateStarted = [bool](Test-MTDcuSelfUpdateStarted -LogPath $LogPath)
             PreviousToolVersion = $PreviousVersion

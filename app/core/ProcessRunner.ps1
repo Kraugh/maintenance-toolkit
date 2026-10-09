@@ -430,7 +430,8 @@ function Invoke-LoggedProcess {
         [ValidateSet("Default", "UTF8", "Unicode", "OEM")]
         [string]$OutputEncoding = "Default",
         [bool]$CopyOutputToMainLog = $true,
-        [int]$TimeoutSeconds = 0
+        [int]$TimeoutSeconds = 0,
+        [switch]$ProcessOutcomeOnly
     )
 
     $Out = Join-Path $env:MT_SESSION_DIR (
@@ -487,6 +488,9 @@ function Invoke-LoggedProcess {
             Write-WarnLog (
                 Get-MTRuntimeText "PROCESS_TIMEOUT_RESULT" @($Label, $TimeoutSeconds)
             ) $Module
+        }
+        elseif ($ProcessOutcomeOnly) {
+            Add-Log "INFO" (Get-MTRuntimeText "PROCESS_EXIT_PENDING_VERIFICATION" @($Label, $ExitCode)) $Module
         }
         elseif ($ExitCode -in $SuccessCodes) {
             Write-Ok (

@@ -1,4 +1,4 @@
-{
+﻿{
   "APP_NAME": "Maintenance Toolkit",
   "APP_VERSION_DEVELOPMENT": "Development version",
   "LANGUAGE_FALLBACK_NOTICE": "The requested language is unavailable. English has been selected.",
@@ -67,7 +67,7 @@
   "OEM_DELL_APPLY_SAFE": "Dell Command Update non-BIOS updates",
   "OEM_LENOVO_NOT_CONFIGURED": "The Lenovo Thin Installer repository is not configured.",
   "OEM_UNSUPPORTED": "Manufacturer not handled by the OEM module: {0}",
-  "OEM_RESTORE_REUSED": "Reusing session restore point: {0}",
+  "OEM_RESTORE_REUSED": "Recent restore point verified and reused: {0}",
   "OEM_RESTORE_CREATED": "Restore point created: {0}",
   "OEM_RESTORE_FAILED": "The mandatory restore point could not be created or verified: {0}",
   "OEM_TOOL_SIGNATURE_INVALID": "The OEM tool digital signature is invalid.",
@@ -381,5 +381,8 @@
   "NVIDIA_DEVICE_FAILED": "{0}: verification incomplete. {1}",
   "NVIDIA_SUMMARY": "NVIDIA: {0} updates available; {1} GPUs without a newer update in the selected branch; {2} incomplete checks.",
   "NVIDIA_FORM_FACTOR_UNVERIFIED": "Desktop/notebook form factor cannot be verified: no catalogue model is assumed.",
-  "OEM_DELL_DEFERRED": "Dell installation deferred by user activity; installation is not verified."
+  "OEM_DELL_DEFERRED": "Dell installation deferred by user activity; installation is not verified.",
+  "PROCESS_EXIT_PENDING_VERIFICATION": "Process ended: {0}. Process code {1}; operation outcome requires verification.",
+  "OEM_DELL_EXIT_EVIDENCE": "Dell Command Update: process code {0}; native code {1}.",
+  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: process code {0}; native code unavailable in the log."
 }

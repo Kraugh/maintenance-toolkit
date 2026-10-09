@@ -6,83 +6,93 @@
     $env:MT_OEM_STATUS_PATH = $Path
 }
 
+# Only completed, present and recent points may protect an OEM operation.
+function Get-MTRestorePointDate {
+    param([Parameter(Mandatory)][object]$Point)
+    if ($Point.CreationTime -is [datetime]) { return [datetime]$Point.CreationTime }
+    return [Management.ManagementDateTimeConverter]::ToDateTime([string]$Point.CreationTime)
+}
+
+function Get-MTRecentRestorePoints {
+    param([int]$ReuseWindowHours = 24)
+    $Now = Get-Date
+    return @(
+        Get-ComputerRestorePoint -ErrorAction Stop | Where-Object {
+            try {
+                $Created = Get-MTRestorePointDate -Point $_
+                [int]$_.EventType -eq 100 -and
+                $Created -ge $Now.AddHours(-$ReuseWindowHours) -and $Created -le $Now
+            }
+            catch { $false }
+        } | Sort-Object SequenceNumber -Descending
+    )
+}
+
+function Save-MTVerifiedRestorePoint {
+    param([object]$Point, [string]$MarkerPath, [bool]$Created)
+    $Marker = [pscustomobject]@{
+        description = [string]$Point.Description
+        sequenceNumber = [int]$Point.SequenceNumber
+        createdAt = (Get-MTRestorePointDate -Point $Point).ToString("o")
+    }
+    $Marker | ConvertTo-Json | Set-Content -LiteralPath $MarkerPath -Encoding UTF8
+    $Key = if ($Created) { "OEM_RESTORE_CREATED" } else { "OEM_RESTORE_REUSED" }
+    Write-Ok (Get-MTRuntimeText $Key @($Marker.description)) "OEM"
+    return $Marker
+}
+
 function Get-MTVerifiedRestorePoint {
     param([Parameter(Mandatory)][string]$Manufacturer)
 
-    $ReuseWindowHours = 24
     $VerificationTimeoutSeconds = 90
-    $VerificationPollSeconds = 5
     $MarkerPath = Join-Path $env:MT_SESSION_DIR "restore-point.json"
-    if (Test-Path -LiteralPath $MarkerPath -PathType Leaf) {
-        $Marker = Get-Content -LiteralPath $MarkerPath -Raw -Encoding UTF8 |
-            ConvertFrom-Json
-        Write-Ok (Get-MTRuntimeText "OEM_RESTORE_REUSED" @($Marker.description)) "OEM"
-        return $Marker
-    }
-
-    $RecentPoint = Get-ComputerRestorePoint -ErrorAction SilentlyContinue |
-        Where-Object {
-            $_.Description -like "Maintenance Toolkit*" -and
-            [Management.ManagementDateTimeConverter]::ToDateTime($_.CreationTime) -ge (Get-Date).AddHours(-$ReuseWindowHours)
-        } |
-        Sort-Object SequenceNumber -Descending |
-        Select-Object -First 1
-
-    if ($null -ne $RecentPoint) {
-        $Marker = [pscustomobject]@{
-            description = [string]$RecentPoint.Description
-            sequenceNumber = [int]$RecentPoint.SequenceNumber
-            createdAt = [Management.ManagementDateTimeConverter]::ToDateTime(
-                $RecentPoint.CreationTime
-            ).ToString("o")
-        }
-        $Marker | ConvertTo-Json | Set-Content -LiteralPath $MarkerPath -Encoding UTF8
-        Write-Ok (Get-MTRuntimeText "OEM_RESTORE_REUSED" @($Marker.description)) "OEM"
-        return $Marker
-    }
-
-    $Timestamp = Get-Date -Format "yyyy-MM-dd HH-mm-ss"
-    $Version = if ([string]::IsNullOrWhiteSpace($env:MT_VERSION)) {
-        "unknown"
-    }
-    else {
-        $env:MT_VERSION
-    }
-    $Description = "Maintenance Toolkit $Version - Before $Manufacturer updates - $Timestamp"
-
     try {
-        Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction Stop
-        Checkpoint-Computer `
-            -Description $Description `
-            -RestorePointType MODIFY_SETTINGS `
-            -ErrorAction Stop
-
-        $Point = $null
-        $VerificationDeadline = (Get-Date).AddSeconds($VerificationTimeoutSeconds)
-        do {
-            $Point = Get-ComputerRestorePoint -ErrorAction Stop |
-                Where-Object Description -eq $Description |
-                Sort-Object SequenceNumber -Descending |
-                Select-Object -First 1
-
-            if ($null -ne $Point -or (Get-Date) -ge $VerificationDeadline) {
-                break
+        $RecentPoints = @(Get-MTRecentRestorePoints)
+        if (Test-Path -LiteralPath $MarkerPath -PathType Leaf) {
+            $Marker = $null
+            try {
+                $Marker = Get-Content -LiteralPath $MarkerPath -Raw -Encoding UTF8 | ConvertFrom-Json
             }
-            Start-Sleep -Seconds $VerificationPollSeconds
+            catch { $Marker = $null }
+            if ($null -ne $Marker -and
+                $null -ne $Marker.PSObject.Properties["sequenceNumber"] -and
+                $null -ne $Marker.PSObject.Properties["description"]) {
+                $MarkedPoint = $RecentPoints | Where-Object {
+                    $_.SequenceNumber -eq $Marker.sequenceNumber -and
+                    $_.Description -eq $Marker.description
+                } | Select-Object -First 1
+                if ($null -ne $MarkedPoint) {
+                    return Save-MTVerifiedRestorePoint -Point $MarkedPoint -MarkerPath $MarkerPath -Created $false
+                }
+            }
+        }
+        # A recent Windows/vendor point also satisfies the existing 24-hour safeguard.
+        # Do not change SystemRestorePointCreationFrequency to bypass Windows policy.
+        if ($RecentPoints.Count -gt 0) {
+            return Save-MTVerifiedRestorePoint -Point $RecentPoints[0] -MarkerPath $MarkerPath -Created $false
+        }
+
+        $Version = if ([string]::IsNullOrWhiteSpace($env:MT_VERSION)) { "unknown" } else { $env:MT_VERSION }
+        $Description = "Maintenance Toolkit $Version - Before $Manufacturer updates - " +
+            (Get-Date -Format "yyyy-MM-dd HH-mm-ss") + " - " + [guid]::NewGuid().ToString("N")
+        Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction Stop
+        Checkpoint-Computer -Description $Description -RestorePointType MODIFY_SETTINGS -ErrorAction Stop
+
+        $Deadline = (Get-Date).AddSeconds($VerificationTimeoutSeconds)
+        do {
+            $RecentPoints = @(Get-MTRecentRestorePoints)
+            $Point = $RecentPoints | Where-Object Description -eq $Description | Select-Object -First 1
+            if ($null -ne $Point) {
+                return Save-MTVerifiedRestorePoint -Point $Point -MarkerPath $MarkerPath -Created $true
+            }
+            # Windows may suppress creation if another application just created a point.
+            if ($RecentPoints.Count -gt 0) {
+                return Save-MTVerifiedRestorePoint -Point $RecentPoints[0] -MarkerPath $MarkerPath -Created $false
+            }
+            if ((Get-Date) -ge $Deadline) { break }
+            Start-Sleep -Seconds 5
         } while ($true)
-
-        if ($null -eq $Point) {
-            throw (Get-MTRuntimeText "RESTORE_VERIFY_FAILED")
-        }
-
-        $Marker = [pscustomobject]@{
-            description = $Description
-            sequenceNumber = [int]$Point.SequenceNumber
-            createdAt = (Get-Date).ToString("o")
-        }
-        $Marker | ConvertTo-Json | Set-Content -LiteralPath $MarkerPath -Encoding UTF8
-        Write-Ok (Get-MTRuntimeText "OEM_RESTORE_CREATED" @($Description)) "OEM"
-        return $Marker
+        throw (Get-MTRuntimeText "RESTORE_VERIFY_FAILED")
     }
     catch {
         throw (Get-MTRuntimeText "OEM_RESTORE_FAILED" @($_.Exception.Message))

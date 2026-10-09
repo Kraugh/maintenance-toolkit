@@ -1,4 +1,4 @@
-{
+﻿{
   "APP_NAME": "Maintenance Toolkit",
   "APP_VERSION_DEVELOPMENT": "Utvecklingsversion",
   "LANGUAGE_FALLBACK_NOTICE": "Det begärda språket är inte tillgängligt. Engelska har valts.",
@@ -67,7 +67,7 @@
   "OEM_DELL_APPLY_SAFE": "Dell Command Update-uppdateringar utanför BIOS",
   "OEM_LENOVO_NOT_CONFIGURED": "Databasen för Lenovo Thin Installer är inte konfigurerad.",
   "OEM_UNSUPPORTED": "Tillverkaren hanteras inte av OEM-modulen: {0}",
-  "OEM_RESTORE_REUSED": "Sessionens återställningspunkt återanvänds: {0}",
+  "OEM_RESTORE_REUSED": "Ny återställningspunkt verifierad och återanvänd: {0}",
   "OEM_RESTORE_CREATED": "Återställningspunkt skapad: {0}",
   "OEM_RESTORE_FAILED": "Den obligatoriska återställningspunkten kunde inte skapas eller verifieras: {0}",
   "OEM_TOOL_SIGNATURE_INVALID": "OEM-verktygets digitala signatur är ogiltig.",
@@ -381,5 +381,8 @@
   "NVIDIA_DEVICE_FAILED": "{0}: verifieringen är inte slutförd. {1}",
   "NVIDIA_SUMMARY": "NVIDIA: {0} uppdateringar tillgängliga; {1} GPU:er utan nyare uppdatering i vald gren; {2} ofullständiga kontroller.",
   "NVIDIA_FORM_FACTOR_UNVERIFIED": "Datorns typ, stationär eller bärbar, kan inte verifieras: ingen katalogmodell antas.",
-  "OEM_DELL_DEFERRED": "Dell-installationen sköts upp på grund av användaraktivitet; installationen är inte verifierad."
+  "OEM_DELL_DEFERRED": "Dell-installationen sköts upp på grund av användaraktivitet; installationen är inte verifierad.",
+  "PROCESS_EXIT_PENDING_VERIFICATION": "Processen avslutades: {0}. Processkod {1}; resultatet måste verifieras.",
+  "OEM_DELL_EXIT_EVIDENCE": "Dell Command Update: processkod {0}; intern kod {1}.",
+  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: processkod {0}; intern kod saknas i loggen."
 }
