@@ -8,9 +8,7 @@ $ErrorActionPreference = "Stop"
 $MsiRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = (Resolve-Path (Join-Path $MsiRoot "..\..")).Path
 $ToolRoot = Join-Path $MsiRoot ".tools"
-$ArtifactStamp = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTimeOffset]::UtcNow, 'W. Europe Standard Time').ToString('yyyyMMdd-HHmmss')
-$BuildId = $ArtifactStamp + '-' + [guid]::NewGuid().ToString('N').Substring(0,8)
-$OutputRoot = Join-Path 'C:\temp' ('MT-MSI-' + $BuildId)
+$OutputRoot = Join-Path $MsiRoot "out"
 $WixExe = Join-Path $ToolRoot "wix.exe"
 $VersionManifestPath = Join-Path $RepoRoot "config\version.json"
 $RuntimeEntryPoint = Join-Path $RepoRoot "app\MaintenanceToolkit.ps1"
@@ -100,11 +98,10 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
 New-Item -ItemType Directory -Path $ToolRoot -Force | Out-Null
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 
-# The output directory contains disposable build artifacts only. Clean it before
-# every build so an old external cabinet can never be mistaken for a dependency
-# of a newly embedded-cab MSI.
-Get-ChildItem -LiteralPath $OutputRoot -File -ErrorAction SilentlyContinue |
-    Remove-Item -Force
+$ExpectedOutput = Join-Path $OutputRoot ("MaintenanceToolkit-{0}.msi" -f $Version.Replace(".", "_"))
+if (Test-Path -LiteralPath $ExpectedOutput) {
+    throw "MSI already exists; preserve the verified package before rebuilding: $ExpectedOutput"
+}
 
 if (-not (Test-Path -LiteralPath $WixExe)) {
     Write-Host "Installing local WiX Toolset 5.0.2..."
@@ -122,7 +119,7 @@ try {
         throw "Unable to acquire WixToolset.Util.wixext 5.0.2."
     }
 
-    $OutputMsi = Join-Path $OutputRoot ("MT-{0}-x64-{1}.msi" -f $Version.Replace(".", "_"), $BuildId)
+    $OutputMsi = Join-Path $OutputRoot ("MaintenanceToolkit-{0}.msi" -f $Version.Replace(".", "_"))
 
     & $WixExe build `
         -arch x64 `

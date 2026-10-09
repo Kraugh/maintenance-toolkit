@@ -4,5 +4,5 @@
   "Channel": "stable",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
-  "Milestone": "4.0.4 frozen sources; build, signing and package verification pending"
+  "Milestone": "4.0.4: verified restore safeguards, Dell outcomes and NVIDIA inventory advisories"
 }

@@ -4,14 +4,14 @@
 - Preserve native Dell reboot/failure outcomes and distinguish process termination from verified update completion.
 - Report deferred and remaining Dell updates alongside BIOS guidance.
 - Check professional NVIDIA driver availability without downloading or installing drivers; preserve results in inventory.
-- Build and signing validation remain pending. Public stable manifest remains 4.0.3 until publication.
+- Windows regressions passed; launcher and MSI signatures/timestamps verified; portable and installed SelfTests passed with zero errors/warnings; MSI installation and uninstall returned 0. Publication remains pending; public manifest stays at 4.0.3 until publication.
 
 ## 4.0.4-dev.9 - Release blocker corrections (2026-10-09)
 
 - Verify existing session restore-point markers against actual completed points. Reuse any completed point no older than 24 hours, including Windows/vendor points, without changing the registry frequency.
 - Distinguish DCU process termination from native exit evidence and installation verification. A native success cannot hide a failed/timed-out process.
 - Add isolated restore-point and DCU evidence tests. Windows PowerShell 5.1 and live default-frequency verification remain required before signing.
-- Create uniquely named ZIP/checksum/MSI artifacts; MSI outputs use a new directory under C:\temp. Public update manifest remains 4.0.3.
+- Release build outputs use repository folders: MSI in packaging/msi/out, portable ZIP/checksum in dist, staging in dist/staging. Public filenames contain product/version only; work handover ZIPs use date/time and revision. Public update manifest remains 4.0.3 until publication.
 
 ## 4.0.4-dev.8 — 2026-10-05 (development sources)
 

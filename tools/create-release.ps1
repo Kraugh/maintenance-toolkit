@@ -23,7 +23,7 @@ elseif (-not [System.IO.Path]::IsPathRooted($Destination)) {
 $Destination = [System.IO.Path]::GetFullPath($Destination)
 
 $BuildRoot = Join-Path `
-    "C:\temp" `
+    (Join-Path $RepositoryRoot "dist\staging") `
     ("MaintenanceToolkit-{0}-{1}" -f @(
         $Version,
         [guid]::NewGuid().ToString("N")
@@ -31,8 +31,7 @@ $BuildRoot = Join-Path `
 
 $PackageFolderName = "Maintenance-Toolkit-{0}" -f $Version
 $PackageRoot = Join-Path $BuildRoot $PackageFolderName
-$ArtifactStamp = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTimeOffset]::UtcNow, 'W. Europe Standard Time').ToString('yyyyMMdd-HHmmss')
-$ArtifactName = "MT-{0}-{1}-{2}" -f $Version.Replace('.', '_'), $ArtifactStamp, [guid]::NewGuid().ToString('N').Substring(0,8)
+$ArtifactName = "MaintenanceToolkit-{0}" -f $Version.Replace(".", "_")
 $ZipPath = Join-Path $Destination ($ArtifactName + ".zip")
 $ChecksumPath = Join-Path $Destination ($ArtifactName + ".sha256")
 
@@ -396,8 +395,12 @@ try {
         )
     }
 
-    if ((Test-Path -LiteralPath $ZipPath) -or (Test-Path -LiteralPath $ChecksumPath)) {
-        throw "Release artifact already exists; choose a new artifact name."
+    if (Test-Path -LiteralPath $ZipPath) {
+        throw "ZIP already exists; preserve the verified package before rebuilding: $ZipPath"
+    }
+
+    if (Test-Path -LiteralPath $ChecksumPath) {
+        Remove-Item -LiteralPath $ChecksumPath -Force
     }
 
     Compress-Archive `

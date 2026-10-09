@@ -1,7 +1,7 @@
 # Maintenance Toolkit 4.0 — System Administrator Guide
 
 **Document version:** 1.0
-**Compatible with:** Maintenance Toolkit `4.0.3`
+**Compatible with:** Maintenance Toolkit `4.0.4`
 **Updated:** 22 September 2026
 
 ## Purpose
@@ -157,3 +157,7 @@ and module configuration before production rollout.
 - Italian: [Manuale tecnico](../ita/manuale-tecnico.md)
 - Repository: <https://github.com/Kraugh/maintenance-toolkit>
 - Website: <https://www.kraugh.it>
+
+## 4.0.4 package validation
+
+On 9 October 2026, Windows regression suites passed. The launcher and MSI signatures and timestamps were verified. Elevated portable and installed SelfTests returned 0 with no errors/warnings. MSI installation and uninstall returned 0. These checks do not certify every OEM/GPU model. NVIDIA remains advisory-only; unattended BIOS installation and automatic restarts remain blocked.

@@ -1,6 +1,6 @@
 ENGLISH
 
-MAINTENANCE TOOLKIT 4.0.3
+MAINTENANCE TOOLKIT 4.0.4
 ==============================
 
 RECOMMENDED STARTUP
@@ -28,7 +28,7 @@ the policy on the pilot PC. Full instructions: docs\eng\OEM-UPDATES.md
 
 ITALIANO
 
-MAINTENANCE TOOLKIT 4.0.3
+MAINTENANCE TOOLKIT 4.0.4
 ==============================
 
 AVVIO CONSIGLIATO

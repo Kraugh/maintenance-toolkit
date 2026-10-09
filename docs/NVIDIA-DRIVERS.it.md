@@ -1,4 +1,4 @@
-# Controllo driver NVIDIA — 4.0.4-dev.7-NVDOK
+# Controllo driver NVIDIA — 4.0.4
 
 Modalità esclusivamente informativa, come la segnalazione BIOS: non scarica
 pacchetti, non estrae file, non installa, non crea punti di ripristino e non
@@ -20,17 +20,13 @@ con le applicazioni professionali/ISV. Catalogo irraggiungibile, modello non
 univoco, OS o ramo non supportati: WARN/verifica non completata, mai un falso OK.
 GeForce, AMD e Intel restano fuori da questo controllo online.
 
-Artefatti: logs/<computer>/<sessione>/NVIDIA/nvidia-status.json (schema 2),
+Artefatti: logs/<computer>/<sessione>/NVIDIA/nvidia-status.json (schema 3),
 risposte XML del catalogo e JSON di ricerca. Nessun EXE viene scaricato.
 I vecchi log FNV e i pacchetti già scaricati vengono lasciati intatti.
 
-Validazione: ricerca FNV03 della P620 riuscita; test di installazione FNV04
-confermato dopo riavvio, 528.89 -> 582.78. NVDOK estende la ricerca oltre la
-P620, ma ciascun modello aggiuntivo richiede prove reali. Eseguire il test
-app/tools/Test-MTNvidia.ps1 e una scansione read-only su KRAUGHHQ prima del
-checkpoint GitHub. La 4.0.4 non è ancora una release pubblica: stabile 4.0.3.
+Validazione 4.0.4: test di selezione catalogo, corrispondenza desktop/mobile e scenari corrente, disponibile, sconosciuto, multiplo, offline e assente superati. Prove reali informative su Quadro P620, T1000 e RTX A1000; nessun download o installazione nel flusso attuale. Ulteriori modelli richiedono hardware rappresentativo. Pubblicazione 4.0.4 in attesa; endpoint pubblico ancora alla 4.0.3.
 
-## dev.8: risultati per DMT
+## Risultati per DMT
 
 Con Inventario e NVIDIA nella stessa sessione, il JSON di inventario locale e quello pubblicato sulla share includono `maintenance.data.gpuDrivers`. NVIDIA da solo produce `NVIDIA/nvidia-status.json` nella sessione: non aggiorna inventari di sessioni precedenti.
 

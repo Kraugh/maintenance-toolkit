@@ -1,3 +1,15 @@
+## Stato release 4.0.4 - 9 ottobre 2026
+
+- [x] Sorgenti congelati alla 4.0.4.
+- [x] Test regressione Windows e autotest foundation superati.
+- [x] Launcher e MSI compilati, firmati e timestamp verificati.
+- [x] SelfTest portabile e installato: zero errori e avvisi.
+- [x] Installazione e disinstallazione MSI: codice 0.
+- [ ] Rigenerare i pacchetti con la documentazione aggiornata e verificarli.
+- [ ] Pubblicare 4.0.4 e aggiornare il manifest pubblico fuori dall'orario vietato.
+
+I checkpoint seguenti descrivono lo storico dello sviluppo; non sostituiscono questo stato corrente.
+
 # Development process / Processo di sviluppo
 
 Maintenance Toolkit is developed in focused development cycles. Bug reports, feature requests and user feedback are collected continuously; open issues and approved roadmap goals are reviewed before each implementation cycle.

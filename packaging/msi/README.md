@@ -1,4 +1,4 @@
-﻿# Maintenance Toolkit — MSI packaging
+# Maintenance Toolkit — MSI packaging
 
 This directory contains the enterprise MSI packaging source.
 
@@ -31,7 +31,7 @@ unreliable EXE version check.
 Output:
 
 ```text
-C:\temp\MT-MSI-<timestamp>-<id>\MT-<version-with-underscores>-x64-<timestamp>-<id>.msi
+packaging\msi\out\MaintenanceToolkit-<canonical-version-with-underscores>.msi
 ```
 
 ## MSI properties
@@ -45,20 +45,20 @@ C:\temp\MT-MSI-<timestamp>-<id>\MT-<version-with-underscores>-x64-<timestamp>-<i
 Standalone MSI example with MSI-owned scheduling:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.3-x64.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
+msiexec /i MaintenanceToolkit-4_0_4.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 Silent standalone example:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.3-x64.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
+msiexec /i MaintenanceToolkit-4_0_4.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 Enterprise/GPO deployment must use `CREATE_TASK=0` (the default). Group Policy
 owns and configures its separately named Scheduled Task:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4.0.3-x64.msi /qn CREATE_TASK=0
+msiexec /i MaintenanceToolkit-4_0_4.msi /qn CREATE_TASK=0
 ```
 
 ## Scheduled Task ownership
@@ -90,3 +90,13 @@ under `SYSTEM`, with highest privileges, whether or not a user is logged on.
 The MSI installs the same MT runtime used by the portable distribution under Program Files, using its existing relative `config`, `logs`, and `reports` model. The runtime change that treats an unavailable Winget dependency as `SKIP` is a general runtime bugfix discovered during SYSTEM/MSI validation; it also applies to portable execution and is not MSI-only behaviour.
 
 Separating immutable application files in Program Files from mutable state in ProgramData remains a follow-up architectural improvement and should be implemented only together with the corresponding runtime path abstraction and regression tests.
+
+## Release output locations
+
+- Signed launcher: repository root `MaintenanceToolkit.exe`.
+- MSI: `packaging/msi/out/MaintenanceToolkit-4_0_4.msi`.
+- Portable ZIP: `dist/MaintenanceToolkit-4_0_4.zip`.
+- Portable checksum: `dist/MaintenanceToolkit-4_0_4.sha256`.
+- Portable staging: `dist/staging` inside the repository.
+
+Public filenames contain product name and version only. Work handover ZIPs use date/time and revision. No build output is redirected outside the repository. Existing MSI/ZIP packages are not silently overwritten. Signing changes bytes, so record the signed hash and verify the timestamp before packaging.

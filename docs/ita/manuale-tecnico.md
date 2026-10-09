@@ -1,7 +1,7 @@
 # Manuale tecnico — Maintenance Toolkit 4.0
 
 **Versione documento:** 2.1
-**Compatibile con:** Maintenance Toolkit `4.0.3`
+**Compatibile con:** Maintenance Toolkit `4.0.4`
 **Aggiornato:** 22 settembre 2026
 
 ## 1. Scopo
@@ -46,7 +46,7 @@ Non avviare direttamente `app/MaintenanceToolkit.ps1` o i singoli script sotto
 Dopo avere verificato che lo ZIP provenga dalla release ufficiale:
 
 ```powershell
-Unblock-File .\Maintenance-Toolkit-4.0.3.zip
+Unblock-File .\MaintenanceToolkit-4_0_4.zip
 ```
 
 Riestrarre quindi l'archivio.
@@ -56,7 +56,7 @@ Riestrarre quindi l'archivio.
 La struttura essenziale della release è:
 
 ```text
-Maintenance-Toolkit-4.0.3/
+Maintenance-Toolkit-4.0.4/
 ├── Avvia_Manutenzione.bat
 ├── app/
 ├── config/
@@ -180,7 +180,7 @@ per la durata del processo MT.
 ## 11. Riga di comando ed esecuzione pianificata
 
 Il launcher firmato `MaintenanceToolkit.exe` inoltra al runtime PowerShell i
-parametri ricevuti. Le opzioni disponibili in Maintenance Toolkit 4.0.3 sono:
+parametri ricevuti. Le opzioni disponibili in Maintenance Toolkit 4.0.4 sono:
 
 | Parametro | Funzione |
 |---|---|
@@ -372,7 +372,7 @@ funzionano, il warning può essere dovuto al filtraggio degli echo request.
 Controllare i messaggi di avanzamento. Aggiornamenti Windows e installer
 applicativi possono richiedere molto tempo.
 
-## 14. Validazione 4.0.3
+## 14. Validazione 4.0.4
 
 La serie 4.0 è stata provata su:
 
@@ -398,3 +398,7 @@ Per una segnalazione tecnica allegare, quando possibile:
 
 Repository: <https://github.com/Kraugh/maintenance-toolkit>
 Sito: <https://www.kraugh.it>
+
+## 4.0.4 package validation
+
+On 9 October 2026, Windows regression suites passed. The launcher and MSI signatures and timestamps were verified. Elevated portable and installed SelfTests returned 0 with no errors/warnings. MSI installation and uninstall returned 0. These checks do not certify every OEM/GPU model. NVIDIA remains advisory-only; unattended BIOS installation and automatic restarts remain blocked.
