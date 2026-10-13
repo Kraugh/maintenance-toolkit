@@ -1,4 +1,4 @@
-# Aggiornamenti OEM
+﻿# Aggiornamenti OEM
 
 **Compatibile con:** Maintenance Toolkit `4.0.4` e versioni successive
 
@@ -72,3 +72,7 @@ La prova sotto SYSTEM ha restituito un report vuoto per gli aggiornamenti non BI
 ### Protezioni ripristino 4.0.4
 
 La protezione OEM riutilizza un punto completato e verificato delle ultime 24 ore, anche creato da Windows. I marcatori della sessione sono verificati nuovamente. MT non modifica SystemRestorePointCreationFrequency. I log DCU distinguono codice processo e codice nativo: il codice zero non dimostra da solo l'installazione.
+
+### Correzione 4.0.5
+
+Il campo `apply.outcome` segue la verifica finale: `installed`, `still_applicable`, `deferred_by_user_activity`, `restart_required`, `no_longer_applicable` oppure `verification_failed`. Il codice 0 da solo non conferma l’installazione.

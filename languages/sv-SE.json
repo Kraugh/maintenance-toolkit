@@ -192,7 +192,7 @@
   "WINGET_WINDOWS_NOTICE": "Fönster för enskilda program kan visas under installationen; detta är normalt.",
   "WINGET_RESUME_NOTICE": "Maintenance Toolkit fortsätter automatiskt när åtgärden är klar.",
   "WINGET_PASS_LABEL": "Winget-pass {0}",
-  "WINGET_NOT_FOUND": "winget.exe hittades inte i PATH.",
+  "WINGET_NOT_FOUND": "Ingen fungerande winget.exe hittades i PATH eller App Installer-installationerna.",
   "WINGET_GET_AVAILABLE": "Winget: hämtar tillgängliga uppdateringar.",
   "WINGET_UPDATE_SOURCES": "Winget: uppdaterar källor.",
   "WINGET_SOURCE_LABEL": "Uppdatering av Winget-källor",

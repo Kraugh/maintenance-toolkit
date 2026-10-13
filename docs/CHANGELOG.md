@@ -1,4 +1,4 @@
-## 4.0.4 - 2026-10-09 (publication pending)
+﻿## 4.0.4 - 2026-10-09 (publication pending)
 
 - Verify recent completed Windows restore points before OEM changes; revalidate saved markers without changing restore-point frequency.
 - Preserve native Dell reboot/failure outcomes and distinguish process termination from verified update completion.
@@ -464,3 +464,9 @@ Validated on Windows 11 and Windows 10.
 ## 3.0.0
 
 - prima versione interattiva e modulare.
+
+## 4.0.5 — prepared, not yet published
+
+- Resolve a working Winget executable from App Installer when SYSTEM has no PATH alias. Validate Microsoft signature on fallback paths and probe --version with a 15-second timeout; do not change PATH or install dependencies.
+- Finalize Dell apply.outcome from post-check results; preserve deferred, remaining, restart and failed verification states.
+- No BIOS/NVIDIA automation changes.

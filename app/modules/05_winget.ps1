@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.3 - Winget module
+# Maintenance Toolkit 4.0.5 - Winget module
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -8,9 +8,7 @@ $Config = Read-IniFile $env:MT_INI
 $Module = "WINGET"
 $ErrorActionPreference = "Stop"
 
-function Get-WingetCommand {
-    return Get-Command winget.exe -ErrorAction SilentlyContinue
-}
+. "$PSScriptRoot\winget\WingetDiscovery.ps1"
 
 function Get-WingetTimeoutSeconds {
     param(

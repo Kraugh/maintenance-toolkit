@@ -1,13 +1,13 @@
 {
-    "project":  "Maintenance Toolkit",
-    "latest_version":  "4.0.3",
-    "minimum_supported":  "3.5.0",
-    "release_date":  "2026-09-22",
-    "release_notes":  "Maintenance Toolkit 4.0.3 adds production-tested Dell OEM update handling, safe Dell Command Update bootstrap via Winget, separate BIOS detection and guidance, restore-point safeguards, and improved MSI uninstall cleanup.",
-    "download_url":  "https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.3",
-    "repository_url":  "https://github.com/Kraugh/maintenance-toolkit",
-    "documentation_url":  "https://www.kraugh.it/software/maintenance-toolkit/",
-    "selftest":  true,
-    "update_check":  true,
-    "duck_message":  "La papera non ha trovato versioni più recenti."
+    "project": "Maintenance Toolkit",
+    "latest_version": "4.0.4",
+    "minimum_supported": "3.5.0",
+    "release_date": "2026-10-09",
+    "release_notes": "Maintenance Toolkit 4.0.4 adds advisory-only NVIDIA professional driver availability checks and inventory advisories, evidence-based Dell update outcomes, verified recent restore-point reuse and safer native exit-code handling. No automatic NVIDIA driver installation, BIOS installation or restart.",
+    "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.4",
+    "repository_url": "https://github.com/Kraugh/maintenance-toolkit",
+    "documentation_url": "https://www.kraugh.it/software/maintenance-toolkit/",
+    "selftest": true,
+    "update_check": true,
+    "duck_message": "La papera non ha trovato versioni più recenti."
 }

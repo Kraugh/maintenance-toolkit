@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>
 
@@ -269,3 +269,7 @@ Developed with the indispensable help of a very patient Rubber Duck.
 ## 4.0.4 source checkpoint
 
 Sources are frozen for 4.0.4. Build, signing and Windows package validation passed on 9 October 2026. The published release remains 4.0.3 until publication.
+
+## 4.0.5 patch
+
+Winget discovery validates the PATH command and falls back to Microsoft-signed App Installer executables in WindowsApps, including under SYSTEM. Dell apply.outcome now reflects the post-installation verification, remaining updates, deferral, restart or verification failure. Build output paths remain unchanged.

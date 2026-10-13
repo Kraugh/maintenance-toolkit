@@ -1,4 +1,4 @@
-# OEM updates
+﻿# OEM updates
 
 **Compatible with:** Maintenance Toolkit `4.0.4` and later
 
@@ -73,3 +73,7 @@ The pilot reached zero non-BIOS applicable updates after the remaining recovery 
 ### 4.0.4 restore safeguards
 
 OEM safeguards reuse a verified completed restore point from the last 24 hours, regardless of its creator. Session markers are revalidated. MT does not change SystemRestorePointCreationFrequency. DCU logs separately record process and native codes; installation success still requires verification.
+
+### 4.0.5 correction
+
+`apply.outcome` follows final verification: `installed`, `still_applicable`, `deferred_by_user_activity`, `restart_required`, `no_longer_applicable` or `verification_failed`. Exit 0 alone does not confirm installation.

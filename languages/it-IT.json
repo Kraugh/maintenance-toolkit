@@ -192,7 +192,7 @@
   "WINGET_WINDOWS_NOTICE": "Durante l'installazione potrebbero comparire finestre dei singoli programmi: è un comportamento normale.",
   "WINGET_RESUME_NOTICE": "Maintenance Toolkit riprenderà automaticamente al termine.",
   "WINGET_PASS_LABEL": "Winget passaggio {0}",
-  "WINGET_NOT_FOUND": "winget.exe non trovato nel PATH.",
+  "WINGET_NOT_FOUND": "Nessun winget.exe funzionante trovato nel PATH o nelle installazioni di App Installer.",
   "WINGET_GET_AVAILABLE": "Winget: acquisizione aggiornamenti disponibili.",
   "WINGET_UPDATE_SOURCES": "Winget: aggiornamento sorgenti.",
   "WINGET_SOURCE_LABEL": "Aggiornamento sorgenti Winget",

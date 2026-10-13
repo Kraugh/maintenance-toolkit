@@ -192,7 +192,7 @@
   "WINGET_WINDOWS_NOTICE": "Individual application windows may appear during installation; this is normal.",
   "WINGET_RESUME_NOTICE": "Maintenance Toolkit will resume automatically when the operation completes.",
   "WINGET_PASS_LABEL": "Winget pass {0}",
-  "WINGET_NOT_FOUND": "winget.exe was not found in PATH.",
+  "WINGET_NOT_FOUND": "No working winget.exe found in PATH or App Installer installations.",
   "WINGET_GET_AVAILABLE": "Winget: collecting available updates.",
   "WINGET_UPDATE_SOURCES": "Winget: updating sources.",
   "WINGET_SOURCE_LABEL": "Winget source update",

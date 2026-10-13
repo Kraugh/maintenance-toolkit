@@ -157,8 +157,15 @@ if ($Manufacturer -match "Dell") {
                         }
                     )
                 }
+                # Final outcome follows the verified package states, not exit 0 alone.
+                $Status.apply.outcome = if ($Status.rebootRequired) { 'restart_required' }
+                elseif ($ApplyResult.Evidence.Deferred) { 'deferred_by_user_activity' }
+                elseif (@($Status.updates | Where-Object { $_.status -eq 'still_applicable' }).Count -gt 0) { 'still_applicable' }
+                elseif ($ApplyCode -eq 500) { 'no_longer_applicable' }
+                else { 'installed' }
             }
             catch {
+                $Status.apply.outcome = 'verification_failed'
                 $Status.updates = @(
                     foreach ($Update in $Installable) {
                         [pscustomobject][ordered]@{
