@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0",
+  "computerName": "REPLACE-WITH-TARGET-HOSTNAME",
+  "mode": "exclude_packages",
+  "excludedPackageIds": [
+    "Vendor.ProtectedPackage"
+  ],
+  "reason": "Administrator-controlled exception"
+}

@@ -384,5 +384,13 @@
   "OEM_DELL_DEFERRED": "Dell installation deferred by user activity; installation is not verified.",
   "PROCESS_EXIT_PENDING_VERIFICATION": "Process ended: {0}. Process code {1}; operation outcome requires verification.",
   "OEM_DELL_EXIT_EVIDENCE": "Dell Command Update: process code {0}; native code {1}.",
-  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: process code {0}; native code unavailable in the log."
+  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: process code {0}; native code unavailable in the log.",
+  "WINGET_EXCEPTION_INVALID": "Invalid Winget exception file or target computer. Updates blocked.",
+  "WINGET_EXCEPTION_ACCESS": "Winget exception file must be owned and writable only by Administrators or SYSTEM, without reparse points.",
+  "WINGET_EXCEPTION_EXPORT_FAILED": "Winget JSON inventory unavailable or invalid; no upgrade started.",
+  "WINGET_EXCEPTION_BLOCKED": "Winget operation blocked by local exception policy.",
+  "WINGET_EXCEPTION_EXPORT_LABEL": "Winget installed package JSON inventory",
+  "WINGET_EXCEPTION_ID": "Winget excluded package: {0}",
+  "WINGET_EXCEPTION_DETAIL": "Winget selective pass completed; {0} package IDs excluded. Installer-internal dependencies and other update engines are outside this policy.",
+  "WINGET_EXCEPTION_FINALIZE": "Winget exception inventory finalization failed: {0}"
 }

@@ -470,3 +470,17 @@ Validated on Windows 11 and Windows 10.
 - Resolve a working Winget executable from App Installer when SYSTEM has no PATH alias. Validate Microsoft signature on fallback paths and probe --version with a 15-second timeout; do not change PATH or install dependencies.
 - Finalize Dell apply.outcome from post-check results; preserve deferred, remaining, restart and failed verification states.
 - No BIOS/NVIDIA automation changes.
+
+## 4.0.6 — preparation
+
+- Add exact machine-local Winget exclusions and block_module mode.
+- Validate policy identity, permissions and JSON inventory before selective upgrades; disable Winget-managed dependencies in selective mode.
+- Report exclusions and incomplete execution in session logs and inventory.
+- Preserve existing behavior when policy is absent; no persistent pins or new external dependencies.
+
+## 4.0.6 — preparation
+
+- Add exact machine-local Winget exclusions and block_module mode.
+- Validate policy identity, permissions and JSON inventory before selective upgrades; disable Winget-managed dependencies in selective mode.
+- Report exclusions and incomplete execution in session logs and inventory.
+- Preserve existing behavior when policy is absent; no persistent pins or new external dependencies.

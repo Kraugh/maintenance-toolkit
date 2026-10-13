@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.5 - Winget module
+# Maintenance Toolkit 4.0.6 - Winget module
 ###############################################################################
 
 . "$PSScriptRoot\00_common.ps1"
@@ -9,6 +9,7 @@ $Module = "WINGET"
 $ErrorActionPreference = "Stop"
 
 . "$PSScriptRoot\winget\WingetDiscovery.ps1"
+. "$PSScriptRoot\winget\WingetExceptions.ps1"
 
 function Get-WingetTimeoutSeconds {
     param(
@@ -96,6 +97,20 @@ function Invoke-WingetUpgradePass {
 }
 
 try {
+    $env:MT_WINGET_EXCEPTION_STATUS_PATH=Join-Path $env:MT_SESSION_DIR 'winget-exceptions-status.json'
+    $ExceptionPolicy=$null
+    $ExceptionPolicy=Read-MTWingetExceptionPolicy
+    if ($null -ne $ExceptionPolicy) {
+        [ordered]@{schemaVersion='1.0';status='active';mode=$ExceptionPolicy.mode;excludedPackageIds=@($ExceptionPolicy.excludedPackageIds)} |
+            ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $env:MT_WINGET_EXCEPTION_STATUS_PATH -Encoding UTF8
+        foreach ($Id in $ExceptionPolicy.excludedPackageIds) { Write-Main (Get-MTRuntimeText 'WINGET_EXCEPTION_ID' @($Id)) }
+        if ($ExceptionPolicy.mode -eq 'block_module') {
+            $Detail=Get-MTRuntimeText 'WINGET_EXCEPTION_BLOCKED'
+            Write-WarnLog $Detail $Module
+            Set-ModuleResult (Get-MTRuntimeText 'MODULE_WINGET') 'WARN' $Detail
+            exit 20
+        }
+    }
     $Winget = Get-WingetCommand
 
     if (-not $Winget) {
@@ -167,11 +182,16 @@ try {
 
     # One bounded pass only. A generic retry after any non-zero exit code can
     # simply reproduce the same hung third-party installer unattended.
-    $PassRun = Invoke-WingetUpgradePass `
-        -Pass 1 `
-        -WingetPath $Winget.Source `
-        -Arguments $Arguments `
-        -TimeoutSeconds $PassTimeoutSeconds
+    if ($null -ne $ExceptionPolicy) {
+        $PassRun=Invoke-MTWingetExceptionPass -WingetPath $Winget.Source -Policy $ExceptionPolicy -TimeoutSeconds $PassTimeoutSeconds
+    }
+    else {
+        $PassRun = Invoke-WingetUpgradePass `
+            -Pass 1 `
+            -WingetPath $Winget.Source `
+            -Arguments $Arguments `
+            -TimeoutSeconds $PassTimeoutSeconds
+    }
 
     $FinalResult = [int]$PassRun.ExitCode
 
@@ -190,6 +210,13 @@ try {
         )
         Write-WarnLog (Get-MTRuntimeText "WINGET_TIMEOUT_WARN") $Module
         Set-ModuleResult (Get-MTRuntimeText "MODULE_WINGET") "WARN" $Detail
+        exit 20
+    }
+
+    if ($null -ne $ExceptionPolicy -and $FinalResult -eq 0) {
+        $Detail=Get-MTRuntimeText 'WINGET_EXCEPTION_DETAIL' @($ExceptionPolicy.excludedPackageIds.Count)
+        Write-WarnLog $Detail $Module
+        Set-ModuleResult (Get-MTRuntimeText 'MODULE_WINGET') 'WARN' $Detail -RebootRequired $PassRun.RebootRequired
         exit 20
     }
 
@@ -223,6 +250,10 @@ try {
     exit 1
 }
 catch {
+    if ($env:MT_WINGET_EXCEPTION_STATUS_PATH) {
+        [ordered]@{schemaVersion='1.0';status='error';errorCode='winget_exception_or_execution_failed';excludedPackageIds=$(if($null -ne $ExceptionPolicy){@($ExceptionPolicy.excludedPackageIds)}else{@()})} |
+            ConvertTo-Json | Set-Content -LiteralPath $env:MT_WINGET_EXCEPTION_STATUS_PATH -Encoding UTF8
+    }
     Write-ErrorLog $_.Exception.Message $Module
     Write-ErrorLog $_.InvocationInfo.PositionMessage $Module
     Set-ModuleResult `

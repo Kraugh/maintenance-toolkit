@@ -1,4 +1,4 @@
-# Maintenance Toolkit — Inventory Schema 1.0
+﻿# Maintenance Toolkit — Inventory Schema 1.0
 
 **Status:** frozen functional contract for the initial MT 5.0 implementation.
 
@@ -193,3 +193,7 @@ MT must never report `healthy` when the actual state is merely unknown.
 ## Optional maintenance extensions in 4.0.4-dev.8
 
 `maintenance.data.oem` and `maintenance.data.gpuDrivers` are optional extensions. Older snapshots remain valid. GPU checks are advisory only; each device exposes `updateAvailable` as true, false or null, plus installed Windows/commercial driver versions and the validated candidate. Consumers must treat null or `verification_incomplete` as unknown. An update is only assessed within the selected compatible professional branch. DMT presentation is implemented in its own repository.
+
+4.0.6 optional extension: maintenance.data.wingetExceptions records local policy, excluded IDs and selective-pass outcomes. Active exclusions mean partial maintenance coverage, not an error. The policy does not cover other update engines.
+
+4.0.6 optional extension: maintenance.data.wingetExceptions records local policy, excluded IDs and selective-pass outcomes. Active exclusions mean partial maintenance coverage, not an error. The policy does not cover other update engines.

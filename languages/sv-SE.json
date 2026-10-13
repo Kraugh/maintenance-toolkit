@@ -384,5 +384,13 @@
   "OEM_DELL_DEFERRED": "Dell-installationen sköts upp på grund av användaraktivitet; installationen är inte verifierad.",
   "PROCESS_EXIT_PENDING_VERIFICATION": "Processen avslutades: {0}. Processkod {1}; resultatet måste verifieras.",
   "OEM_DELL_EXIT_EVIDENCE": "Dell Command Update: processkod {0}; intern kod {1}.",
-  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: processkod {0}; intern kod saknas i loggen."
+  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: processkod {0}; intern kod saknas i loggen.",
+  "WINGET_EXCEPTION_INVALID": "Ogiltig WinGet-undantagsfil eller fel dator. Uppdateringar blockerade.",
+  "WINGET_EXCEPTION_ACCESS": "WinGet-undantagsfilen maste agas och endast kunna skrivas av Administrators eller SYSTEM, utan reparse points.",
+  "WINGET_EXCEPTION_EXPORT_FAILED": "WinGet JSON-inventering saknas eller ar ogiltig; ingen uppdatering startad.",
+  "WINGET_EXCEPTION_BLOCKED": "WinGet-atgarden blockerad av lokala undantag.",
+  "WINGET_EXCEPTION_EXPORT_LABEL": "WinGet JSON-inventering av installerade paket",
+  "WINGET_EXCEPTION_ID": "WinGet undantaget paket: {0}",
+  "WINGET_EXCEPTION_DETAIL": "Selektiv WinGet-korning klar; {0} paket-ID undantagna. Installerarens interna beroenden och andra uppdateringsmotorer omfattas inte.",
+  "WINGET_EXCEPTION_FINALIZE": "WinGet-undantagsinventering kunde inte slutforas: {0}"
 }

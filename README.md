@@ -273,3 +273,11 @@ Sources are frozen for 4.0.4. Build, signing and Windows package validation pass
 ## 4.0.5 patch
 
 Winget discovery validates the PATH command and falls back to Microsoft-signed App Installer executables in WindowsApps, including under SYSTEM. Dell apply.outcome now reflects the post-installation verification, remaining updates, deferral, restart or verification failure. Build output paths remain unchanged.
+
+## 4.0.6: local Winget exceptions
+
+Optional machine-local exception policy; see [English guide](docs/eng/WINGET-EXCEPTIONS.md) and [guida italiana](docs/ita/ECCEZIONI-WINGET.md). No Windows Update or OEM exclusions are implemented.
+
+## 4.0.6: local Winget exceptions
+
+Optional machine-local exception policy; see [English guide](docs/eng/WINGET-EXCEPTIONS.md) and [guida italiana](docs/ita/ECCEZIONI-WINGET.md). No Windows Update or OEM exclusions are implemented.

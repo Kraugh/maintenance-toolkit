@@ -197,6 +197,11 @@ function Update-MTInventoryMaintenanceSummary {
     if ($null -ne $GpuProperty -and $null -ne $GpuProperty.Value) {
         $HasWarning = $HasWarning -or $GpuProperty.Value.status -in @('action_required', 'verification_incomplete')
     }
+    $WingetProperty=$Snapshot.maintenance.data.PSObject.Properties['wingetExceptions']
+    if ($null -ne $WingetProperty -and $null -ne $WingetProperty.Value) {
+        if ($WingetProperty.Value.status -eq 'error') { $Errors.Add([pscustomobject]@{source='wingetExceptions';code='policy_or_execution_failed'}) }
+        $HasWarning=$HasWarning -or $WingetProperty.Value.status -in @('active','incomplete')
+    }
     $Snapshot.maintenance.errors = @($Errors)
     $Snapshot.maintenance.status = if ($Errors.Count -gt 0) {
         "error"
@@ -322,6 +327,48 @@ function Update-MTInventoryGpuDriverStatus {
     }
     else {
         $snapshot.maintenance.data.gpuDrivers = $GpuDriverStatus
+    }
+
+    Update-MTInventoryMaintenanceSummary -Snapshot $snapshot
+
+    $json = ConvertTo-MTInventoryJson -Snapshot $snapshot
+    $tempPath = $Path + ".tmp"
+
+    try {
+        Write-MTInventoryUtf8NoBom -Path $tempPath -Content $json
+        Move-Item -LiteralPath $tempPath -Destination $Path -Force -ErrorAction Stop
+    }
+    catch {
+        if (Test-Path -LiteralPath $tempPath) {
+            Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue
+        }
+        throw
+    }
+}
+
+function Update-MTInventoryWingetExceptionsStatus {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [object]$WingetExceptionsStatus
+    )
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        throw "Inventory snapshot not found: $Path"
+    }
+
+    $snapshot = Get-Content -LiteralPath $Path -Raw -ErrorAction Stop |
+        ConvertFrom-Json -ErrorAction Stop
+
+    if ($null -eq $snapshot.maintenance.data.PSObject.Properties["wingetExceptions"]) {
+        $snapshot.maintenance.data |
+            Add-Member -NotePropertyName wingetExceptions -NotePropertyValue $WingetExceptionsStatus
+    }
+    else {
+        $snapshot.maintenance.data.wingetExceptions = $WingetExceptionsStatus
     }
 
     Update-MTInventoryMaintenanceSummary -Snapshot $snapshot

@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.5
+# Maintenance Toolkit 4.0.6
 #
 # Autore:
 #   Luca Miselli
@@ -20,7 +20,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.5"
+$Version = "4.0.6"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -711,6 +711,7 @@ function Invoke-ToolkitSession {
     Remove-Item Env:MT_WINDOWS_UPDATE_ERROR_CODE -ErrorAction SilentlyContinue
     Remove-Item Env:MT_OEM_STATUS_PATH -ErrorAction SilentlyContinue
     Remove-Item Env:MT_NVIDIA_STATUS_PATH -ErrorAction SilentlyContinue
+    Remove-Item Env:MT_WINGET_EXCEPTION_STATUS_PATH -ErrorAction SilentlyContinue
 
     # Inizializza i percorsi dei log solo dopo aver creato la sessione.
     Initialize-LogPaths
@@ -865,6 +866,17 @@ function Invoke-ToolkitSession {
                     ("OEM inventory finalization failed: {0}" -f $_.Exception.Message) `
                     "OEM"
             }
+        }
+        if (-not [string]::IsNullOrWhiteSpace($env:MT_WINGET_EXCEPTION_STATUS_PATH) -and (Test-Path -LiteralPath $env:MT_WINGET_EXCEPTION_STATUS_PATH)) {
+            try {
+                $WingetExceptions=Get-Content -LiteralPath $env:MT_WINGET_EXCEPTION_STATUS_PATH -Raw -Encoding UTF8 | ConvertFrom-Json
+                foreach ($InventoryPath in @($env:MT_INVENTORY_LOCAL_PATH,$env:MT_INVENTORY_REMOTE_PATH)) {
+                    if (-not [string]::IsNullOrWhiteSpace($InventoryPath)) {
+                        Update-MTInventoryWingetExceptionsStatus -Path $InventoryPath -WingetExceptionsStatus $WingetExceptions
+                    }
+                }
+            }
+            catch { Write-WarnLog (Get-MTRuntimeText 'WINGET_EXCEPTION_FINALIZE' @($_.Exception.Message)) 'WINGET' }
         }
         if (
             -not [string]::IsNullOrWhiteSpace($env:MT_NVIDIA_STATUS_PATH) -and

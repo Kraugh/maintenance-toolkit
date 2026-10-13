@@ -1635,6 +1635,53 @@
                   "const": false
                 }
               }
+            },
+            "wingetExceptions": {
+              "type": "object",
+              "description": "Local Winget exception evidence; does not apply to other update engines.",
+              "properties": {
+                "schemaVersion": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "active",
+                    "incomplete",
+                    "error"
+                  ]
+                },
+                "mode": {
+                  "enum": [
+                    "exclude_packages",
+                    "block_module"
+                  ]
+                },
+                "excludedPackageIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "packages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "dependencyProcessing": {
+                  "type": "string"
+                },
+                "installerDependenciesGuaranteed": {
+                  "type": "boolean"
+                },
+                "errorCode": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
             }
           }
         }

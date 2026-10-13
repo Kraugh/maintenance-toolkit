@@ -384,5 +384,13 @@
   "OEM_DELL_DEFERRED": "Installazione Dell rinviata per attività utente; installazione non verificata.",
   "PROCESS_EXIT_PENDING_VERIFICATION": "Processo terminato: {0}. Codice processo {1}; esito operativo da verificare.",
   "OEM_DELL_EXIT_EVIDENCE": "Dell Command Update: codice processo {0}; codice nativo {1}.",
-  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: codice processo {0}; codice nativo non disponibile nel log."
+  "OEM_DELL_EXIT_NATIVE_MISSING": "Dell Command Update: codice processo {0}; codice nativo non disponibile nel log.",
+  "WINGET_EXCEPTION_INVALID": "File eccezioni Winget non valido o PC destinatario errato. Aggiornamenti bloccati.",
+  "WINGET_EXCEPTION_ACCESS": "Il file eccezioni Winget deve appartenere ed essere scrivibile solo ad Administrators o SYSTEM, senza reparse point.",
+  "WINGET_EXCEPTION_EXPORT_FAILED": "Inventario JSON Winget assente o non valido; nessun aggiornamento avviato.",
+  "WINGET_EXCEPTION_BLOCKED": "Operazione Winget bloccata dalle eccezioni locali.",
+  "WINGET_EXCEPTION_EXPORT_LABEL": "Inventario JSON pacchetti installati Winget",
+  "WINGET_EXCEPTION_ID": "Pacchetto escluso da Winget: {0}",
+  "WINGET_EXCEPTION_DETAIL": "Passaggio selettivo Winget completato; {0} ID pacchetto esclusi. Dipendenze interne agli installer e altri motori di aggiornamento non sono coperti.",
+  "WINGET_EXCEPTION_FINALIZE": "Finalizzazione inventario eccezioni Winget fallita: {0}"
 }
