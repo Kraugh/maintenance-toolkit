@@ -4,7 +4,7 @@
 - Invalid policy or failed JSON export prevents Winget installation; selective commands disable Winget-managed dependency processing.
 - Exclusions and execution evidence are retained in inventory; IT/EN guides and JSON example included.
 - Canonical test names and package-name guard; build outputs remain packaging/msi/out and dist.
-- Windows regression suites passed. Live SYSTEM policy/plan diagnostics passed without installation. Final ZIP SelfTest passed with the expected non-elevation warning. Launcher/MSI signed and timestamped. Live selective installation and MSI upgrade/policy-preservation validation remain pending.
+- Windows regression suites passed. Live SYSTEM policy/plan diagnostics passed without installation. Final ZIP SelfTest passed with the expected non-elevation warning. Launcher/MSI signed and timestamped. User-reported remote MSI upgrade under SYSTEM completed with exit code 0; version 4.0.6 verified, the eight-exception file unchanged and GPO task configuration preserved. A live selective Winget pass remains unverified.
 
 ## 4.0.5 — 2026-10-13 (published)
 

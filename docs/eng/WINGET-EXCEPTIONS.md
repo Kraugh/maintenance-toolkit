@@ -4,7 +4,7 @@ Fixed path: `C:\ProgramData\Kraugh\MaintenanceToolkit\exceptions\winget-exceptio
 
 Keep company policy files out of the repository and public packages. Use docs/examples/winget-exception.example.json as a template: schemaVersion 1.0, exact local computerName without domain, mode exclude_packages or block_module, and excludedPackageIds as an array of exact IDs. Empty exclusion lists, duplicates, wildcards, unsupported schema or a wrong computer stop the Winget module before installation.
 
-File and folder must be owned by Administrators or SYSTEM and writable only by these principals, with no reparse points. The current MSI scripts do not install or remove this external directory; preservation during upgrade still requires pilot validation.
+File and folder must be owned by Administrators or SYSTEM and writable only by these principals, with no reparse points. The current MSI scripts do not install or remove this external directory. The user reported a remote MSI upgrade under SYSTEM completed with exit code 0: version 4.0.6 was verified, the eight-exception file was unchanged and GPO task configuration was preserved. This pilot evidence does not validate a live selective Winget pass, which remains unverified.
 
 Without the file, normal Winget processing is preserved. With exclusions, MT validates a Winget JSON export, filters the exact IDs case-insensitively and upgrades permitted packages individually using --id/--exact/--skip-dependencies. No persistent pins are added or removed. Invalid/failed export blocks installation. Packages missing from the export are not upgraded. The selective pass has one overall time budget. Successful commands are recorded as processed, not individually verified installations.
 

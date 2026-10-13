@@ -16,7 +16,7 @@ L'archivio ha superato la verifica CRC. Sono stati letti e inventariati tutti i 
 - Runtime/config: 4.0.6 coerente. EXE, BAT e PS1 raggiungono il modulo Winget condiviso. Il modulo legge il percorso exceptions concordato; file assente mantiene il flusso normale, file invalido blocca Winget. Il piano esclude ID esatti senza --all; --skip-dependencies non controlla prerequisiti incorporati negli installer.
 - MSI: struttura compound-file leggibile, cabinet interno presente (75 file), stream di firma presente. Questa ispezione non sostituisce SignTool e non costituisce nuova verifica crittografica della catena.
 - ZIP pubblico 4.0.6: 90 elementi, CRC integro; tutti i file confrontabili sono byte-identici ai sorgenti locali allegati. Nessun payload installer, log o file aziendale di eccezioni nel pacchetto; il modello JSON e distinto dalla policy attiva.
-- Cleanup MSI: opera su logs/reports sotto INSTALLFOLDER; non contiene rimozione della cartella ProgramData delle eccezioni. La conservazione su un upgrade reale rimane da provare.
+- Cleanup MSI: opera su logs/reports sotto INSTALLFOLDER; non contiene rimozione della cartella ProgramData delle eccezioni. Nell'audit dell'archivio la conservazione su un upgrade reale non era ancora provata; vedere l'aggiornamento documentale della prova MSI sotto riportato.
 
 ## Hash dei pacchetti pubblicati verificati sui byte allegati
 
@@ -59,4 +59,8 @@ Questa e una verifica statica e di integrita dell'archivio, non una certificazio
 
 I pacchetti 4.0.6 gia pubblicati rimangono immutati e conservano la documentazione/manifest presenti al momento della build. Non sostituirli con byte diversi sotto lo stesso nome/versione. Le correzioni documentali possono essere committate su main; il riallineamento dei pacchetti richiede una successiva distribuzione identificata correttamente.
 
-Priorita operativa ancora aperta: installare 4.0.6 sul PC protetto prima del prossimo task. Il file eccezioni validato non viene letto dalle versioni precedenti.
+## Aggiornamento documentale — prova MSI 4.0.6
+
+Evidenza riferita dall'utente, non prova rieseguita durante questo aggiornamento: upgrade remoto sotto SYSTEM completato con codice 0, versione 4.0.6 verificata, file delle otto eccezioni inalterato e configurazione del task GPO conservata. La precedente priorita di installazione e verifica della conservazione sul pilota risulta completata per questa prova. Il file eccezioni validato non viene letto dalle versioni precedenti.
+
+Il passaggio Winget selettivo reale rimane da verificare. L'esito dell'upgrade non estende le garanzie delle eccezioni agli installer o agli aggiornamenti esterni a MT.

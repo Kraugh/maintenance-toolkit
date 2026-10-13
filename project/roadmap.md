@@ -2,7 +2,7 @@
 
 - [x] GitHub stable 4.0.6 published, signed MSI and ZIP verified.
 - [x] Winget SYSTEM discovery and local exceptions validated with tests and read-only pilot diagnostics.
-- [ ] Install 4.0.6 on the protected pilot and verify MSI policy preservation.
+- [x] Remote MSI 4.0.6 upgrade under SYSTEM completed with exit code 0; version 4.0.6 verified, the eight-exception file unchanged and GPO task configuration preserved (user-reported pilot evidence).
 - [ ] Validate a live selective Winget pass; do not claim installer-internal dependency protection.
 - [ ] Resolve DCU self-update timeout/reboot-summary evidence issue.
 - [ ] Deploy and verify the updated website manifest.

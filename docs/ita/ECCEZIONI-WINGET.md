@@ -4,7 +4,7 @@ Percorso fisso: `C:\ProgramData\Kraugh\MaintenanceToolkit\exceptions\winget-exce
 
 Il file aziendale non deve essere inserito nel repository o nelle distribuzioni pubbliche. Usare `docs/examples/winget-exception.example.json` come modello, sostituendo il nome del PC e gli ID esatti. Schema `1.0`; `computerName` deve coincidere con il nome locale, senza dominio; `excludedPackageIds` è un array di ID, senza wildcard o duplicati. Identificazione senza distinzione tra maiuscole/minuscole. Modalità `exclude_packages` oppure `block_module` (nessuna operazione Winget).
 
-La cartella e il file devono avere proprietario Administrators o SYSTEM e permessi di scrittura riservati a questi due soggetti; i collegamenti/reparse point non sono ammessi. Il file è esterno all'albero installato: gli script MSI attuali non lo distribuiscono e non lo eliminano. Verificare la conservazione su un pilota durante l'upgrade MSI.
+La cartella e il file devono avere proprietario Administrators o SYSTEM e permessi di scrittura riservati a questi due soggetti; i collegamenti/reparse point non sono ammessi. Il file è esterno all'albero installato: gli script MSI attuali non lo distribuiscono e non lo eliminano. L'utente ha riferito un upgrade MSI remoto sotto SYSTEM completato con codice 0: versione 4.0.6 verificata, file delle otto eccezioni inalterato e configurazione del task GPO conservata. Questa prova pilota non valida il passaggio Winget selettivo reale, che rimane da verificare.
 
 File assente: flusso Winget normale. File invalido, non leggibile, con ACL non conformi o relativo a un altro PC: modulo Winget in errore, nessun ripiego su upgrade globale.
 

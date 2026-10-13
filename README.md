@@ -198,7 +198,7 @@ see [OEM updates](docs/eng/OEM-UPDATES.md).
 
 ## Release validation
 
-4.0.6: regression tests and Foundation autotest passed on Windows PowerShell 5.1. Read-only SYSTEM diagnostics verified policy access and all eight excluded IDs on a pilot. The final ZIP passed filename, documentation, hash, signature and SelfTest checks; the only SelfTest warning was the non-elevated session. Launcher and MSI signatures/timestamps were verified. A live selective installation and a 4.0.6 MSI upgrade/policy-preservation test have not yet been performed. The installation/uninstall tests performed for 4.0.4 are historical evidence, not a 4.0.6 test.
+4.0.6: regression tests and Foundation autotest passed on Windows PowerShell 5.1. Read-only SYSTEM diagnostics verified policy access and all eight excluded IDs on a pilot. The final ZIP passed filename, documentation, hash, signature and SelfTest checks; the only SelfTest warning was the non-elevated session. Launcher and MSI signatures/timestamps were verified. The user reported a remote MSI upgrade under SYSTEM completed with exit code 0: version 4.0.6 was verified, the eight-exception file was unchanged and GPO task configuration was preserved. A live selective Winget pass remains unverified. The installation/uninstall tests performed for 4.0.4 remain historical evidence, separate from this 4.0.6 upgrade test.
 
 The 4.0 release line has been exercised on:
 
