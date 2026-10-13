@@ -2,20 +2,18 @@
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>
 
-# Maintenance Toolkit 4.0
+# Maintenance Toolkit 4.0.6
 
 Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
 maintenance, diagnostics and technical reporting.
 
-**Release version prepared:** `4.0.4`
+**Current stable release:** [4.0.6](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.6)
 
-Publication is pending; the live update endpoint remains at 4.0.3 until publication.
+Published on 13 October 2026. The website update manifest is deployed separately; GitHub Releases is authoritative for the downloadable version.
 
-Version 4.0.4 adds the production-tested Dell and HP OEM workflow, structured
-OEM status for DMT, mandatory restore-point verification and strict protection
-against unattended BIOS installation or automatic restart.
+Version 4.0.6 adds machine-local Winget exceptions, inheriting SYSTEM Winget discovery and final Dell outcome verification from 4.0.5. Guarded Dell/HP OEM updates, verified restore points, advisory-only NVIDIA checks and no automatic restart remain in place.
 
-Maintenance Toolkit 4.0 introduces a bilingual application core, integrated
+Maintenance Toolkit 4.0 introduces a multilingual application core, integrated
 Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
 technical network reports, a native Windows launcher and Authenticode code
 signing, while retaining the validated maintenance modules from the 3.7.x line.
@@ -39,7 +37,7 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 - TXT technical network reports with correlated JSON topology and rule data;
 - optional Ookla Speedtest CLI integration;
 - per-computer session logs and summaries;
-- bilingual interface resources (Italian and English);
+- interface resources in Italian, English and Swedish;
 - native `MaintenanceToolkit.exe` launcher;
 - Authenticode digital signature with trusted timestamp;
 - automatic prevention of system sleep while Maintenance Toolkit is running,
@@ -51,28 +49,27 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 
 Download the current stable release from the GitHub **Releases** page:
 
-**Maintenance Toolkit 4.0.4**
+**Maintenance Toolkit 4.0.6**
 
 Two official distribution formats are available:
 
-- `MaintenanceToolkit-4_0_4.zip` — portable package for manual and field use;
-- `MaintenanceToolkit-4_0_4.msi` — signed per-machine Windows x64 installer
+- `MaintenanceToolkit-4_0_6.zip` — portable package for manual and field use;
+- `MaintenanceToolkit-4_0_6.msi` — signed per-machine Windows x64 installer
   for standalone or centrally managed deployment.
 
-Both artifacts are accompanied by SHA-256 checksum files. The MSI is digitally
+Both artifacts are accompanied by distinct checksum files: `MaintenanceToolkit-4_0_6-msi.sha256` and `MaintenanceToolkit-4_0_6-zip.sha256`. The MSI is digitally
 signed and timestamped and supports silent installation. For Active Directory
 and Group Policy deployment, use `CREATE_TASK=0` and let Group Policy own the
 Scheduled Task and runtime arguments. See the
 [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
-Release packages contain the runtime only. Development files, generated logs,
-reports and optional third-party executables are not bundled.
+Release packages contain the runtime and selected validation scripts under app/tools. Repository build tools, project notes, generated logs/reports and optional third-party executables are not bundled.
 
 ## First run
 
 ### Portable ZIP
 
-1. Download `MaintenanceToolkit-4_0_4.zip` from the official GitHub release.
+1. Download `MaintenanceToolkit-4_0_6.zip` from the official GitHub release.
 2. Verify the SHA-256 checksum when appropriate.
 3. If Windows marks the downloaded ZIP as coming from the Internet, verify that
    it came from the official project release and use **Properties → Unblock**
@@ -84,7 +81,7 @@ reports and optional third-party executables are not bundled.
 ### MSI installer
 
 For a normal per-machine installation, run
-`MaintenanceToolkit-4_0_4.msi` with administrative privileges. Silent and
+`MaintenanceToolkit-4_0_6.msi` with administrative privileges. Silent and
 centrally managed deployment options are documented in the
 [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
@@ -108,7 +105,7 @@ from the official project release and have verified its origin, unblock the ZIP
 before extracting it. From PowerShell you may also use:
 
 ```powershell
-Unblock-File .\MaintenanceToolkit-4_0_4.zip
+Unblock-File .\MaintenanceToolkit-4_0_6.zip
 ```
 
 Then extract the archive again.
@@ -199,9 +196,9 @@ For unattended execution and Task Scheduler, see the
 For vendor-update safety, the required System Restore GPO and pilot procedure,
 see [OEM updates](docs/eng/OEM-UPDATES.md).
 
-## 4.0.4 release status
+## Release validation
 
-Maintenance Toolkit 4.0.4 packages have passed build, signing, portable SelfTest, MSI installation SelfTest and uninstall checks. Publication is pending.
+4.0.6: regression tests and Foundation autotest passed on Windows PowerShell 5.1. Read-only SYSTEM diagnostics verified policy access and all eight excluded IDs on a pilot. The final ZIP passed filename, documentation, hash, signature and SelfTest checks; the only SelfTest warning was the non-elevated session. Launcher and MSI signatures/timestamps were verified. A live selective installation and a 4.0.6 MSI upgrade/policy-preservation test have not yet been performed. The installation/uninstall tests performed for 4.0.4 are historical evidence, not a 4.0.6 test.
 
 The 4.0 release line has been exercised on:
 
@@ -241,6 +238,8 @@ builds, when available, remain opt-in through GitHub Releases.
 - [English system administrator guide](docs/eng/System-Administrator-Guide.md)
 - [English OEM update guide](docs/eng/OEM-UPDATES.md)
 - [Italian OEM update guide](docs/ita/AGGIORNAMENTI-OEM.md)
+- [Local Winget exceptions (English)](docs/eng/WINGET-EXCEPTIONS.md)
+- [Eccezioni Winget locali (italiano)](docs/ita/ECCEZIONI-WINGET.md)
 - [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md)
 - [Guida enterprise MSI/GPO in italiano](docs/enterprise/MSI-GPO-DEPLOYMENT.it.md)
 - [Enterprise diagnostic commands](docs/enterprise/DIAGNOSTIC-COMMANDS.md)
@@ -266,17 +265,9 @@ critical or centrally managed systems and follow your organization's policies.
 
 Developed with the indispensable help of a very patient Rubber Duck.
 
-## 4.0.4 source checkpoint
-
-Sources are frozen for 4.0.4. Build, signing and Windows package validation passed on 9 October 2026. The published release remains 4.0.3 until publication.
-
 ## 4.0.5 patch
 
 Winget discovery validates the PATH command and falls back to Microsoft-signed App Installer executables in WindowsApps, including under SYSTEM. Dell apply.outcome now reflects the post-installation verification, remaining updates, deferral, restart or verification failure. Build output paths remain unchanged.
-
-## 4.0.6: local Winget exceptions
-
-Optional machine-local exception policy; see [English guide](docs/eng/WINGET-EXCEPTIONS.md) and [guida italiana](docs/ita/ECCEZIONI-WINGET.md). No Windows Update or OEM exclusions are implemented.
 
 ## 4.0.6: local Winget exceptions
 

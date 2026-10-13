@@ -61,7 +61,7 @@ After driver or firmware installation, a restart may leave the computer offline 
 
 ## Release channels
 
-`4.0.6` refines the guarded OEM workflow introduced by 4.0.3. Publication is pending. It is distributed as a portable archive and a signed x64 MSI; both public artifacts are accompanied by their SHA-256 checksum.
+`4.0.6` refines the guarded OEM workflow introduced by 4.0.3. GitHub release published on 13 October 2026. It is distributed as a portable archive and a signed x64 MSI; both public artifacts are accompanied by their SHA-256 checksum.
 
 ## 4.0.6 outcome verification
 

@@ -96,7 +96,9 @@ Separating immutable application files in Program Files from mutable state in Pr
 - Signed launcher: repository root `MaintenanceToolkit.exe`.
 - MSI: `packaging/msi/out/MaintenanceToolkit-4_0_6.msi`.
 - Portable ZIP: `dist/MaintenanceToolkit-4_0_6.zip`.
-- Portable checksum: `dist/MaintenanceToolkit-4_0_6.sha256`.
+- Public portable checksum: `dist/MaintenanceToolkit-4_0_6-zip.sha256`.
+- Public MSI checksum: `dist/MaintenanceToolkit-4_0_6-msi.sha256`.
+- The ZIP build helper also generates `dist/MaintenanceToolkit-4_0_6.sha256`; this is a local build output, not the public asset name.
 - Portable staging: `dist/staging` inside the repository.
 
 Public filenames contain product name and version only. Work handover ZIPs use date/time and revision. No build output is redirected outside the repository. Existing MSI/ZIP packages are not silently overwritten. Signing changes bytes, so record the signed hash and verify the timestamp before packaging.

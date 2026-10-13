@@ -1,10 +1,10 @@
-{
+﻿{
     "project": "Maintenance Toolkit",
-    "latest_version": "4.0.4",
+    "latest_version": "4.0.6",
     "minimum_supported": "3.5.0",
-    "release_date": "2026-10-09",
-    "release_notes": "Maintenance Toolkit 4.0.4 adds advisory-only NVIDIA professional driver availability checks and inventory advisories, evidence-based Dell update outcomes, verified recent restore-point reuse and safer native exit-code handling. No automatic NVIDIA driver installation, BIOS installation or restart.",
-    "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.4",
+    "release_date": "2026-10-13",
+    "release_notes": "Maintenance Toolkit 4.0.6 adds machine-local Winget package exceptions and module blocking, including SYSTEM Winget discovery and verified Dell apply outcomes from 4.0.5. Exceptions apply only to Winget invoked by MT; no automatic BIOS or NVIDIA installation or restart.",
+    "download_url": "https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.6",
     "repository_url": "https://github.com/Kraugh/maintenance-toolkit",
     "documentation_url": "https://www.kraugh.it/software/maintenance-toolkit/",
     "selftest": true,

@@ -61,7 +61,7 @@ Dopo l'installazione di driver o firmware, il riavvio può lasciare il computer 
 
 ## Canali di rilascio
 
-`4.0.6` migliora il flusso OEM protetto introdotto dalla 4.0.3. Pubblicazione in attesa. È distribuita come archivio portabile e come MSI x64 firmato; entrambi gli artefatti pubblici sono accompagnati dal relativo checksum SHA-256.
+`4.0.6` migliora il flusso OEM protetto introdotto dalla 4.0.3. Release GitHub pubblicata il 13 ottobre 2026. È distribuita come archivio portabile e come MSI x64 firmato; entrambi gli artefatti pubblici sono accompagnati dal relativo checksum SHA-256.
 
 ## 4.0.6 outcome verification
 

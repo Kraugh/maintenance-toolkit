@@ -24,7 +24,7 @@ Artefatti: logs/<computer>/<sessione>/NVIDIA/nvidia-status.json (schema 3),
 risposte XML del catalogo e JSON di ricerca. Nessun EXE viene scaricato.
 I vecchi log FNV e i pacchetti già scaricati vengono lasciati intatti.
 
-Validazione 4.0.6: test di selezione catalogo, corrispondenza desktop/mobile e scenari corrente, disponibile, sconosciuto, multiplo, offline e assente superati. Prove reali informative su Quadro P620, T1000 e RTX A1000; nessun download o installazione nel flusso attuale. Ulteriori modelli richiedono hardware rappresentativo. Pubblicazione 4.0.6 in attesa; endpoint pubblico ancora alla 4.0.3.
+Validazione 4.0.6: test di selezione catalogo, corrispondenza desktop/mobile e scenari corrente, disponibile, sconosciuto, multiplo, offline e assente superati. Prove reali informative su Quadro P620, T1000 e RTX A1000; nessun download o installazione nel flusso attuale. Ulteriori modelli richiedono hardware rappresentativo. Release GitHub 4.0.6 pubblicata; stato del manifest web da verificare dopo il caricamento sul sito.
 
 ## Risultati per DMT
 

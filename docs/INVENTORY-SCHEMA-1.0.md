@@ -195,5 +195,3 @@ MT must never report `healthy` when the actual state is merely unknown.
 `maintenance.data.oem` and `maintenance.data.gpuDrivers` are optional extensions. Older snapshots remain valid. GPU checks are advisory only; each device exposes `updateAvailable` as true, false or null, plus installed Windows/commercial driver versions and the validated candidate. Consumers must treat null or `verification_incomplete` as unknown. An update is only assessed within the selected compatible professional branch. DMT presentation is implemented in its own repository.
 
 4.0.6 optional extension: maintenance.data.wingetExceptions records local policy, excluded IDs and selective-pass outcomes. Active exclusions mean partial maintenance coverage, not an error. The policy does not cover other update engines.
-
-4.0.6 optional extension: maintenance.data.wingetExceptions records local policy, excluded IDs and selective-pass outcomes. Active exclusions mean partial maintenance coverage, not an error. The policy does not cover other update engines.

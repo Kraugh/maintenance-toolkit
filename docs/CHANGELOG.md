@@ -1,10 +1,24 @@
-﻿## 4.0.4 - 2026-10-09 (publication pending)
+﻿## 4.0.6 — 2026-10-13 (published)
+
+- Machine-local Winget exception file: exact ID exclusions or complete Winget-module blocking.
+- Invalid policy or failed JSON export prevents Winget installation; selective commands disable Winget-managed dependency processing.
+- Exclusions and execution evidence are retained in inventory; IT/EN guides and JSON example included.
+- Canonical test names and package-name guard; build outputs remain packaging/msi/out and dist.
+- Windows regression suites passed. Live SYSTEM policy/plan diagnostics passed without installation. Final ZIP SelfTest passed with the expected non-elevation warning. Launcher/MSI signed and timestamped. Live selective installation and MSI upgrade/policy-preservation validation remain pending.
+
+## 4.0.5 — 2026-10-13 (published)
+
+- Locate and validate App Installer Winget when no SYSTEM PATH alias exists; no PATH changes or new dependencies.
+- Finalize Dell apply.outcome from actual verification states, retaining deferred, remaining, restart and failure outcomes.
+- Regression/Foundation tests, live SYSTEM discovery and extracted ZIP SelfTest passed.
+
+## 4.0.4 - 2026-10-09 (published)
 
 - Verify recent completed Windows restore points before OEM changes; revalidate saved markers without changing restore-point frequency.
 - Preserve native Dell reboot/failure outcomes and distinguish process termination from verified update completion.
 - Report deferred and remaining Dell updates alongside BIOS guidance.
 - Check professional NVIDIA driver availability without downloading or installing drivers; preserve results in inventory.
-- Windows regressions passed; launcher and MSI signatures/timestamps verified; portable and installed SelfTests passed with zero errors/warnings; MSI installation and uninstall returned 0. Publication remains pending; public manifest stays at 4.0.3 until publication.
+- Windows regressions passed; launcher and MSI signatures/timestamps verified; portable and installed SelfTests passed with zero errors/warnings; MSI installation and uninstall returned 0. GitHub release published on 9 October 2026; website manifest deployment is separate.
 
 ## 4.0.4-dev.9 - Release blocker corrections (2026-10-09)
 
@@ -464,23 +478,3 @@ Validated on Windows 11 and Windows 10.
 ## 3.0.0
 
 - prima versione interattiva e modulare.
-
-## 4.0.5 — prepared, not yet published
-
-- Resolve a working Winget executable from App Installer when SYSTEM has no PATH alias. Validate Microsoft signature on fallback paths and probe --version with a 15-second timeout; do not change PATH or install dependencies.
-- Finalize Dell apply.outcome from post-check results; preserve deferred, remaining, restart and failed verification states.
-- No BIOS/NVIDIA automation changes.
-
-## 4.0.6 — preparation
-
-- Add exact machine-local Winget exclusions and block_module mode.
-- Validate policy identity, permissions and JSON inventory before selective upgrades; disable Winget-managed dependencies in selective mode.
-- Report exclusions and incomplete execution in session logs and inventory.
-- Preserve existing behavior when policy is absent; no persistent pins or new external dependencies.
-
-## 4.0.6 — preparation
-
-- Add exact machine-local Winget exclusions and block_module mode.
-- Validate policy identity, permissions and JSON inventory before selective upgrades; disable Winget-managed dependencies in selective mode.
-- Report exclusions and incomplete execution in session logs and inventory.
-- Preserve existing behavior when policy is absent; no persistent pins or new external dependencies.

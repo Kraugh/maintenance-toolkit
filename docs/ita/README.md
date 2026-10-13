@@ -3,11 +3,11 @@
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
 
-**Versione preparata per la release:** `4.0.6`
+**Versione stabile pubblicata:** `4.0.6`
 
-Pubblicazione in attesa; endpoint pubblico ancora alla 4.0.3 fino alla pubblicazione.
+Release GitHub 4.0.6 pubblicata il 13 ottobre 2026. Il manifest del sito viene aggiornato separatamente.
 
-La versione 4.0.6 aggiunge il flusso OEM Dell e HP collaudato in produzione,
+La versione 4.0.6 aggiunge le eccezioni Winget locali e mantiene il flusso OEM Dell e HP,
 lo stato OEM strutturato per DMT, la verifica obbligatoria del punto di
 ripristino e il divieto rigoroso di installazione BIOS o riavvio automatici.
 
@@ -155,3 +155,7 @@ Maintenance Toolkit è distribuito con licenza MIT. Consultare
 <https://www.kraugh.it>
 
 Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.
+
+## Eccezioni Winget locali
+
+Vedere [la guida completa](ECCEZIONI-WINGET.md): percorso, ID esatti, permessi, modalità di blocco e limiti della protezione.
