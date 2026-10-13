@@ -1,6 +1,6 @@
 ﻿# Aggiornamenti OEM
 
-**Compatibile con:** Maintenance Toolkit `4.0.4` e versioni successive
+**Compatibile con:** Maintenance Toolkit `4.0.6` e versioni successive
 
 Il modulo OEM installa gli aggiornamenti idonei del produttore mantenendo tre vincoli di sicurezza: il BIOS non viene mai installato automaticamente, Windows non viene mai riavviato automaticamente e gli aggiornamenti non-BIOS non possono iniziare senza un punto di ripristino verificato.
 
@@ -61,15 +61,15 @@ Dopo l'installazione di driver o firmware, il riavvio può lasciare il computer 
 
 ## Canali di rilascio
 
-`4.0.4` migliora il flusso OEM protetto introdotto dalla 4.0.3. Pubblicazione in attesa. È distribuita come archivio portabile e come MSI x64 firmato; entrambi gli artefatti pubblici sono accompagnati dal relativo checksum SHA-256.
+`4.0.6` migliora il flusso OEM protetto introdotto dalla 4.0.3. Pubblicazione in attesa. È distribuita come archivio portabile e come MSI x64 firmato; entrambi gli artefatti pubblici sono accompagnati dal relativo checksum SHA-256.
 
-## 4.0.4 outcome verification
+## 4.0.6 outcome verification
 
 The apply invocation's own persisted log is examined for UserActivity deferral. Exit 0 alone does not prove installation. Deferred updates remain warnings even alongside a BIOS notice. Exit 500 denotes no applicable updates for the selected filter; updates that disappear after that result are marked `no_longer_applicable`, not `installed`. Reboot-required results still need a later scan after the manual reboot. A cached empty scan describes the selected filter/cache at that time, not a fresh exhaustive device audit.
 
 La prova sotto SYSTEM ha restituito un report vuoto per gli aggiornamenti non BIOS, mantenendo visibile l'avviso BIOS. La precedente attivita separata di SupportAssist ha aggiornato il BIOS: la policy non BIOS di MT non controlla gli altri programmi Dell e le loro pianificazioni. MT non li disabilita automaticamente. Il risultato non garantisce compatibilita universale per ogni modello Dell.
 
-### Protezioni ripristino 4.0.4
+### Protezioni ripristino 4.0.6
 
 La protezione OEM riutilizza un punto completato e verificato delle ultime 24 ore, anche creato da Windows. I marcatori della sessione sono verificati nuovamente. MT non modifica SystemRestorePointCreationFrequency. I log DCU distinguono codice processo e codice nativo: il codice zero non dimostra da solo l'installazione.
 

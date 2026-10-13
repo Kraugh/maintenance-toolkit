@@ -1,7 +1,7 @@
-# Maintenance Toolkit 4.0 — Field Technician Guide
+﻿# Maintenance Toolkit 4.0 — Field Technician Guide
 
 **Document version:** 2.1
-**Compatible with:** Maintenance Toolkit `4.0.4`
+**Compatible with:** Maintenance Toolkit `4.0.6`
 **Updated:** 22 September 2026
 
 ## Overview
@@ -39,7 +39,7 @@ After verifying that the archive is the official project release, the ZIP can
 be unblocked before extraction:
 
 ```powershell
-Unblock-File .\MaintenanceToolkit-4_0_4.zip
+Unblock-File .\MaintenanceToolkit-4_0_6.zip
 ```
 
 Extract the archive again afterwards.
@@ -185,7 +185,7 @@ MT displays periodic status messages while long operations are running.
 During a Maintenance Toolkit session, MT asks Windows to keep the system awake
 without forcing the display to remain on. The request lasts for the MT process.
 
-## 4.0.4 validation
+## 4.0.6 validation
 
 The 4.0 series has been exercised on:
 
@@ -232,6 +232,6 @@ When reporting a problem, provide:
 Repository: <https://github.com/Kraugh/maintenance-toolkit>
 Website: <https://www.kraugh.it>
 
-## 4.0.4 package validation
+## 4.0.6 package validation
 
 On 9 October 2026, Windows regression suites passed. The launcher and MSI signatures and timestamps were verified. Elevated portable and installed SelfTests returned 0 with no errors/warnings. MSI installation and uninstall returned 0. These checks do not certify every OEM/GPU model. NVIDIA remains advisory-only; unattended BIOS installation and automatic restarts remain blocked.

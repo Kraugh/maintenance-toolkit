@@ -1,4 +1,4 @@
-{
+﻿{
   "baselineCommit": "002583a833d2b517effbcee1b73ab37c534355ad",
   "developmentVersion": "4.0.4-dev.9",
   "stableManifestUnchanged": true,
@@ -8,7 +8,7 @@
     "app/core/ProcessRunner.ps1",
     "app/modules/oem/DellCommandUpdate.ps1",
     "app/modules/oem/HPImageAssistant.ps1",
-    "app/tools/Test-MTReleaseBlockers-20261009-1620-R01.ps1",
+    "app/tools/Test-MTReleaseBlockers.ps1",
     "config/version.json",
     "docs/CHANGELOG.md",
     "docs/eng/OEM-UPDATES.md",

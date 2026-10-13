@@ -1,4 +1,4 @@
-# Maintenance Toolkit — MSI packaging
+﻿# Maintenance Toolkit — MSI packaging
 
 This directory contains the enterprise MSI packaging source.
 
@@ -45,20 +45,20 @@ packaging\msi\out\MaintenanceToolkit-<canonical-version-with-underscores>.msi
 Standalone MSI example with MSI-owned scheduling:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4_0_4.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
+msiexec /i MaintenanceToolkit-4_0_6.msi CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 Silent standalone example:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4_0_4.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
+msiexec /i MaintenanceToolkit-4_0_6.msi /qn CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT"
 ```
 
 Enterprise/GPO deployment must use `CREATE_TASK=0` (the default). Group Policy
 owns and configures its separately named Scheduled Task:
 
 ```powershell
-msiexec /i MaintenanceToolkit-4_0_4.msi /qn CREATE_TASK=0
+msiexec /i MaintenanceToolkit-4_0_6.msi /qn CREATE_TASK=0
 ```
 
 ## Scheduled Task ownership
@@ -94,9 +94,9 @@ Separating immutable application files in Program Files from mutable state in Pr
 ## Release output locations
 
 - Signed launcher: repository root `MaintenanceToolkit.exe`.
-- MSI: `packaging/msi/out/MaintenanceToolkit-4_0_4.msi`.
-- Portable ZIP: `dist/MaintenanceToolkit-4_0_4.zip`.
-- Portable checksum: `dist/MaintenanceToolkit-4_0_4.sha256`.
+- MSI: `packaging/msi/out/MaintenanceToolkit-4_0_6.msi`.
+- Portable ZIP: `dist/MaintenanceToolkit-4_0_6.zip`.
+- Portable checksum: `dist/MaintenanceToolkit-4_0_6.sha256`.
 - Portable staging: `dist/staging` inside the repository.
 
 Public filenames contain product name and version only. Work handover ZIPs use date/time and revision. No build output is redirected outside the repository. Existing MSI/ZIP packages are not silently overwritten. Signing changes bytes, so record the signed hash and verify the timestamp before packaging.

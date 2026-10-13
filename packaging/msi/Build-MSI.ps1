@@ -7,6 +7,14 @@ $ErrorActionPreference = "Stop"
 
 $MsiRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = (Resolve-Path (Join-Path $MsiRoot "..\..")).Path
+
+# Exchange revision names must never become public runtime test filenames.
+$InvalidTestNames = @(Get-ChildItem -LiteralPath (Join-Path $RepoRoot 'app\tools') -File -Filter '*.ps1' |
+    Where-Object { $_.Name -match '(?:20[0-9]{6}|-R[0-9]+(?=\.ps1$))' })
+if ($InvalidTestNames.Count -gt 0) {
+    throw ('Public test filenames contain exchange revisions: ' + (($InvalidTestNames.Name) -join ', '))
+}
+
 $ToolRoot = Join-Path $MsiRoot ".tools"
 $OutputRoot = Join-Path $MsiRoot "out"
 $WixExe = Join-Path $ToolRoot "wix.exe"

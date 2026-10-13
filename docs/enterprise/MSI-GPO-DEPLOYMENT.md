@@ -1,6 +1,6 @@
-# Enterprise deployment — MSI and Group Policy
+﻿# Enterprise deployment — MSI and Group Policy
 
-This guide describes the supported installation path for Maintenance Toolkit 4.0.4. It covers standalone MSI installation and centrally managed Active Directory deployment without attempting to catalogue environment-specific troubleshooting cases.
+This guide describes the supported installation path for Maintenance Toolkit 4.0.6. It covers standalone MSI installation and centrally managed Active Directory deployment without attempting to catalogue environment-specific troubleshooting cases.
 
 ## 1. Deployment model
 
@@ -26,13 +26,13 @@ Maintenance Toolkit must not run as a Domain Administrator and never reboots the
 
 - Windows x64 supported by the organisation;
 - local administrative rights or a computer-assigned software deployment policy;
-- the signed `MaintenanceToolkit-4_0_4.msi` from the official release;
+- the signed `MaintenanceToolkit-4_0_6.msi` from the official release;
 - network access required by the enabled MT modules;
 - for inventory publication, a dedicated SMB destination writable by computer accounts.
 
 Before production deployment, validate the exact MSI, policy, execution account and share permissions on a test computer or pilot OU.
 
-### OEM updates and System Restore policy (4.0.4+)
+### OEM updates and System Restore policy (4.0.6+)
 
 The OEM module requires a restore point that MT can create and verify before it applies non-BIOS updates. In the same computer GPO used to manage MT, configure:
 
@@ -47,13 +47,13 @@ In File Explorer, open **Properties → Digital Signatures** and verify that the
 PowerShell verification:
 
 ```powershell
-$r = Get-AuthenticodeSignature '.\MaintenanceToolkit-4_0_4.msi' | Select-Object Status,StatusMessage,@{N='Signer';E={$_.SignerCertificate.Subject}},@{N='Timestamp';E={$_.TimeStamperCertificate.Subject}} | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
+$r = Get-AuthenticodeSignature '.\MaintenanceToolkit-4_0_6.msi' | Select-Object Status,StatusMessage,@{N='Signer';E={$_.SignerCertificate.Subject}},@{N='Timestamp';E={$_.TimeStamperCertificate.Subject}} | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
 ```
 
 SHA-256 verification:
 
 ```powershell
-$r = Get-FileHash '.\MaintenanceToolkit-4_0_4.msi' -Algorithm SHA256 | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
+$r = Get-FileHash '.\MaintenanceToolkit-4_0_6.msi' -Algorithm SHA256 | Format-List | Out-String -Width 500; $r | Set-Clipboard; $r
 ```
 
 Compare the resulting hash with the checksum published alongside the release asset.
@@ -65,13 +65,13 @@ For an interactive installation, start the MSI with administrative privileges.
 Default silent per-machine installation, without an MSI-managed task:
 
 ```powershell
-msiexec.exe /i ".\MaintenanceToolkit-4_0_4.msi" /qn /norestart CREATE_TASK=0 /L*v ".\MT-4_0_4-install.log"
+msiexec.exe /i ".\MaintenanceToolkit-4_0_6.msi" /qn /norestart CREATE_TASK=0 /L*v ".\MT-4_0_6-install.log"
 ```
 
 Standalone silent installation with the optional daily MSI-managed task:
 
 ```powershell
-msiexec.exe /i ".\MaintenanceToolkit-4_0_4.msi" /qn /norestart CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT" /L*v ".\MT-4_0_4-install.log"
+msiexec.exe /i ".\MaintenanceToolkit-4_0_6.msi" /qn /norestart CREATE_TASK=1 TASK_TIME=03:00 INVENTORY_SHARE="\\SERVER\MT" /L*v ".\MT-4_0_6-install.log"
 ```
 
 Public MSI properties:
@@ -104,7 +104,7 @@ For GPO deployments, keep versioned source folders and assign only the approved 
 
 ```text
 \\SERVER\Software\MaintenanceToolkit\
-    4.0.4\MaintenanceToolkit-4_0_4.msi
+    4.0.6\MaintenanceToolkit-4_0_6.msi
     NEWVERSION\MaintenanceToolkit-NEWVERSION.msi
 ```
 
@@ -115,7 +115,7 @@ Pilot the upgrade before changing the production assignment. Do not silently rep
 Use **Installed apps**, the organisation's software-management platform, or the original MSI:
 
 ```powershell
-msiexec.exe /x ".\MaintenanceToolkit-4_0_4.msi" /qn /norestart /L*v ".\MT-4_0_4-uninstall.log"
+msiexec.exe /x ".\MaintenanceToolkit-4_0_6.msi" /qn /norestart /L*v ".\MT-4_0_6-uninstall.log"
 ```
 
 Uninstall removes only the uniquely named MSI-managed task. A GPO-managed task remains owned by Group Policy and must be removed or disabled in that policy.

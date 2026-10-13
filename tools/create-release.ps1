@@ -13,6 +13,14 @@ $ErrorActionPreference = "Stop"
 
 $RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
+# Exchange revision names must never become public runtime test filenames.
+$InvalidTestNames = @(Get-ChildItem -LiteralPath (Join-Path $RepositoryRoot 'app\tools') -File -Filter '*.ps1' |
+    Where-Object { $_.Name -match '(?:20[0-9]{6}|-R[0-9]+(?=\.ps1$))' })
+if ($InvalidTestNames.Count -gt 0) {
+    throw ('Public test filenames contain exchange revisions: ' + (($InvalidTestNames.Name) -join ', '))
+}
+
+
 if ([string]::IsNullOrWhiteSpace($Destination)) {
     $Destination = Join-Path $RepositoryRoot "dist"
 }
@@ -327,7 +335,7 @@ try {
         }
     }
 
-    foreach ($DocLanguage in @("eng", "ita", "enterprise")) {
+    foreach ($DocLanguage in @("eng", "ita", "enterprise", "examples")) {
         $Source = Join-Path $RepositoryRoot ("docs\" + $DocLanguage)
 
         if (Test-Path -LiteralPath $Source -PathType Container) {
