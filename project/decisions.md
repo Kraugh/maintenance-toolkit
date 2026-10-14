@@ -1191,3 +1191,27 @@ This feature is explicitly deferred from the current enterprise MSI publication 
 ### Reason
 
 The information is valuable both for unattended inventory/diagnostics and for the future GUI, but introducing it while closing the enterprise distribution release would mix stabilization with feature expansion.
+
+---
+
+## 2026-10-13 — MT 4.1 self-update ownership and consent
+
+### Approved decision
+
+Standalone ZIP and unmanaged MSI installations offer an explicit "Aggiorna MT" command with confirmation. Automatic installation is available only after explicit enablement. GPO-managed installations detect and report updates; installation remains owned by Group Policy. Unknown management never permits automatic installation. Domain membership alone does not establish GPO management.
+
+This decision defines future 4.1 behaviour; it does not implement it or change the stable manifest. It extends the original manual update-check decision while preserving the existing MSI/GPO task ownership boundary. No automatic reboot is allowed.
+
+### Reason and next design step
+
+Explicit ownership and consent prevent MT from competing with enterprise deployment policy. The proposed configuration, defaults, precedence and failure behaviour are recorded in [MT 4.1 self-update plan](MT-4.1-SELF-UPDATE-PLAN.md). That configuration contract remains a proposal requiring agreement before implementation.
+
+### Approved refinement — 2026-10-14
+
+Machine policy takes precedence over local JSON, then defaults. Unknown management permits detection only; explicit standalone configuration is required before installation. The opt-in must be protected and preserved across upgrades.
+
+Standalone automatic update runs at the start of an existing scheduled execution, before maintenance, without an additional permanent task. After a verified update, the new version resumes the requested maintenance exactly once, without another update cycle.
+
+If download or verification fails before installation changes, the current version continues maintenance with WARN. Once application has started and installation state is uncertain, maintenance must stop: run the planned recovery and report its outcome. GPO remains detection/reporting only, with no installation by MT. No automatic reboot is allowed.
+
+The concrete configuration storage, validation and signing contracts remain design proposals; this refinement does not implement runtime changes.
