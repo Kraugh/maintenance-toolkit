@@ -1,4 +1,4 @@
-> Current patch: **4.1.1**, correcting hosting rejection of empty User-Agent requests. Real hosting downloads, 118 regressions, Foundation and signed final packages verified; publication authorized after checks. The 4.1.0 site/feed was uploaded and content-verified; 4.1.1 web upload remains with the user. See [patch verification](MT-4.1.1-RELEASE-VERIFICATION.md). Status below preserves preceding checkpoints.
+> Current release: **4.1.1 published on GitHub, 15 October 2026 at 21:15:54 Europe/Rome**, correcting hosting rejection of empty User-Agent requests. Real hosting downloads, 118 regressions, Foundation, signed final packages and public GitHub downloads verified. All 4.1.0 assets unchanged. The 4.1.0 site/feed was uploaded and content-verified; 4.1.1 web upload remains with the user. See [patch verification](MT-4.1.1-RELEASE-VERIFICATION.md). Status below preserves preceding checkpoints.
 
 ## Current status — 15 October 2026 / Stato corrente
 

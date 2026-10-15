@@ -1,5 +1,7 @@
 # MT 4.1.1 — hosting User-Agent patch
 
+**Published:** [GitHub v4.1.1](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.1), 15 October 2026 at 21:15:54 Europe/Rome, outside prohibited windows. Tag/source commit `3caf2b72713043678b2962642515694add66d3bf`. All eight draft assets downloaded and byte-matched before publication. After publication, production downloader/hash/signature/metadata-catalog/MSI-identity/ZIP-payload-catalog checks passed through public GitHub URLs. All eight 4.1.0 remote asset digests/sizes and five local hashes checked unchanged again afterward. New website/API upload remains pending with the user; no issues closed.
+
 15 October 2026. User explicitly authorized the 4.1.1 correction, real hosting verification, signed packages, conditional GitHub publication and a complete updated web ZIP. Published 4.1.0 assets must remain unchanged. Publication windows still apply. Scope is issue #28's transport compatibility, without changing trust, installation, GPO, consent or scheduling contracts.
 
 ## Correction and verified preparation
@@ -33,3 +35,5 @@ GitHub assets are verified after upload before the draft is made public, then ch
 - Complete web ZIP: `dist/MaintenanceToolkit-4.1.1-Web-20261015-211305-web.zip`, SHA-256 3270EA17CC4C2499B400301D9A382CAFC8AFFBE1063FA1AD649AC065C3E77770. Eighteen MT/overview pages updated, other projects unchanged, zero missing relative HTML targets, all 83 ZIP files checked against staging. API files match final signed originals. New metadata sequence 5 expires 14 November 2026 at 19:12:35 UTC (20:12:35 Rome).
 
 Retained final evidence/generators: `launcher/build/FinalReleaseVerification-411`, `launcher/build/Verify-411Release.ps1`, `launcher/build/Test-411PackagedHosting.ps1`, preparation-root `packaged-hosting` and `packaged-hosting-result.json`, `launcher/build/Prepare-411Website.ps1`, `launcher/build/current-411-web.json`, and `dist/staging/MaintenanceToolkit-4.1.1-Web-20261015-211305`. Keep for review; metadata builder's disposable extraction stages and regression fixtures cleaned by their canonical scripts. No new install, task or reboot during this patch phase. No new browser rendering test is claimed; the validated 4.1.0 website layout/CSS is retained with changed text/links/hashes.
+
+Post-publication evidence retained: preparation-root `github-draft` (eight downloaded assets), `dist/staging/MaintenanceToolkit-PublicVerification-411-20261015-211600` (downloaded public assets/extracted payload), `launcher/build/Verify-Public411Release.ps1`, `launcher/build/published-411-release.json`. No downloaded script executed during public transport verification. These files are intentionally retained for review; no manual cleanup requested.
