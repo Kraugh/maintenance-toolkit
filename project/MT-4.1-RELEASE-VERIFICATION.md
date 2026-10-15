@@ -1,5 +1,7 @@
 # MT 4.1.0 — release verification
 
+**Published:** [GitHub v4.1.0](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.0), 15 October 2026 at 20:21:49 Europe/Rome, outside prohibited windows. Release/tag commit: 3b8d8e419c8fc7abd0aea3501057141e641acf01. Eight uploaded assets were downloaded from the draft and byte-matched before publication. After publication the production downloader fetched public metadata/catalog, MSI, ZIP and payload catalog; all production trust/hash/MSI-identity/ZIP-membership assertions passed. Website upload remains pending with the user. No issues closed by this publication.
+
 Release date: 15 October 2026. The user authorized final packages, signing, final verification and GitHub publication only if checks pass. Website deployment remains manual by the user after GitHub assets are available. Check the Rome publication window immediately before remote mutations.
 
 ## Scope and evidence
@@ -34,3 +36,5 @@ Canonical final packages: packaging/msi/out/MaintenanceToolkit-4_1_0.msi and dis
 - Browser preview was rejected by the browser security policy because file: is not allowed. No bypass/local-server workaround attempted. Website review is static; final visual rendering is not claimed. Historical screenshots remain labelled as such.
 
 Retained generators: launcher/build/Verify-FinalRelease.ps1 and Prepare-FinalWebsite.ps1; pointer current-final-web.json. Initial extraction launcher/build/ReleaseVerification and launcher/build/FinalReleaseVerification remain diagnostic evidence. Superseded unsigned/finalization outputs were moved within the repository into dist/staging/MaintenanceToolkit-Prefinal-20261015-201600 and MaintenanceToolkit-Prefinal-20261015-201800; no public bytes overwritten. Superseded web archive/staging MaintenanceToolkit-4.1.0-Web-20261015-201618 retained, use only the 201858 bundle. Existing cleanup policy rejections remain documented; no bypass or new task.
+
+Post-upload retained evidence: dist/staging/MaintenanceToolkit-RemoteVerification-20261015-202100 (eight downloaded draft assets), dist/staging/MaintenanceToolkit-PublicVerification-20261015-202200 (public transport/trust verification and extracted payload), launcher/build/Verify-PublicRelease.ps1 and launcher/build/published-release.json. These are review evidence; no scripts from downloaded packages were executed for this transport check. No maintenance, task creation, installation or reboot during finalization. The VM remains on its previously installed private pilot until explicitly upgraded.

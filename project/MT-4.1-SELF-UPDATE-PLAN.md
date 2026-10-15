@@ -1,4 +1,4 @@
-> Current: final 4.1.0 packaging/publication authorized after checks. See [release verification](MT-4.1-RELEASE-VERIFICATION.md). Dated design/pilot sections below preserve historical status.
+> Current: **4.1.0 published on GitHub** after final package/signature/regression/Foundation/public-download checks, 15 October 2026. Website/API upload is pending with the user; issues are not automatically closed. See [release verification](MT-4.1-RELEASE-VERIFICATION.md). Dated design/pilot sections below preserve historical status.
 
 # MT 4.1 — piano di autoaggiornamento
 

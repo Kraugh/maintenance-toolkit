@@ -1,4 +1,4 @@
-> 4.1.0 finalization authorized 15 October 2026: packages/signatures/final checks then GitHub publication if successful; website delivered for manual upload. See [current release verification](MT-4.1-RELEASE-VERIFICATION.md). Status below preserves the preceding pilot checkpoint.
+> Current release: **4.1.0 published on GitHub, 15 October 2026 at 20:21:49 Europe/Rome**. Final packages/signatures, 117 regressions, Foundation and public download/trust verification passed. Full web bundle delivered for manual upload; deployed-site/API verification remains pending. See [current release verification](MT-4.1-RELEASE-VERIFICATION.md). Status below preserves the preceding pilot checkpoint.
 
 ## Current status — 15 October 2026 / Stato corrente
 
