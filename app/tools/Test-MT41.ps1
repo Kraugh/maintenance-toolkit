@@ -13,6 +13,8 @@ function Assert-Test {param([bool]$Condition,[string]$Name) if(-not $Condition){
 function Assert-Rejected {param([scriptblock]$Action,[string]$Name) $Rejected=$false;try{& $Action | Out-Null}catch{$Rejected=$true};Assert-Test $Rejected $Name}
 try {
     foreach($Name in @('Privileges','UpdateTrust','SelfUpdate','Scheduling','UpdateApplication')){. (Join-Path $ProjectRoot ('app/core/'+$Name+'.ps1'))}
+    $HostingRequest=New-MTUpdateWebRequest 'https://www.kraugh.it/api/maintenance-toolkit/update-v1.json'
+    Assert-Test ($HostingRequest.UserAgent -match '^MaintenanceToolkit/\d+\.\d+$') 'hosting requests identify only the MT product line before transport'
     if($MsiIdentityFixture) {
         Assert-Test (@(Assert-MTMsiIdentity $MsiIdentityFixture $MsiIdentityVersion).Count -eq 0) 'real MSI COM identity validation emits no pipeline values'
         Assert-Rejected {Assert-MTMsiIdentity $MsiIdentityFixture '0.0.0'} 'real MSI COM rejects different product version'

@@ -1,6 +1,6 @@
 # Aggiornamento MT — 4.1
 
-Istruzioni per MT 4.1.0. Il primo passaggio dalla 4.0.6 richiede installazione manuale con pacchetti ufficiali verificati. Le prove con numerazione privata sono documentate separatamente.
+Istruzioni per MT 4.1.1. Il primo passaggio dalla 4.0.6 richiede installazione manuale con pacchetti ufficiali verificati. Le prove con numerazione privata sono documentate separatamente.
 
 ## Primo passaggio da 4.0.6
 
@@ -23,3 +23,7 @@ Con installazione incerta non riprendere manutenzione e non eliminare manualment
 ## Ambito delle prove
 
 117 regressioni e pilota reale su Windows 11 Pro build 26200 / Windows PowerShell 5.1. Test Windows 10 saltato per decisione esplicita dell’utente: non dichiarato verificato. UNC locale verificato, autorizzazioni su server aziendali da validare nel contesto SYSTEM effettivo. Documentazione pubblica solo IT/EN; nuove lingue del runtime con copertura parziale e fallback inglese.
+
+## Patch 4.1.1 per il trasporto HTTP
+
+La 4.1.0 puo ricevere HTTP 403 dall'hosting prima di scaricare metadati/payload, perche non invia User-Agent. Eseguire il passaggio manuale alla 4.1.1 con MSI/ZIP ufficiale verificato, conservando impostazioni, eccezioni, log/report, InventoryShare e task come sopra. La patch invia soltanto l'identificativo prodotto, senza nomi macchina o utenti. Non eliminare journal/lock per aggirare un eventuale stato incerto. I pacchetti 4.1.0 restano invariati.

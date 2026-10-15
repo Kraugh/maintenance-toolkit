@@ -1,4 +1,4 @@
-> Current release: **4.1.0 published on GitHub, 15 October 2026 at 20:21:49 Europe/Rome**. Final packages/signatures, 117 regressions, Foundation and public download/trust verification passed. Full web bundle delivered for manual upload; deployed-site/API verification remains pending. See [current release verification](MT-4.1-RELEASE-VERIFICATION.md). Status below preserves the preceding pilot checkpoint.
+> Current patch: **4.1.1**, correcting hosting rejection of empty User-Agent requests. Real hosting downloads, 118 regressions, Foundation and signed final packages verified; publication authorized after checks. The 4.1.0 site/feed was uploaded and content-verified; 4.1.1 web upload remains with the user. See [patch verification](MT-4.1.1-RELEASE-VERIFICATION.md). Status below preserves preceding checkpoints.
 
 ## Current status — 15 October 2026 / Stato corrente
 

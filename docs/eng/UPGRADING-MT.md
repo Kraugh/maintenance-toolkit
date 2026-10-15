@@ -1,6 +1,6 @@
 # Upgrading MT — 4.1
 
-Instructions for MT 4.1.0. The first upgrade from 4.0.6 requires manual installation with verified official packages. Private-version pilot evidence is documented separately.
+Instructions for MT 4.1.1. The first upgrade from 4.0.6 requires manual installation with verified official packages. Private-version pilot evidence is documented separately.
 
 ## First upgrade from 4.0.6
 
@@ -23,3 +23,7 @@ If installation state is uncertain, do not resume maintenance or delete journals
 ## Validation scope
 
 117 regressions and real pilot on Windows 11 Pro build 26200 / Windows PowerShell 5.1. The user explicitly waived the Windows 10 test; it is not claimed validated. Local UNC publication passed; corporate-server authorization must be checked in the actual SYSTEM context. Public documentation is IT/EN only; additional runtime translations have partial coverage with English fallback.
+
+## 4.1.1 HTTP transport patch
+
+4.1.0 can receive HTTP 403 from hosting before retrieving metadata/payload because it sends no User-Agent. Manually upgrade to 4.1.1 with verified official MSI/ZIP, preserving settings, exceptions, logs/reports, InventoryShare and tasks as above. The patch sends product identity only, without machine/user names. Never delete journals/locks to bypass uncertain installation state. Published 4.1.0 packages remain unchanged.

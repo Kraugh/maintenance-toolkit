@@ -1,3 +1,9 @@
+## 4.1.1 — 2026-10-15
+
+- Fix updater HTTP requests rejected by hosting with HTTP 403 when User-Agent is empty. Every request/redirect now identifies only the MT product line; no machine/user identity is sent. URL allowlist, signature/catalog, hash, revocation and consent requirements are unchanged.
+- Live Windows PowerShell 5.1 download/verification against the deployed hosting API, plus regression coverage for product identification. Published 4.1.0 artifacts remain immutable.
+- Upgrade from affected 4.1.0 installations manually to 4.1.1 using verified MSI/ZIP; the old updater may fail before it can retrieve this fix. No install or maintenance is implied by transport tests.
+
 ## 4.1.0 — 2026-10-15
 
 - Confirmed standalone MSI/ZIP updates with authenticated metadata, signed payload catalogs, pinned publisher identity, transactional recovery and one-time maintenance resume. GPO remains detection/reporting only; unknown management cannot install; automatic installation requires protected opt-in.

@@ -88,7 +88,10 @@ function Assert-MTUpdateManifest {
 
 function New-MTUpdateWebRequest {
     param([string]$Url)
-    [Net.HttpWebRequest]::Create($Url)
+    $Request=[Net.HttpWebRequest]::Create($Url)
+    # Product identity only: hosting rejects anonymous HTTP clients. No machine/user data.
+    $Request.UserAgent='MaintenanceToolkit/4.1'
+    $Request
 }
 
 function Save-MTUpdateDownload {

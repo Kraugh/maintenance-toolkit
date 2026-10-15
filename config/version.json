@@ -1,6 +1,6 @@
 {
   "Project": "Maintenance Toolkit",
-  "Version": "4.1.0",
+  "Version": "4.1.1",
   "Channel": "stable",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",

@@ -2,12 +2,12 @@
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>
 
-# Maintenance Toolkit 4.1.0
+# Maintenance Toolkit 4.1.1
 
 Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
 maintenance, diagnostics and technical reporting.
 
-**Current stable release:** [4.1.0](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.0)
+**Current stable release:** [4.1.1](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.1)
 
 Release date: 15 October 2026. The website update manifest is deployed separately; GitHub Releases is authoritative for the downloadable version.
 
@@ -17,6 +17,10 @@ Maintenance Toolkit 4.0 introduces a multilingual application core, integrated
 Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
 technical network reports, a native Windows launcher and Authenticode code
 signing, while retaining the validated maintenance modules from the 3.7.x line.
+
+## 4.1.1 hosting compatibility patch
+
+The updater now sends a product-only User-Agent required by the hosting service. Existing 4.1.0 installations may receive HTTP 403 before downloading the fix; upgrade manually to 4.1.1 with verified packages. Published 4.1.0 assets are unchanged. See [patch release verification](project/MT-4.1.1-RELEASE-VERIFICATION.md).
 
 ## MT 4.1 updates and scheduling
 
@@ -55,15 +59,15 @@ The first upgrade from 4.0.6 is manual: [English instructions](docs/eng/UPGRADIN
 
 Download the current stable release from the GitHub **Releases** page:
 
-**Maintenance Toolkit 4.1.0**
+**Maintenance Toolkit 4.1.1**
 
 Two official distribution formats are available:
 
-- `MaintenanceToolkit-4_1_0.zip` — portable package for manual and field use;
-- `MaintenanceToolkit-4_1_0.msi` — signed per-machine Windows x64 installer
+- `MaintenanceToolkit-4_1_1.zip` — portable package for manual and field use;
+- `MaintenanceToolkit-4_1_1.msi` — signed per-machine Windows x64 installer
   for standalone or centrally managed deployment.
 
-Both artifacts are accompanied by distinct checksum files: `MaintenanceToolkit-4_1_0-msi.sha256` and `MaintenanceToolkit-4_1_0-zip.sha256`. The MSI is digitally
+Both artifacts are accompanied by distinct checksum files: `MaintenanceToolkit-4_1_1-msi.sha256` and `MaintenanceToolkit-4_1_1-zip.sha256`. The MSI is digitally
 signed and timestamped and supports silent installation. For Active Directory
 and Group Policy deployment, use `CREATE_TASK=0` and let Group Policy own the
 Scheduled Task and runtime arguments. See the
@@ -75,7 +79,7 @@ Release packages contain the runtime and selected validation scripts under app/t
 
 ### Portable ZIP
 
-1. Download `MaintenanceToolkit-4_1_0.zip` from the official GitHub release.
+1. Download `MaintenanceToolkit-4_1_1.zip` from the official GitHub release.
 2. Verify the SHA-256 checksum and signed payload catalog, including scripts/resources; verify the expected publisher and launcher signature before execution.
 3. If Windows marks the downloaded ZIP as coming from the Internet, verify that
    it came from the official project release and use **Properties → Unblock**
@@ -87,7 +91,7 @@ Release packages contain the runtime and selected validation scripts under app/t
 ### MSI installer
 
 For a normal per-machine installation, run
-`MaintenanceToolkit-4_1_0.msi` with administrative privileges. Silent and
+`MaintenanceToolkit-4_1_1.msi` with administrative privileges. Silent and
 centrally managed deployment options are documented in the
 [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
@@ -111,7 +115,7 @@ from the official project release and have verified its origin, unblock the ZIP
 before extracting it. From PowerShell you may also use:
 
 ```powershell
-Unblock-File .\MaintenanceToolkit-4_1_0.zip
+Unblock-File .\MaintenanceToolkit-4_1_1.zip
 ```
 
 Then extract the archive again.
@@ -208,7 +212,7 @@ GitHub and website documentation are published in **Italian and English only**. 
 
 ## Release validation
 
-4.1.0 final preparation follows 117 regression checks and private R04/4.0.9006 Windows 11/PowerShell 5.1 pilots for MSI/ZIP application, controlled recovery, one-time resume and SYSTEM/loopback UNC. Windows 10 testing was explicitly waived. Corporate SMB authorization and live selective Winget installation remain environment-specific/unverified. See [pilot evidence](project/MT-4.1-VM-PILOT-20261015.md) and [release verification](project/MT-4.1-RELEASE-VERIFICATION.md).
+4.1.1 final preparation follows 117 regression checks and private R04/4.0.9006 Windows 11/PowerShell 5.1 pilots for MSI/ZIP application, controlled recovery, one-time resume and SYSTEM/loopback UNC. Windows 10 testing was explicitly waived. Corporate SMB authorization and live selective Winget installation remain environment-specific/unverified. See [pilot evidence](project/MT-4.1-VM-PILOT-20261015.md) and [release verification](project/MT-4.1-RELEASE-VERIFICATION.md).
 
 4.0.6: regression tests and Foundation autotest passed on Windows PowerShell 5.1. Read-only SYSTEM diagnostics verified policy access and all eight excluded IDs on a pilot. The final ZIP passed filename, documentation, hash, signature and SelfTest checks; the only SelfTest warning was the non-elevated session. Launcher and MSI signatures/timestamps were verified. The user reported a remote MSI upgrade under SYSTEM completed with exit code 0: version 4.0.6 was verified, the eight-exception file was unchanged and GPO task configuration was preserved. A live selective Winget pass remains unverified. The installation/uninstall tests performed for 4.0.4 remain historical evidence, separate from this 4.0.6 upgrade test.
 

@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.1.0
+# Maintenance Toolkit 4.1.1
 #
 # Autore:
 #   Luca Miselli
@@ -23,7 +23,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.1.0"
+$Version = "4.1.1"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
