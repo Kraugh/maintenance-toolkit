@@ -12,10 +12,13 @@ The official target language set is:
 - English (`en-US`);
 - German (`de-DE`);
 - French (`fr-FR`);
+- Spanish (`es-ES`);
 - Japanese (`ja-JP`);
 - Simplified Chinese (`zh-CN`).
 
 MT 4.0 has the validated EN/IT localization foundation. The development tree may contain additional language resources (currently including `sv-SE`) before they are part of the supported public language contract. A resource file alone does not make a language officially supported: runtime selection, key coverage, fallback behaviour and release validation must all be aligned. Expansion to the complete official target set is planned work and must not be described as released until it has been validated.
+
+MT 4.1 adds a Languages menu for the seven target languages, persists selection in settings.json and always uses English for unsupported system languages and missing individual translations. French, Spanish, German, Simplified Chinese and Japanese resources currently translate the main menu and the new 4.1 workflows; remaining historical diagnostics fall back to English. This is partial translation coverage, not seven fully translated languages. Swedish remains a compatibility resource and is not listed in the seven-language menu.
 
 ## Runtime selection
 
@@ -81,3 +84,7 @@ Documentation languages and runtime UI languages are related but not identical r
 The repository uses English as the primary development/technical language. User documentation may have localized variants. Before every public release, the documentation gate must verify that published documentation accurately describes the languages actually supported by that release.
 
 The public kraugh.it pages must also be reviewed from the current hosting source archive as required by `project/DEVELOPMENT_WORKFLOW.md`.
+
+## Public communication policy — 14 October 2026
+
+GitHub and kraugh.it publish documentation, instructions and announcements in **Italian and English only**. Announce the multilingual runtime in both languages; additional runtime languages do not require corresponding public pages. For 4.1, list all seven menu languages and disclose partial coverage and English fallback. The first upgrade from 4.0.6 is manual; the 4.1 release retains partial translation disclosure. Prepared bilingual copy: [publication notes](PUBLICATION-NOTES-4.1.md). Full translation completion remains open under issue #20; its older Swedish target must be reconciled with the approved Spanish target before closure.

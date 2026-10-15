@@ -8,7 +8,7 @@
       Scope="perMachine"
       InstallerVersion="500">
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of Maintenance Toolkit is already installed." />
+    <MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of Maintenance Toolkit is already installed." />
 
     <MediaTemplate EmbedCab="yes" />
 

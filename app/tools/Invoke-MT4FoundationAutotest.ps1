@@ -108,16 +108,28 @@ try {
         ConvertFrom-Json
 
     $EnglishKeys = @($English.PSObject.Properties.Name | Sort-Object)
+    . (Join-Path $ProjectRoot 'app/core/Localization.ps1')
 
     Get-ChildItem -LiteralPath (Join-Path $ProjectRoot 'languages') -Filter *.json -File |
         Where-Object { $_.Name -ne 'en-US.json' } |
         ForEach-Object {
             $Language = Get-Content $_.FullName -Raw -Encoding UTF8 | ConvertFrom-Json
             $LanguageKeys = @($Language.PSObject.Properties.Name | Sort-Object)
-            if (Compare-Object $EnglishKeys $LanguageKeys) {
+            $PartialLanguage = $_.BaseName -in @('fr-FR','es-ES','de-DE','zh-CN','ja-JP')
+            $UnexpectedKeys = @($LanguageKeys | Where-Object { $_ -notin $EnglishKeys })
+            $RequiredKeys = if ($PartialLanguage) { @($EnglishKeys | Where-Object { $_ -like 'MT41_*' }) } else { $EnglishKeys }
+            $MissingRequired = @($RequiredKeys | Where-Object { $_ -notin $LanguageKeys })
+            if ($UnexpectedKeys.Count -or $MissingRequired.Count) {
                 Add-MT4AutotestError (
                     'Language key mismatch between en-US and {0}.' -f $_.Name
                 )
+            }
+            $Resolved = Import-MTLanguage -ProjectRoot $ProjectRoot -Settings ([pscustomobject]@{Language=$_.BaseName;DefaultLanguage='en-US'})
+            if (Compare-Object $EnglishKeys @($Resolved.Data.PSObject.Properties.Name | Sort-Object)) {
+                throw ('Incomplete runtime language after English fallback: ' + $_.Name)
+            }
+            foreach ($MissingKey in @($EnglishKeys | Where-Object { $_ -notin $LanguageKeys })) {
+                if ($Resolved.Data.$MissingKey -cne $English.$MissingKey) { throw ('Incorrect English fallback: ' + $_.Name + '/' + $MissingKey) }
             }
         }
 }

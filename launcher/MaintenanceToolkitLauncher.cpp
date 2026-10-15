@@ -3,6 +3,21 @@
 #include <string>
 #include <vector>
 
+static std::wstring QuoteArgument(const std::wstring& value)
+{
+    std::wstring result = L"\"";
+    size_t slashes = 0;
+    for (wchar_t ch : value) {
+        if (ch == L'\\') { ++slashes; continue; }
+        result.append(slashes * (ch == L'"' ? 2 : 1), L'\\');
+        slashes = 0;
+        if (ch == L'"') result += L'\\';
+        result += ch;
+    }
+    result.append(slashes * 2, L'\\');
+    return result + L"\"";
+}
+
 int wmain(int argc, wchar_t* argv[])
 {
     try
@@ -27,16 +42,15 @@ int wmain(int argc, wchar_t* argv[])
             return 2;
         }
 
-        std::wstring commandLine =
-            L"powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File \"" +
-            script.wstring() +
-            L"\"";
+        wchar_t systemDirectory[MAX_PATH]{};
+        if (!GetSystemDirectoryW(systemDirectory, MAX_PATH)) return 1;
+        std::wstring powershell = std::wstring(systemDirectory) + L"\\WindowsPowerShell\\v1.0\\powershell.exe";
+        std::wstring commandLine = QuoteArgument(powershell) +
+            L" -NoLogo -NoProfile -ExecutionPolicy Bypass -File " + QuoteArgument(script.wstring());
 
         for (int i = 1; i < argc; ++i)
         {
-            commandLine += L" \"";
-            commandLine += argv[i];
-            commandLine += L"\"";
+            commandLine += L" " + QuoteArgument(argv[i]);
         }
 
         STARTUPINFOW si{};
@@ -48,7 +62,7 @@ int wmain(int argc, wchar_t* argv[])
         buffer.push_back(L'\0');
 
         BOOL ok = CreateProcessW(
-            nullptr,
+            powershell.c_str(),
             buffer.data(),
             nullptr,
             nullptr,

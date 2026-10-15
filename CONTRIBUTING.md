@@ -25,3 +25,7 @@ Thank you for contributing.
 
 A gentleman never runs.
 He never stops either.
+
+## Languages and evidence
+
+Public documentation, instructions and announcements on GitHub and the website are published in Italian and English only. Runtime JSON translations may cover additional languages. State the actual release and translation coverage; do not present partial development resources as fully supported stable languages. See [localization](docs/LOCALIZATION.md), [workflow](project/DEVELOPMENT_WORKFLOW.md) and the [current issue review](project/ISSUE-REVIEW-20261014.md). Issue closure requires evidence for its complete acceptance criteria, not only a passing isolated test or a user-reported pilot.

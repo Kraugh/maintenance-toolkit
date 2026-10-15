@@ -1215,3 +1215,59 @@ Standalone automatic update runs at the start of an existing scheduled execution
 If download or verification fails before installation changes, the current version continues maintenance with WARN. Once application has started and installation state is uncertain, maintenance must stop: run the planned recovery and report its outcome. GPO remains detection/reporting only, with no installation by MT. No automatic reboot is allowed.
 
 The concrete configuration storage, validation and signing contracts remain design proposals; this refinement does not implement runtime changes.
+
+### Local development contract — 2026-10-14
+
+Development implements issue #27 with three explicit scheduled modes: maintenance (existing enabled-module RunAll semantics), analysis (Connectivity, Inventory, NetworkReport, DiskHealth and NVIDIA advisory only), and update detection. All JSON generated in a session is retained locally and optionally copied atomically to a configured local/UNC destination; remote failure warns without discarding the local result. Schedule creation uses the existing MSI-owned task name only when its action targets this installation, with explicit replacement confirmation; otherwise it uses a standalone-owned name. GPO tasks are never edited.
+
+For issue #28, the user authorized development of application/recovery on simulated installations, leaving real installation tests for a separate agreed phase. Signed catalogs authenticate metadata and the complete ZIP baseline; MSI additionally requires embedded signature and product/UpgradeCode verification. The initial allowed certificate SHA-256 is derived from the user-specified Certum certificate, not from downloaded metadata. Public binaries and stable manifest remain unchanged; the source identifies itself as 4.1.0-dev.1. No new permanent updater task is introduced.
+
+Machine policy remains authoritative. Protected local preferences are an installation-specific overlay under `%ProgramData%\Kraugh\MaintenanceToolkit\self-update\<installation-id>\preferences.json`, ahead of packaged JSON defaults, outside MSI-owned files. This prevents upgrade resets of consent. Transaction data uses the same protected installation-specific directory, owned/writable only by Administrators/SYSTEM. Automatic MT update applies before both scheduled maintenance and scheduled analysis when explicitly enabled; update-only mode remains detection-only. Normal process startup does not imply opt-in.
+
+ZIP payload catalog is an external release sidecar, so neither the catalog nor the manifest catalog is included in the files it catalogs. Metadata preparation extends the existing dist outputs with immutable version-specific metadata; it never signs or publishes automatically. MSI major-upgrade removal is scheduled after InstallInitialize so Windows Installer can roll back removal; custom task/data restoration still requires live validation. Uncertain MSI state, including restart-pending, blocks maintenance even if mutable-state restoration succeeds.
+
+### Menu and language refinement — 2026-10-14
+
+User-approved simplification: V (Update MT) replaces the U detection entry and checks availability before offering standalone installation. The CLI CheckUpdates and update-only scheduled mode remain detection-only. R is removed from the user menu; automatic transactional rollback remains internal, and uncertain installations require a verified reinstall/administrator validation. The machine under test is explicitly described by its owner as standalone; this does not authorize privileged execution from a writable development directory.
+
+Languages is a short menu entry selecting English, Italian, French, Spanish, German, Simplified Chinese and Japanese, persisting the choice in existing settings.json. English is the fallback for unsupported system languages and missing individual translations. Swedish remains a compatibility resource. New resources translate menus and 4.1 workflows; historical diagnostic translations remain partial and are not claimed complete. Simplified Chinese is not substituted for an explicitly Traditional Chinese system locale.
+
+### Signed local development packages — 2026-10-14
+
+The user authorized preparation/signing of local test packages after reporting G/P working. Runtime version remains 4.1.0-dev.3. For this private MSI, ProductVersion is 4.0.9003: greater than 4.0.6 and lower than final 4.1.0, using MSI's three-field ordering without relying on an ignored fourth component. This is an explicitly recorded development mapping, not the public runtime version or stable update manifest.
+
+Use the same pinned WiX 5.0.2/Util extension and Product.wxs build invocation with a frozen source snapshot and MTVersion=4.0.9003. Output stays in a unique private directory under packaging/msi/out. ZIP uses the canonical create-release.ps1 copied into that same snapshot with UseExistingLauncher, output under a unique dist directory. Sign only the new snapshot launcher, new MSI and payload catalog, with the approved Certum certificate and SHA-256 RFC 3161 timestamp. Existing published artifacts and the active protected test copy remain unchanged. No updater manifest for this development version is generated or deployed, and no installation is authorized by package signing alone.
+
+## 2026-10-14 — Lingue della comunicazione pubblica
+
+Decisione approvata dall’utente: GitHub e sito pubblicano documentazione, istruzioni e annunci solo in italiano e inglese, comunicando il supporto multilingue del runtime. Distinguere release stabile e candidato locale, copertura completa e parziale/fallback; non creare ulteriori varianti pubbliche. Non autorizza push, chiusure issue o pubblicazione. Contratto: [LOCALIZATION](../docs/LOCALIZATION.md); [testi preparati](../docs/PUBLICATION-NOTES-4.1.md).
+
+## 2026-10-15 — Completion of standalone task management (#27)
+
+Within the user-authorized 4.1 completion phase, P manages create/update, inspect and confirmed removal of the canonical MT task for the explicitly standalone installation. The machine policy and protected-path checks apply to every mutation. GPO/unknown installations cannot mutate tasks; foreign actions are rejected. No new permanent task is introduced.
+
+The existing protected installation state directory records diagnostic task-management events in `schedule-events.jsonl`. Inspection reports the native Task Scheduler state, last run, last result and next run without changing a task. The wizard explicitly offers missed-run recovery (default on), execution on battery (default off) and network-required (default off); network availability does not prove access to a UNC share. No automatic reboot, credential storage or UAC prompt in headless execution. Task-management Windows APIs are mocked for local regression; real SYSTEM validation remains a separate pilot.
+
+## 2026-10-15 — Private VM pilot version mapping
+
+The authorized VM pilot uses version 4.0.9004 consistently in its frozen runtime/ZIP/MSI copy, above stable 4.0.6 and below future stable 4.1.0. The working tree remains 4.1.0-dev.3, and the stable manifest is unchanged. New output directories use a unique MaintenanceToolkit-Pilot project/date/time identifier under launcher/build, dist and packaging/msi/out. The canonical launcher and ZIP procedures run from the frozen copy; WiX uses the existing pinned 5.0.2/Util invocation. This private numbering enables genuine identity/version verification without publishing development payloads or weakening trust. A harness may stage authenticated local test metadata instead of the live stable feed; this transport fixture is not shipped as runtime configuration. Real application/rollback tests must be labelled separately from network retrieval and the unsupported 4.0.6 update UI.
+
+Private pilot follow-up: version 4.0.9005/R03 replaces the test candidate after the real COM identity reader exposed null pipeline outputs. Previous 4.0.9004 files remain immutable; only the newly frozen copy changes version. The unchanged signed native launcher is reused; MSI, payload catalog and metadata are newly built/signed.
+
+## 2026-10-15 — Atomic ZIP directory transitions
+
+The authorized real locked-file pilot showed PowerShell Move-Item can partially relocate directory contents before failing. ZIP apply and recovery therefore use System.IO.Directory.Move for same-volume sibling directory renames, never provider fallback or directory merging. Existing full-byte verification, protected sibling paths and recovery journal remain mandatory. Failed partial-move pilot trees are retained as diagnostic evidence; they are not treated as recovered installations. A new immutable candidate is required because R03 contains the old implementation.
+
+Private R04 pilot mapping: 4.0.9006 contains atomic ZIP directory transitions and the locked-file regression. Rebuild/sign only new MSI/catalogs/metadata; reuse the unchanged signed launcher. Previous R03/4.0.9005 outputs remain immutable and the installed MSI pilot is retained until an explicit next test.
+
+## 2026-10-15 — Isolated intentional MSI rollback fixture
+
+Within the authorized checkpoint-backed VM tests, a private 4.0.9007 MSI fixture adds a deferred failing WixQuietExec action after InstallFiles. Only its frozen Product.wxs copy changes; production MSI source and R04/4.0.9006 remain unchanged. The new MSI, ZIP/catalog and private metadata are signed normally, kept under an INTENTIONAL-FAILURE output directory and never published or treated as a usable candidate. This verifies real Windows Installer rollback and updater uncertain-state handling after actual changes, instead of claiming the inconclusive mutex experiment as a failure test. Source runtime remains 4.1.0-dev.3.
+
+## 2026-10-15 — Deroga esplicita al test Windows 10
+
+L’utente autorizza di saltare il controllo reale su Windows 10 per questa fase 4.1 e proseguire con gli altri gate. Registrare il limite nella documentazione di rilascio: i risultati reali di questa fase riguardano Windows 11 Pro build 26200 / Windows PowerShell 5.1. Non dichiarare Windows 10 verificato per la 4.1; le evidenze precedenti rimangono storiche. La deroga non autorizza pubblicazione, modifica del feed stabile o rimozione delle altre verifiche.
+
+## 2026-10-15 — Final 4.1.0 release authorization and metadata lifecycle
+
+The user subsequently authorized final 4.1 packages, signatures and checks, followed by GitHub publication if all checks pass and delivery of the full website upload ZIP. This supersedes the earlier no-publication restriction; Rome publication windows still apply. Final metadata uses sequence 4 (above private pilot sequence 3) and 30-day validity. Refresh requires explicit maintainer action, incremented sequence, fresh timestamps and re-signing/verifying the JSON/catalog pair; immutable packages remain unchanged. No new task/service is introduced for refresh. Full web bundle uses the existing dist outputs with software/ and api/maintenance-toolkit/ paths. See [release verification](MT-4.1-RELEASE-VERIFICATION.md).

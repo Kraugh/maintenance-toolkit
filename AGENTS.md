@@ -35,3 +35,5 @@
 - Registra nomi e percorsi esatti dei file e task temporanei creati durante il lavoro, così da poterli verificare e rimuovere senza chiedere all'utente di recuperare nomi creati dall'agente.
 - Dopo la verifica, rimuovi quelli non più necessari nell'ambito autorizzato, controllando i percorsi prima della rimozione. Conserva gli artefatti necessari alla revisione e segnala quelli mantenuti.
 - Artefatti di scambio: nomi univoci con progetto, data e ora `Europe/Rome`, più revisione o altro suffisso quando necessario a evitare collisioni. File interni: nomi canonici, senza data o revisione. Pacchetti pubblici: prodotto e versione, secondo le convenzioni esistenti.
+
+- GitHub e sito pubblicano documentazione, istruzioni e annunci soltanto in italiano e inglese. Comunicare la disponibilita multilingue del runtime, distinguendo lingue validate nella release pubblica e copertura parziale dei candidati; non creare pagine pubbliche nelle altre lingue. Applicare [docs/LOCALIZATION.md](docs/LOCALIZATION.md).

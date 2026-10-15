@@ -172,3 +172,7 @@ For all user-facing MT text, apply the localization contract rather than embeddi
 - Stable, versioned contracts at integration boundaries.
 - Documentation must describe reality, not intent.
 - The previous stable release remains available until the new one earns its place.
+
+## Public language policy
+
+GitHub and website documentation, instructions and announcements are published only in Italian and English. Runtime multilingual support must be described with the actual release scope and coverage from [the localization contract](../docs/LOCALIZATION.md). The two published language variants must agree. Additional UI languages do not create additional website/documentation variants. Local signed candidates are not public releases; issue closure must cover every acceptance criterion. See [the 14 October issue review](ISSUE-REVIEW-20261014.md).

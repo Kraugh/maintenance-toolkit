@@ -57,7 +57,7 @@ try {
     [void][version]$CanonicalVersion
 }
 catch {
-    throw "Canonical runtime version is not a valid MSI version: $CanonicalVersion"
+    throw "MSI build requires a finalized numeric runtime version; development version '$CanonicalVersion' cannot be packaged as a public MSI."
 }
 
 if ([string]::IsNullOrWhiteSpace($Version)) {
@@ -112,19 +112,15 @@ if (Test-Path -LiteralPath $ExpectedOutput) {
 }
 
 if (-not (Test-Path -LiteralPath $WixExe)) {
-    Write-Host "Installing local WiX Toolset 5.0.2..."
-    & dotnet tool install wix --tool-path $ToolRoot --version 5.0.2
-    if ($LASTEXITCODE -ne 0) {
-        throw "Unable to install WiX Toolset 5.0.2."
-    }
+    throw "Existing WiX Toolset 5.0.2 is required. Dependency acquisition needs explicit authorization."
 }
 
 Push-Location $MsiRoot
 try {
     # WiX v5 is intentionally pinned: reproducible build and no v6/v7 OSMF dependency.
-    & $WixExe extension add WixToolset.Util.wixext/5.0.2
-    if ($LASTEXITCODE -ne 0) {
-        throw "Unable to acquire WixToolset.Util.wixext 5.0.2."
+    $UtilExtension = Join-Path $MsiRoot '.wix\extensions\WixToolset.Util.wixext\5.0.2\wixext5\WixToolset.Util.wixext.dll'
+    if (-not (Test-Path -LiteralPath $UtilExtension)) {
+        throw "Existing WixToolset.Util.wixext 5.0.2 is required. Dependency acquisition needs explicit authorization."
     }
 
     $OutputMsi = Join-Path $OutputRoot ("MaintenanceToolkit-{0}.msi" -f $Version.Replace(".", "_"))

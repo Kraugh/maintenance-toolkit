@@ -1,4 +1,6 @@
-﻿## Current status — 13 October 2026 / Stato corrente
+> 4.1.0 finalization authorized 15 October 2026: packages/signatures/final checks then GitHub publication if successful; website delivered for manual upload. See [current release verification](MT-4.1-RELEASE-VERIFICATION.md). Status below preserves the preceding pilot checkpoint.
+
+## Current status — 15 October 2026 / Stato corrente
 
 - [x] GitHub stable 4.0.6 published, signed MSI and ZIP verified.
 - [x] Winget SYSTEM discovery and local exceptions validated with tests and read-only pilot diagnostics.
@@ -7,6 +9,10 @@
 - [ ] Resolve DCU self-update timeout/reboot-summary evidence issue.
 - [ ] Deploy and verify the updated website manifest.
 - 4.1: MT self-update. 5.0: presentation/interface evolution. Lenovo remains deferred.
+- 4.1 local development: 117 regression checks passed; P inspection/removal/status and power/network controls implemented locally; distinct EXE/MSI/ZIP payload catalog signed and verified. H/G/P success is user-reported. Real MSI/ZIP application, locked-file ZIP recovery, single diagnostic resume and SYSTEM/loopback UNC passed on private R04. Controlled MSI rollback after InstallFiles also passed; production feed/bootstrap, website-source review and other declared environment limits remain documented; see [pilot evidence](MT-4.1-VM-PILOT-20261015.md). Hyper-V checkpoint confirmed by the user; [pilot sequence](MT-4.1-PILOT.md) prepared. See [the 4.1 plan](MT-4.1-SELF-UPDATE-PLAN.md) and [validation evidence](MT-4.1-LOCAL-VALIDATION.md).
+- Windows 10 real test explicitly waived by the user for this phase; do not claim 4.1 validation on Windows 10. See [remaining release gates](MT-4.1-RELEASE-PREPARATION.md).
+- Seven-language menu implemented locally, five new translations partial with English fallback. Public documentation/announcements remain IT/EN only.
+- [Issue review, 14 October](ISSUE-REVIEW-20261014.md): none of the 17 open issues meets all closure criteria; #27/#28 and #20 contain remaining work.
 
 The sections below preserve development history; earlier "pending" or stable-version statements describe their original checkpoint, not today's release state.
 
@@ -40,7 +46,7 @@ Le date di rilascio non sono prefissate. Qualità, affidabilità e coerenza dell
 >
 > La roadmap contiene obiettivi approvati del progetto. Le GitHub Issue sono le unità operative usate per realizzarli. L'ordine delle sezioni non rappresenta necessariamente l'ordine cronologico di implementazione.
 
-## Current stable baseline / Stato stabile attuale
+## Historical 4.0.3 baseline / Baseline storica 4.0.3
 
 - [x] Maintenance Toolkit **4.0.3** stable release
 - [x] Native `MaintenanceToolkit.exe` launcher
@@ -202,7 +208,7 @@ Internationalization is a project-wide architectural requirement, not an optiona
 - [x] Automatic system-language detection exists for the currently supported languages.
 - [x] English fallback exists.
 - [x] Explicit language override exists.
-- [ ] Make the official MT language set: **Italian, English, Swedish, German, French, Japanese and Simplified Chinese**.
+- [ ] Complete translation and validation of the official MT language set: **English, Italian, French, Spanish, German, Simplified Chinese and Japanese**. The 4.1 development menu selects these seven; historical diagnostics in new resources still fall back to English. Swedish remains a compatibility resource.
 - [ ] Ensure all MT-generated user-facing UI text is loaded from external language JSON resources; no user-facing string may be hard-coded in application logic.
 - [ ] Allow a supported language to be added by adding a language JSON resource without changing application logic.
 - [ ] Define validation for missing keys, invalid language files and fallback behaviour.

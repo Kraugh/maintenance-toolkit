@@ -72,3 +72,7 @@ Possible future standalone utility for controlled cleanup of directory trees:
 - coordinated visual identity;
 - development process based on documented decisions and issues;
 - shared localization principle: external resources, English fallback and no hard-coded user-facing UI strings.
+
+## Scope reference — 14 October 2026
+
+Approved 4.1 scheduling, self-update and Languages work belongs to the [roadmap](roadmap.md) and [4.1 plan](MT-4.1-SELF-UPDATE-PLAN.md), not to this unscheduled backlog. Remaining concrete acceptance criteria are recorded in the [issue review](ISSUE-REVIEW-20261014.md). Public documentation languages are IT/EN, independently of runtime multilingual resources.

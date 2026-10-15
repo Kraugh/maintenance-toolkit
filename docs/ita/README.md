@@ -1,4 +1,6 @@
-﻿# Maintenance Toolkit 4.0
+> MT 4.1.0: V aggiorna MT standalone con conferma; G configura gestione/opt-in protetto (default disabilitato); P gestisce la pianificazione SYSTEM; H seleziona sette lingue, con cinque traduzioni parziali e fallback inglese. GPO/unknown: sola rilevazione. Primo upgrade dalla 4.0.6 manuale. Guida: [aggiornamento MT](https://github.com/Kraugh/maintenance-toolkit/blob/main/docs/ita/AGGIORNAMENTO-MT.md). Le evidenze 4.0.x sotto restano storiche.
+
+# Maintenance Toolkit 4.0
 
 Maintenance Toolkit è uno strumento gratuito e open source per la manutenzione,
 la diagnostica e la raccolta di informazioni sui sistemi Microsoft Windows.
@@ -159,3 +161,7 @@ Sviluppato con l'indispensabile aiuto di una Rubber Duck molto paziente.
 ## Eccezioni Winget locali
 
 Vedere [la guida completa](ECCEZIONI-WINGET.md): percorso, ID esatti, permessi, modalità di blocco e limiti della protezione.
+
+## Sviluppo locale 4.1
+
+La release stabile resta 4.0.6. [Guida prove locali](MT-4.1-PROVE-LOCALI.md), [copertura lingue](../LOCALIZATION.md) e [annuncio IT/EN preparato](../PUBLICATION-NOTES-4.1.md). Sette lingue nel menu del candidato, nuove traduzioni parziali; documentazione pubblica soltanto IT/EN.

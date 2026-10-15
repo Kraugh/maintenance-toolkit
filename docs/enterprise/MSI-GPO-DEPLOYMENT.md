@@ -1,4 +1,6 @@
-﻿# Enterprise deployment — MSI and Group Policy
+> MT 4.1.0: V offers confirmed standalone MT updates; G configures protected management/opt-in (default off); P manages SYSTEM schedules; H selects seven languages, five partially translated with English fallback. GPO/unknown: detection only. First 4.0.6 upgrade is manual. See [upgrading MT](https://github.com/Kraugh/maintenance-toolkit/blob/main/docs/eng/UPGRADING-MT.md). The 4.0.x evidence below remains historical.
+
+# Enterprise deployment — MSI and Group Policy
 
 This guide describes the supported installation path for Maintenance Toolkit 4.0.6. It covers standalone MSI installation and centrally managed Active Directory deployment without attempting to catalogue environment-specific troubleshooting cases.
 

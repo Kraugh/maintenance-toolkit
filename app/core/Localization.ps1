@@ -6,8 +6,7 @@
     )
 
     $requested = [string]$Settings.Language
-    $defaultLanguage = [string]$Settings.DefaultLanguage
-    if ([string]::IsNullOrWhiteSpace($defaultLanguage)) { $defaultLanguage = 'en-US' }
+    $defaultLanguage = 'en-US'
 
     $detectedCulture = $null
     $fallbackUsed = $false
@@ -22,7 +21,10 @@
 
     if (-not (Test-Path -LiteralPath $candidatePath)) {
         $neutral = ($requested -split '-')[0]
-        $neutralMatch = Get-ChildItem -LiteralPath $languageRoot -Filter ($neutral + '-*.json') -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        # Simplified Chinese is explicit; do not map Traditional Chinese to it.
+        $neutralMatch = if ($requested -match '^(?i:zh-(TW|HK|MO|Hant)(-|$))') { $null } else {
+            Get-ChildItem -LiteralPath $languageRoot -Filter ($neutral + '-*.json') -File -ErrorAction SilentlyContinue | Sort-Object Name | Select-Object -First 1
+        }
         if ($neutralMatch) {
             $candidatePath = $neutralMatch.FullName
             $requested = [System.IO.Path]::GetFileNameWithoutExtension($neutralMatch.Name)
@@ -53,8 +55,34 @@ function Import-MTLanguage {
     )
 
     $resolution = Resolve-MTLanguage -ProjectRoot $ProjectRoot -Settings $Settings
-    $data = Get-Content -LiteralPath $resolution.Path -Raw -Encoding UTF8 | ConvertFrom-Json
+    $englishPath = Join-Path $ProjectRoot 'languages/en-US.json'
+    $data = Get-Content -LiteralPath $englishPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $fallbackKeys=@()
+    if($resolution.Language -ne 'en-US') {
+        try {
+            $selected=Get-Content -LiteralPath $resolution.Path -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop
+            foreach($property in @($data.PSObject.Properties)) {
+                $translation=$selected.PSObject.Properties[$property.Name]
+                if($translation -and $translation.Value -is [string] -and -not [string]::IsNullOrWhiteSpace($translation.Value)) {
+                    $data.PSObject.Properties[$property.Name].Value=$translation.Value
+                } else {$fallbackKeys+=$property.Name}
+            }
+        }catch{
+            $resolution.Language='en-US';$resolution.Path=$englishPath;$resolution.FallbackUsed=$true
+        }
+    }
+    $resolution | Add-Member -NotePropertyName EnglishFallbackKeys -NotePropertyValue @($fallbackKeys)
     [pscustomobject]@{ Data = $data; Resolution = $resolution }
+}
+
+function Set-MTLanguagePreference {
+    param([Parameter(Mandatory)][string]$ProjectRoot,[Parameter(Mandatory)][string]$Language)
+    if($Language -notin @('auto','en-US','it-IT','fr-FR','es-ES','de-DE','zh-CN','ja-JP','sv-SE')){throw 'MT41_LANGUAGE_INVALID'}
+    if($Language -ne 'auto' -and -not (Test-Path -LiteralPath (Join-Path $ProjectRoot ('languages/'+$Language+'.json')))){throw 'MT41_LANGUAGE_INVALID'}
+    $Path=Join-Path $ProjectRoot 'config/settings.json'
+    $Settings=Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop
+    $Settings.Language=$Language
+    Save-MTUpdateJson -Path $Path -Data $Settings
 }
 
 function Get-MTText {

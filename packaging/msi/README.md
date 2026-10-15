@@ -1,4 +1,4 @@
-﻿# Maintenance Toolkit — MSI packaging
+# Maintenance Toolkit — MSI packaging
 
 This directory contains the enterprise MSI packaging source.
 
@@ -102,3 +102,7 @@ Separating immutable application files in Program Files from mutable state in Pr
 - Portable staging: `dist/staging` inside the repository.
 
 Public filenames contain product name and version only. Work handover ZIPs use date/time and revision. No build output is redirected outside the repository. Existing MSI/ZIP packages are not silently overwritten. Signing changes bytes, so record the signed hash and verify the timestamp before packaging.
+
+## Private 4.1 development candidate
+
+Signed dev.3 uses numeric MSI ProductVersion 4.0.9003 exclusively for isolated local testing; it is not public 4.1.0. See [mapping and build evidence](../../project/MT-4.1-LOCAL-VALIDATION.md). Stable 4.0.6 packages remain unchanged. The normal builder rejects nonnumeric development versions; the recorded private build uses existing pinned WiX/Util tools, with no dependency acquisition. New dependencies require authorization. GPO ownership remains outside MT; real upgrade/rollback is not yet validated.

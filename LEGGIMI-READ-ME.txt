@@ -1,6 +1,6 @@
-﻿ENGLISH
+ENGLISH
 
-MAINTENANCE TOOLKIT 4.0.6
+MAINTENANCE TOOLKIT 4.1.0
 ==============================
 
 RECOMMENDED STARTUP
@@ -28,7 +28,7 @@ the policy on the pilot PC. Full instructions: docs\eng\OEM-UPDATES.md
 
 ITALIANO
 
-MAINTENANCE TOOLKIT 4.0.6
+MAINTENANCE TOOLKIT 4.1.0
 ==============================
 
 AVVIO CONSIGLIATO
@@ -55,3 +55,15 @@ NOTA DISTRIBUZIONE OEM
 Prima degli aggiornamenti OEM abilitare Ripristino configurazione di sistema
 nella GPO computer e verificare la policy sul PC pilota. Istruzioni complete:
 docs\ita\AGGIORNAMENTI-OEM.md
+
+MT 4.1.0
+Stable release / Release stabile: 4.1.0.
+Primo aggiornamento dalla 4.0.6 manuale; nessun riavvio automatico.
+H: English, Italiano, Francais, Espanol, Deutsch, zh-CN, ja-JP.
+New languages are partially translated with English fallback.
+Le nuove lingue sono parzialmente tradotte con fallback inglese.
+Public GitHub/website documentation: Italian and English only.
+Documentazione pubblica GitHub/sito: soltanto italiano e inglese.
+Upgrade instructions / Istruzioni aggiornamento:
+docs/eng/UPGRADING-MT.md
+docs/ita/AGGIORNAMENTO-MT.md

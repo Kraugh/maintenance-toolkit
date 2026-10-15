@@ -1,5 +1,5 @@
 ﻿###############################################################################
-# Maintenance Toolkit 4.0.6
+# Maintenance Toolkit 4.1.0
 #
 # Autore:
 #   Luca Miselli
@@ -14,13 +14,16 @@ param(
     [string[]]$Only,
     [switch]$SelfTest,
     [switch]$CheckUpdates,
-    [ValidateSet("auto", "en-US", "it-IT")]
+    [ValidateSet('auto','en-US','it-IT','fr-FR','es-ES','de-DE','zh-CN','ja-JP','sv-SE')]
     [string]$Language = "auto",
-    [string]$InventoryShare
+    [string]$InventoryShare,
+    [ValidateSet('maintenance','analysis','updates')][string]$ScheduledMode,
+    [string]$JsonReportDestination,
+    [string]$ResumeTransaction
 )
 
 $ErrorActionPreference = "Stop"
-$Version = "4.0.6"
+$Version = "4.1.0"
 $AppDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Root = Split-Path -Parent $AppDir
 $ModulesDir = Join-Path $AppDir "modules"
@@ -41,7 +44,7 @@ $env:MT_LOGS = $ComputerLogsDir
 $env:MT_COMPUTER_LOG_NAME = $ComputerLogName
 $env:MT_INI = $IniPath
 $env:MT_VERSION = $Version
-$env:MT_INTERACTIVE = if ($RunAll -or ($Only -and $Only.Count -gt 0)) { "0" } else { "1" }
+$env:MT_INTERACTIVE = if ($RunAll -or ($Only -and $Only.Count -gt 0) -or $ScheduledMode) { "0" } else { "1" }
 
 # Optional DMT publication destination for Inventory snapshots.
 # Modules run in the same PowerShell process, so the environment variable is
@@ -74,6 +77,17 @@ $LanguageData = $MT4Context.Language
 $LanguageResolution = $MT4Context.LanguageResolution
 $CurrentLanguage = [string]$LanguageResolution.Language
 $env:MT_LANGUAGE = $CurrentLanguage
+. (Join-Path $AppDir 'core\UpdateTrust.ps1')
+. (Join-Path $AppDir 'core\SelfUpdate.ps1')
+. (Join-Path $AppDir 'core\Scheduling.ps1')
+. (Join-Path $AppDir 'core\UpdateApplication.ps1')
+if ($ScheduledMode -and ($RunAll -or $Only -or $CheckUpdates -or $SelfTest)) { throw 'MT41_MODE_CONFLICT' }
+if ($JsonReportDestination) {
+    $null=New-MTSchedulePlan -ProjectRoot $Root -JsonDestination $JsonReportDestination
+}
+if ($ScheduledMode -eq 'maintenance') { $RunAll=$true }
+if ($ScheduledMode -eq 'analysis') { $Only=@('Connectivity','Inventory','NetworkReport','DiskHealth','NVIDIA') }
+if ($ScheduledMode -eq 'updates') { $CheckUpdates=$true }
 
 # Native Network Diagnostics domain. Engine functions are loaded into the
 # current MT process; no standalone NDP launcher or second elevation exists.
@@ -214,7 +228,7 @@ function Invoke-MTUpdateCheck {
 
         return [pscustomobject]@{
             Status = "ERROR"
-            InstalledVersion = [version]$Version
+            InstalledVersion = [version]($Version.Split('-')[0])
             LatestVersion = $null
             Manifest = $null
             Error = $_.Exception.Message
@@ -405,7 +419,10 @@ function Show-Menu {
     Write-Host ("[C] {0}" -f (T "MENU_OPEN_CONFIG"))
     Write-Host ("[L] {0}" -f (T "MENU_OPEN_LOGS"))
     Write-Host ("[T] {0}" -f (T "MENU_SELFTEST"))
-    Write-Host ("[U] {0}" -f (T "MENU_CHECK_UPDATES"))
+    Write-Host ("[P] {0}" -f (T 'MT41_MENU_SCHEDULE'))
+    Write-Host ("[V] {0}" -f (T 'MT41_MENU_UPDATE'))
+    Write-Host ("[G] {0}" -f (T 'MT41_MENU_PREFERENCES'))
+    Write-Host ("[H] {0}" -f (T 'MT41_MENU_LANGUAGES'))
     Write-Host ("[I] {0}" -f (T "MENU_INFO"))
     Write-Host ("[Q] {0}" -f (T "MENU_EXIT"))
     Write-Host ""
@@ -602,6 +619,32 @@ function Invoke-MTNetworkDiagnosticsMenu {
     }
 }
 
+function Invoke-MTLanguageMenu {
+    try {
+        $LanguageIds=@('en-US','it-IT','fr-FR','es-ES','de-DE','zh-CN','ja-JP')
+        Write-Host ('[0] '+(T 'MT41_LANGUAGE_AUTO'))
+        for($Index=0;$Index -lt $LanguageIds.Count;$Index++){
+            $Resource=Get-Content -LiteralPath (Join-Path $Root ('languages/'+$LanguageIds[$Index]+'.json')) -Raw -Encoding UTF8 | ConvertFrom-Json
+            Write-Host ('['+($Index+1)+'] '+$Resource.LANGUAGE_NAME)
+        }
+        $Selection=Read-Host (T 'MT41_LANGUAGE_PROMPT')
+        if($Selection -notmatch '^[0-7]$'){return}
+        $NewLanguage=if($Selection -eq '0'){'auto'}else{$LanguageIds[[int]$Selection-1]}
+        Set-MTLanguagePreference -ProjectRoot $Root -Language $NewLanguage
+        $script:MT4Settings.Language=$NewLanguage
+        $Context=Import-MTLanguage -ProjectRoot $Root -Settings $script:MT4Settings
+        $script:LanguageData=$Context.Data
+        $script:LanguageResolution=$Context.Resolution
+        $script:CurrentLanguage=$Context.Resolution.Language
+        $env:MT_LANGUAGE=$script:CurrentLanguage
+        foreach($Module in $Catalog){$Module.Name=T $Module.NameKey}
+        $null=Initialize-MTRuntimeLocalization -ProjectRoot $Root -Language $script:CurrentLanguage
+    }catch{
+        Write-Host (T 'MT41_LANGUAGE_SAVE_FAILED') -ForegroundColor Yellow
+        [void](Read-Host (T 'MENU_PRESS_ENTER'))
+    }
+}
+
 function Select-Modules {
     while ($true) {
         Show-Menu
@@ -637,15 +680,25 @@ function Select-Modules {
             continue
         }
 
-        if ($Choice -match '^[Uu]$') {
-            Clear-Host
-            $null = Invoke-MTUpdateCheck
-            Write-Host ""
-            Write-Host (T "MENU_PRESS_ENTER")
-            [void](Read-Host)
+        if ($Choice -match '^[Pp]$') {
+            Invoke-MTScheduleWizard -ProjectRoot $Root
+            [void](Read-Host (T 'MENU_PRESS_ENTER'))
             continue
         }
-
+        if ($Choice -match '^[Vv]$') {
+            Invoke-MTUpdateMenu -ProjectRoot $Root -InstalledVersion $Version
+            [void](Read-Host (T 'MENU_PRESS_ENTER'))
+            continue
+        }
+        if ($Choice -match '^[Gg]$') {
+            Invoke-MTPreferenceWizard -ProjectRoot $Root
+            [void](Read-Host (T 'MENU_PRESS_ENTER'))
+            continue
+        }
+        if ($Choice -match '^[Hh]$') {
+            Invoke-MTLanguageMenu
+            continue
+        }
 if ($Choice -match '^[Ii]$') {
     Clear-Host
     Write-Host "============================================================"
@@ -689,14 +742,14 @@ if ($Choice -match '^[Ii]$') {
     }
 }
 
-function Invoke-ToolkitSession {
+function Invoke-MTToolkitSessionCore {
     param(
         [Parameter(Mandatory)]
         [array]$Selected
     )
 
     $SessionTimestamp = Get-Date -Format "yyyyMMdd-HHmmss"
-    $SessionId = "${SessionTimestamp}_${ComputerLogName}"
+    $SessionId = "${SessionTimestamp}_${ComputerLogName}_" + [guid]::NewGuid().ToString('N').Substring(0,8)
     $SessionDir = Join-Path $ComputerLogsDir $SessionId
     New-Item -ItemType Directory -Path $SessionDir -Force | Out-Null
 
@@ -915,6 +968,7 @@ function Invoke-ToolkitSession {
     $Reboot = @($Results | Where-Object RebootRequired).Count -gt 0
     $Errors = @($Results | Where-Object Status -eq "ERROR").Count
     $Warnings = @($Results | Where-Object Status -eq "WARN").Count
+    if($MT41UpdateWarning){$Warnings++;Write-WarnLog (T 'MT41_UPDATE_WARN') 'MTUpdate'}
 
     $Txt = Join-Path $SessionDir "riepilogo.txt"
     $Csv = Join-Path $SessionDir "riepilogo.csv"
@@ -972,6 +1026,8 @@ function Invoke-ToolkitSession {
 
     $Lines | Set-Content -LiteralPath $Txt -Encoding UTF8
     $Results | Export-Csv -LiteralPath $Csv -NoTypeInformation -Encoding UTF8
+    [pscustomobject]@{schemaVersion='1.0';version=$Version;session=$SessionId;startedAt=$Start.ToString('o');endedAt=$End.ToString('o');results=@($Results.ToArray());rebootRequired=$Reboot;updatePreparationWarning=[bool]$MT41UpdateWarning} |
+        ConvertTo-Json -Depth 12 | Set-Content -LiteralPath (Join-Path $SessionDir 'maintenance-summary.json') -Encoding UTF8
 
     if (Get-IniBool $Config "General" "GenerateHtmlReport" $true) {
         Add-Type -AssemblyName System.Web
@@ -1080,6 +1136,11 @@ $(T "INFO_THANKS")
         Where-Object LastWriteTime -lt (Get-Date).AddDays(-$Retention) |
         Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
 
+    $Publication=Publish-MTSessionJson -SessionPath $SessionDir -Destination $JsonReportDestination
+    if ($Publication.Status -eq 'WARN') {
+        $Warnings++
+        Write-WarnLog (T 'MT41_PUBLICATION_FAILED') 'JSON'
+    }
     return [pscustomobject]@{
         Errors = $Errors
         Warnings = $Warnings
@@ -1087,6 +1148,54 @@ $(T "INFO_THANKS")
 }
 
 # Autotest e controllo aggiornamenti da riga di comando.
+function Invoke-ToolkitSession {
+    param($Selected)
+    $SessionMutex=$null
+    try {
+        if(-not $script:MT41Lock){$SessionMutex=Enter-MTInstallationLock $Root}
+        Assert-MTNoPendingRecovery $Root
+        Invoke-MTToolkitSessionCore -Selected $Selected
+    }finally{Exit-MTInstallationLock $SessionMutex}
+}
+
+$script:MT41Lock=$null
+$MT41Resume=$null
+$MT41UpdateWarning=$false
+try {
+if($ResumeTransaction) {
+    $script:MT41Lock=Enter-MTInstallationLock $Root 120
+    $MT41Resume=Receive-MTResume $Root $ResumeTransaction
+    $ResumeArgs=@($MT41Resume.resumeArguments)
+    if($ResumeArgs.Count){
+        if($ResumeArgs[0] -notin @('maintenance','analysis')){throw 'MT41_STATE_INVALID'}
+        $ScheduledMode=$ResumeArgs[0]
+        $JsonReportDestination=if($ResumeArgs.Count -gt 1){$ResumeArgs[1]}else{''}
+        if($ScheduledMode -eq 'maintenance'){$RunAll=$true}else{$Only=@('Connectivity','Inventory','NetworkReport','DiskHealth','NVIDIA')}
+        $env:MT_INTERACTIVE='0'
+    }
+    if($MT41Resume.errorCode){$MT41UpdateWarning=$true;Write-Host (T 'MT41_UPDATE_WARN') -ForegroundColor Yellow}
+}
+if($ScheduledMode -and $ScheduledMode -ne 'updates' -and -not $ResumeTransaction){
+    $script:MT41Lock=Enter-MTInstallationLock $Root
+    Assert-MTNoPendingRecovery $Root
+    $UpdatePolicy=Get-MTSelfUpdateConfiguration $Root
+    if($UpdatePolicy.Status -ne 'Valid'){$MT41UpdateWarning=$true;Write-Host (T 'MT41_CONFIG_INVALID') -ForegroundColor Yellow}
+    if($UpdatePolicy.CanInstall -and $UpdatePolicy.AutomaticInstallEnabled){
+        try {
+            $Transaction=New-MTPreparedUpdate $Root $Version @($ScheduledMode,$JsonReportDestination)
+            Start-MTPreparedHelper $Transaction
+            exit 0
+        }catch{
+            if($_.Exception.Message -ne 'MT41_NO_NEW_VERSION'){
+                $MT41UpdateWarning=$true
+                Write-Host (T 'MT41_UPDATE_WARN') -ForegroundColor Yellow
+            }
+        }
+    } else {
+        $Detection=Invoke-MTUpdateCheck
+        if($Detection.Status -eq 'ERROR'){$MT41UpdateWarning=$true}
+    }
+}
 if ($SelfTest) {
     $SelfTestOutcome = Invoke-MTSelfTest
 
@@ -1103,6 +1212,14 @@ if ($SelfTest) {
 
 if ($CheckUpdates) {
     $UpdateOutcome = Invoke-MTUpdateCheck
+
+    if ($ScheduledMode -eq 'updates') {
+        $UpdateSession=Join-Path $ComputerLogsDir ((Get-Date -Format 'yyyyMMdd-HHmmss') + '_updates_' + [guid]::NewGuid().ToString('N').Substring(0,8))
+        New-Item -ItemType Directory -Path $UpdateSession -Force | Out-Null
+        $UpdateOutcome | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $UpdateSession 'update-check.json') -Encoding UTF8
+        $Publication=Publish-MTSessionJson -SessionPath $UpdateSession -Destination $JsonReportDestination
+        if ($Publication.Status -eq 'WARN') { Write-Host (T 'MT41_PUBLICATION_FAILED'); exit 20 }
+    }
 
     if ($UpdateOutcome.Status -eq "ERROR") {
         exit 20
@@ -1143,9 +1260,10 @@ if ($RunAll -or ($Only -and $Only.Count -gt 0)) {
         exit 20
     }
 
+    if($MT41UpdateWarning){exit 20}
+
     exit 0
 }
-
 # Modalità interattiva: dopo ogni esecuzione torna al menu oppure esce.
 while ($true) {
     $Selected = Select-Modules
@@ -1177,5 +1295,16 @@ while ($true) {
         if ($NextAction -match '^[Qq]$') {
             exit 0
         }
+    }
+}
+} catch {
+    $Code=$_.Exception.Message
+    if($Code -notmatch '^MT41_[A-Z_]+$'){$Code='MT41_TASK_FAILED'}
+    Write-Host (T $Code) -ForegroundColor Red
+    exit 1
+} finally {
+    Exit-MTInstallationLock $script:MT41Lock
+    if($MT41Resume -and $MT41Resume.phase -eq 'Consumed'){
+        Remove-MTUpdateWork (Get-MTUpdateStatePath $Root) $MT41Resume.id
     }
 }

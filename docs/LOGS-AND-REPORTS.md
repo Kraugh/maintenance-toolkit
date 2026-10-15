@@ -1,4 +1,4 @@
-﻿# Logs and reports
+# Logs and reports
 
 This document defines the distinction between **logs** and **reports/output artifacts** in Maintenance Toolkit.
 
@@ -168,3 +168,7 @@ Before introducing a new generated file, answer these questions:
 10. Are machine-readable fields stable and independent from UI localization?
 
 The answers should be reflected in the relevant feature documentation before a public release.
+
+## Local 4.1 JSON destination
+
+The new scheduled JSON report destination is distinct from `-InventoryShare`, which retains its inventory-only contract. Local results are retained when optional export fails; UNC access must be verified in the actual SYSTEM context, not inferred from an interactive user session. See [local test instructions](eng/MT-4.1-LOCAL-TESTING.md). No live SYSTEM/UNC run is claimed by isolated tests.

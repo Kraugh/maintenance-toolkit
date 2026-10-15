@@ -323,7 +323,9 @@ try {
 
     foreach ($DocFile in @(
         "ABOUT.txt",
-        "CHANGELOG.md"
+        "CHANGELOG.md",
+        "LOCALIZATION.md",
+        "LOGS-AND-REPORTS.md"
     )) {
         $Source = Join-Path $RepositoryRoot ("docs\" + $DocFile)
 
@@ -367,6 +369,31 @@ try {
         if (-not (Test-Path -LiteralPath $RequiredPackagePath -PathType Leaf)) {
             throw "Release validation failed: required package file missing: $RequiredPackageFile"
         }
+    }
+
+    # Repository-only references remain accessible without bundling project/build files.
+    foreach ($Markdown in Get-ChildItem -LiteralPath $PackageDocs -Filter '*.md' -File -Recurse) {
+        $RelativeDoc = $Markdown.FullName.Substring($PackageRoot.Length + 1)
+        $SourceDoc = if ($RelativeDoc -in @('docs\README.md','docs\CONTRIBUTING.md')) {
+            Join-Path $RepositoryRoot $Markdown.Name
+        } else { Join-Path $RepositoryRoot $RelativeDoc }
+        $Content = [IO.File]::ReadAllText($Markdown.FullName)
+        $Content = [regex]::Replace($Content, '(\]\()([^\s\)]+)(\))', {
+            param($Match)
+            $Reference = $Match.Groups[2].Value
+            if ($Reference -match '^(?:[a-z]+:|/|#)') { return $Match.Value }
+            $Parts = $Reference -split '#',2
+            $LocalTarget = Join-Path $Markdown.DirectoryName $Parts[0]
+            if (Test-Path -LiteralPath $LocalTarget) { return $Match.Value }
+            $SourceTarget = [IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $SourceDoc) $Parts[0]))
+            if ($SourceTarget.StartsWith($RepositoryRoot + '\', [StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $SourceTarget)) {
+                $RepoRelative = $SourceTarget.Substring($RepositoryRoot.Length + 1).Replace('\','/')
+                $Anchor = if ($Parts.Count -gt 1) { '#' + $Parts[1] } else { '' }
+                return '](' + 'https://github.com/Kraugh/maintenance-toolkit/blob/v' + $Version + '/' + $RepoRelative + $Anchor + ')'
+            }
+            return $Match.Value
+        })
+        [IO.File]::WriteAllText($Markdown.FullName, $Content, (New-Object Text.UTF8Encoding($false)))
     }
 
     # Staging-tree validation before compression.

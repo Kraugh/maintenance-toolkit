@@ -1,15 +1,15 @@
-﻿<p align="center">
+<p align="center">
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>
 
-# Maintenance Toolkit 4.0.6
+# Maintenance Toolkit 4.1.0
 
 Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
 maintenance, diagnostics and technical reporting.
 
-**Current stable release:** [4.0.6](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.0.6)
+**Current stable release:** [4.1.0](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.0)
 
-Published on 13 October 2026. The website update manifest is deployed separately; GitHub Releases is authoritative for the downloadable version.
+Release date: 15 October 2026. The website update manifest is deployed separately; GitHub Releases is authoritative for the downloadable version.
 
 Version 4.0.6 adds machine-local Winget exceptions, inheriting SYSTEM Winget discovery and final Dell outcome verification from 4.0.5. Guarded Dell/HP OEM updates, verified restore points, advisory-only NVIDIA checks and no automatic restart remain in place.
 
@@ -17,6 +17,12 @@ Maintenance Toolkit 4.0 introduces a multilingual application core, integrated
 Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
 technical network reports, a native Windows launcher and Authenticode code
 signing, while retaining the validated maintenance modules from the 3.7.x line.
+
+## MT 4.1 updates and scheduling
+
+V checks and offers confirmed MT updates for explicitly standalone installations. G controls management and protected automatic-update opt-in (default off). GPO/unknown management detect/report only. P configures SYSTEM schedules for maintenance (suggested), analysis or update detection; H selects the language. Automatic updates run before opted-in scheduled maintenance/analysis and resume it once, without another updater task or automatic reboot.
+
+The first upgrade from 4.0.6 is manual: [English instructions](docs/eng/UPGRADING-MT.md) / [istruzioni italiane](docs/ita/AGGIORNAMENTO-MT.md). Signed update-v1 metadata authenticates download hashes and the ZIP payload catalog; version.json remains detection-only.
 
 ## Main features
 
@@ -37,7 +43,7 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 - TXT technical network reports with correlated JSON topology and rule data;
 - optional Ookla Speedtest CLI integration;
 - per-computer session logs and summaries;
-- interface resources in Italian, English and Swedish;
+- validated Italian/English localization foundation; Swedish compatibility resources;
 - native `MaintenanceToolkit.exe` launcher;
 - Authenticode digital signature with trusted timestamp;
 - automatic prevention of system sleep while Maintenance Toolkit is running,
@@ -49,15 +55,15 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 
 Download the current stable release from the GitHub **Releases** page:
 
-**Maintenance Toolkit 4.0.6**
+**Maintenance Toolkit 4.1.0**
 
 Two official distribution formats are available:
 
-- `MaintenanceToolkit-4_0_6.zip` — portable package for manual and field use;
-- `MaintenanceToolkit-4_0_6.msi` — signed per-machine Windows x64 installer
+- `MaintenanceToolkit-4_1_0.zip` — portable package for manual and field use;
+- `MaintenanceToolkit-4_1_0.msi` — signed per-machine Windows x64 installer
   for standalone or centrally managed deployment.
 
-Both artifacts are accompanied by distinct checksum files: `MaintenanceToolkit-4_0_6-msi.sha256` and `MaintenanceToolkit-4_0_6-zip.sha256`. The MSI is digitally
+Both artifacts are accompanied by distinct checksum files: `MaintenanceToolkit-4_1_0-msi.sha256` and `MaintenanceToolkit-4_1_0-zip.sha256`. The MSI is digitally
 signed and timestamped and supports silent installation. For Active Directory
 and Group Policy deployment, use `CREATE_TASK=0` and let Group Policy own the
 Scheduled Task and runtime arguments. See the
@@ -69,8 +75,8 @@ Release packages contain the runtime and selected validation scripts under app/t
 
 ### Portable ZIP
 
-1. Download `MaintenanceToolkit-4_0_6.zip` from the official GitHub release.
-2. Verify the SHA-256 checksum when appropriate.
+1. Download `MaintenanceToolkit-4_1_0.zip` from the official GitHub release.
+2. Verify the SHA-256 checksum and signed payload catalog, including scripts/resources; verify the expected publisher and launcher signature before execution.
 3. If Windows marks the downloaded ZIP as coming from the Internet, verify that
    it came from the official project release and use **Properties → Unblock**
    on the ZIP before extracting it.
@@ -81,7 +87,7 @@ Release packages contain the runtime and selected validation scripts under app/t
 ### MSI installer
 
 For a normal per-machine installation, run
-`MaintenanceToolkit-4_0_6.msi` with administrative privileges. Silent and
+`MaintenanceToolkit-4_1_0.msi` with administrative privileges. Silent and
 centrally managed deployment options are documented in the
 [Enterprise MSI/GPO deployment guide](docs/enterprise/MSI-GPO-DEPLOYMENT.md).
 
@@ -105,7 +111,7 @@ from the official project release and have verified its origin, unblock the ZIP
 before extracting it. From PowerShell you may also use:
 
 ```powershell
-Unblock-File .\MaintenanceToolkit-4_0_6.zip
+Unblock-File .\MaintenanceToolkit-4_1_0.zip
 ```
 
 Then extract the archive again.
@@ -169,7 +175,7 @@ The signed launcher forwards command-line arguments to the PowerShell runtime.
 | `-Only <Key>` | Run only the specified module key, then exit. |
 | `-SelfTest` | Run the built-in Toolkit self-test and exit. |
 | `-CheckUpdates` | Check the public update manifest and exit. |
-| `-Language auto|en-US|it-IT` | Override automatic language selection for the current run. |
+| `-Language auto|en-US|it-IT|fr-FR|es-ES|de-DE|zh-CN|ja-JP` | Override automatic language selection for the current run. |
 
 Valid module keys for `-Only` are `Connectivity`, `Inventory`,
 `NetworkReport`, `RestorePoint`, `Winget`, `MicrosoftUpdate`, `Defender`,
@@ -196,7 +202,13 @@ For unattended execution and Task Scheduler, see the
 For vendor-update safety, the required System Restore GPO and pilot procedure,
 see [OEM updates](docs/eng/OEM-UPDATES.md).
 
+## Languages
+
+GitHub and website documentation are published in **Italian and English only**. The 4.1 Languages menu offers English, Italian, French, Spanish, German, Simplified Chinese and Japanese. The five new translations cover the menu and 4.1 workflows; historical diagnostics may fall back to English. The five additional languages have partial coverage; seven complete translations are not claimed. See [coverage and fallback](docs/LOCALIZATION.md) and [prepared bilingual announcement](docs/PUBLICATION-NOTES-4.1.md).
+
 ## Release validation
+
+4.1.0 final preparation follows 117 regression checks and private R04/4.0.9006 Windows 11/PowerShell 5.1 pilots for MSI/ZIP application, controlled recovery, one-time resume and SYSTEM/loopback UNC. Windows 10 testing was explicitly waived. Corporate SMB authorization and live selective Winget installation remain environment-specific/unverified. See [pilot evidence](project/MT-4.1-VM-PILOT-20261015.md) and [release verification](project/MT-4.1-RELEASE-VERIFICATION.md).
 
 4.0.6: regression tests and Foundation autotest passed on Windows PowerShell 5.1. Read-only SYSTEM diagnostics verified policy access and all eight excluded IDs on a pilot. The final ZIP passed filename, documentation, hash, signature and SelfTest checks; the only SelfTest warning was the non-elevated session. Launcher and MSI signatures/timestamps were verified. The user reported a remote MSI upgrade under SYSTEM completed with exit code 0: version 4.0.6 was verified, the eight-exception file was unchanged and GPO task configuration was preserved. A live selective Winget pass remains unverified. The installation/uninstall tests performed for 4.0.4 remain historical evidence, separate from this 4.0.6 upgrade test.
 

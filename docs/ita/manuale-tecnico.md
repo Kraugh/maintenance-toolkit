@@ -1,8 +1,10 @@
-﻿# Manuale tecnico — Maintenance Toolkit 4.0
+> MT 4.1.0: V aggiorna MT standalone con conferma; G configura gestione/opt-in protetto (default disabilitato); P gestisce la pianificazione SYSTEM; H seleziona sette lingue, con cinque traduzioni parziali e fallback inglese. GPO/unknown: sola rilevazione. Primo upgrade dalla 4.0.6 manuale. Guida: [aggiornamento MT](https://github.com/Kraugh/maintenance-toolkit/blob/main/docs/ita/AGGIORNAMENTO-MT.md). Le evidenze 4.0.x sotto restano storiche.
+
+# Manuale tecnico — Maintenance Toolkit 4.0
 
 **Versione documento:** 2.1
 **Compatibile con:** Maintenance Toolkit `4.0.6`
-**Aggiornato:** 22 settembre 2026
+**Aggiornato:** 14 ottobre 2026
 
 ## 1. Scopo
 
@@ -399,6 +401,10 @@ Per una segnalazione tecnica allegare, quando possibile:
 Repository: <https://github.com/Kraugh/maintenance-toolkit>
 Sito: <https://www.kraugh.it>
 
-## 4.0.6 package validation
+## Historical 4.0.4 package validation — 9 October 2026
 
 On 9 October 2026, Windows regression suites passed. The launcher and MSI signatures and timestamps were verified. Elevated portable and installed SelfTests returned 0 with no errors/warnings. MSI installation and uninstall returned 0. These checks do not certify every OEM/GPU model. NVIDIA remains advisory-only; unattended BIOS installation and automatic restarts remain blocked.
+
+## Candidato locale 4.1, non pubblicato
+
+Vedere [prove locali 4.1](MT-4.1-PROVE-LOCALI.md): P pianificazione SYSTEM, G gestione/opt-in, V rilevazione e conferma aggiornamento MT, H Languages. U/R rimossi dal menu; recupero interno conservato. Dominio non significa gestione GPO; GPO e unknown restano in sola rilevazione. Upgrade reale ed esecuzione non interattiva restano gate del pilota. Documentazione pubblica solo IT/EN; nuove traduzioni del runtime ancora parziali.

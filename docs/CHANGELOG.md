@@ -1,4 +1,19 @@
-﻿## 4.0.6 — 2026-10-13 (published)
+## 4.1.0 — 2026-10-15
+
+- Confirmed standalone MSI/ZIP updates with authenticated metadata, signed payload catalogs, pinned publisher identity, transactional recovery and one-time maintenance resume. GPO remains detection/reporting only; unknown management cannot install; automatic installation requires protected opt-in.
+- P manages standalone SYSTEM schedules (maintenance, analysis or update detection), inspection/removal, power/network conditions and optional JSON destination. Existing enterprise task ownership is preserved.
+- H selects seven languages; five additional translations are partial with English fallback. Public documentation remains Italian/English. V replaces U; R is removed from the menu while internal recovery remains.
+- 117 regression checks; private Windows 11/PowerShell 5.1 MSI/ZIP, recovery and SYSTEM/loopback UNC pilot. Windows 10 test waived; corporate SMB and live selective Winget installation are not certified by these tests.
+- First upgrade from 4.0.6 is manual using verified packages. No automatic reboot, BIOS installation or NVIDIA installation.
+
+## 4.1.0-dev.3 — historical local development checkpoint (2026-10-14)
+
+- P: standalone SYSTEM scheduling with three explicit modes; G: protected management/opt-in; V: MT update detection and confirmation; H: persistent language selection. U/R removed from the menu; internal recovery retained.
+- Seven menu languages; five new resources have partial coverage and English fallback. Public documentation/announcements remain Italian and English only.
+- 72 isolated checks passed. Local EXE/MSI/payload catalog signatures and timestamps verified; H/G/P success reported by the user. Real MSI/ZIP self-update and unattended SYSTEM/UNC scheduling still require pilot validation. See [validation](../project/MT-4.1-LOCAL-VALIDATION.md) and [open issue criteria](../project/ISSUE-REVIEW-20261014.md).
+- Stable 4.0.6 manifest and published artifacts unchanged.
+
+## 4.0.6 — 2026-10-13 (published)
 
 - Machine-local Winget exception file: exact ID exclusions or complete Winget-module blocking.
 - Invalid policy or failed JSON export prevents Winget installation; selective commands disable Winget-managed dependency processing.

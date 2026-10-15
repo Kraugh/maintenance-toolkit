@@ -1,17 +1,17 @@
-﻿MAINTENANCE TOOLKIT 4.0
+MAINTENANCE TOOLKIT 4.0
 =======================
 
 Strumento gratuito e open source per la manutenzione, la diagnostica
 e il reporting tecnico dei sistemi Microsoft Windows.
 
-Versione del pacchetto:
-    4.0.6
+Versione stabile pubblicata:
+    4.1.0
 
 Release stabile corrente:
-    4.0.6
+    4.1.0
 
 Data di rilascio:
-    22 settembre 2026
+    15 ottobre 2026
 
 Autore:
     Luca Miselli
@@ -33,3 +33,8 @@ di una Rubber Duck molto paziente.
 
 Se questo Toolkit ti ha fatto risparmiare mezz'ora di lavoro,
 allora ha raggiunto il suo scopo.
+
+MT 4.1: V update MT; G standalone/opt-in; P SYSTEM scheduling; H Languages.
+Seven selectable languages; five additional translations partial, English fallback.
+Sette lingue selezionabili; cinque nuove traduzioni parziali, fallback inglese.
+Public documentation IT/EN. First upgrade from 4.0.6 is manual: docs/eng/UPGRADING-MT.md; docs/ita/AGGIORNAMENTO-MT.md.
