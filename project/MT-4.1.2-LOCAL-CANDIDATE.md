@@ -1,5 +1,7 @@
 # MT 4.1.2 — local candidate, 16 October 2026
 
+> Historical R01: superseded without publication by corrected R02 at the user's request. R01 canonical package/metadata files were moved intact to `launcher/build/MaintenanceToolkit-412-R02-20261016-093414/superseded-R01`; test-stage copies remain unchanged. The paths/hashes below describe the original R01 checkpoint, not current output bytes. See [final R02 verification](MT-4.1.2-RELEASE-VERIFICATION.md).
+
 ## Scope and frozen inputs
 
 User authorized local candidate preparation, signing and VM MSI/ZIP tests only. No push, tag, release, stable-feed deployment or issue closure is authorized. Public stable remains 4.1.1. Its failed preflight is retained in [the separate report](MT-4.1.1-INSTALLATION-20261016.md).

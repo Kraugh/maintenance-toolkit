@@ -1,8 +1,9 @@
-## 4.1.2 — local candidate, not published
+## 4.1.2 — 2026-10-16
 
 - Ignore malformed uninstall locations belonging to unrelated applications under Windows PowerShell 5.1; malformed MT registrations remain blocked. This fixes MSI/ZIP classification before update preparation.
-- Verified on Windows 11 / Windows PowerShell 5.1: fresh signed MSI installation and authenticated manual MSI/ZIP upgrades from public 4.0.6 and 4.1.1; MSI and elevated installed SelfTest exit codes 0. Configuration, logs/reports, protected consent, InventoryShare and task XML preserved; no maintenance or reboot.
-- 122 regressions, Foundation zero errors/warnings, signed-script tamper rejection and real locked-file ZIP recovery passed. The exception file was absent before/after; Windows 10, real GPO and corporate SMB were not tested. [Full evidence and intermediate harness failures](../project/MT-4.1.2-LOCAL-CANDIDATE.md). Public stable/feed remain 4.1.1; no publication or issue closure. Tested package bytes are frozen; this updated changelog is repository documentation, not a repackaged payload.
+- Release contents consistently identify 4.1.2 in runtime metadata, read-me, local detection manifest and package information. Earlier private 4.1.2 R01 packages are superseded, not public releases.
+- Affected 4.1.1 installations need a verified manual MSI/ZIP upgrade. Machine policy, GPO ownership, protected consent, publisher/signature/catalog checks and no automatic reboot remain unchanged.
+- Windows 11 / PowerShell 5.1 is the tested environment; Windows 10, real GPO/corporate SMB and live selective Winget are not certified by this patch. Exact final-package test results and publication status are recorded in repository release evidence and GitHub Releases.
 
 ## 4.1.1 — 2026-10-15
 

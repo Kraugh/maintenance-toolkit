@@ -1,12 +1,12 @@
 # Upgrading MT — 4.1
 
-Instructions for MT 4.1.1. The first upgrade from 4.0.6 requires manual installation with verified official packages. Private-version pilot evidence is documented separately.
+Instructions for MT 4.1.2 packages. Check GitHub Releases for public availability. The first upgrade from 4.0.6 requires manual installation with verified official packages. Private-version pilot evidence is documented separately.
 
-## Local 4.1.2 validation — not a public download
+## Historical private 4.1.2 R01 validation
 
 On 16 October 2026, the final signed local 4.1.2 MSI/ZIP passed manual authenticated upgrades from public 4.0.6 and 4.1.1 on Windows 11 / Windows PowerShell 5.1, plus a fresh MSI installation. Native MSI and elevated installed SelfTest returned 0. Settings, logs/reports, protected consent, InventoryShare and task XML were preserved; locked-file ZIP recovery and modified-script rejection passed. No maintenance or reboot occurred. [Full results and limits](../../project/MT-4.1.2-LOCAL-CANDIDATE.md).
 
-The 4.1.1 updater may stop before installation when an unrelated application's uninstall location is malformed; this was reproduced on the VM. That installation needs a verified manual upgrade once an authorized replacement is available. Do not edit unrelated registry entries or bypass trust checks. Public stable/feed remain 4.1.1; 4.1.2 is local only. Windows 10, real GPO/corporate SMB and preservation of a present corporate exception file were not verified here. These repository instructions were updated after testing; frozen package contents remain unchanged.
+The 4.1.1 updater may stop before installation when an unrelated application's uninstall location is malformed; this was reproduced on the VM. That installation needs a verified manual upgrade once an authorized replacement is available. Do not edit unrelated registry entries or bypass trust checks. These results concern the superseded private R01; current package/publication status is recorded in GitHub Releases. Windows 10, real GPO/corporate SMB and preservation of a present corporate exception file were not verified here. These repository instructions were updated after testing; frozen package contents remain unchanged.
 
 ## First upgrade from 4.0.6
 

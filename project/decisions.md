@@ -1275,3 +1275,7 @@ The user subsequently authorized final 4.1 packages, signatures and checks, foll
 ## 2026-10-15 — Withdraw superseded 4.1.0 without replacing bytes
 
 The user requested removing 4.1.0 after 4.1.1 deployment and reported no end-user adoption. Withdraw the old GitHub release reversibly to a non-public draft, preserving its tag, source history and all eight original asset bytes/digests; 4.1.1 remains Latest. Technical verification downloads explain nonzero counters, which cannot independently prove or exclude external users. No binary replacement, force push or destructive release/tag deletion. Current acceptance and issue closure are documented in [the issue review](ISSUE-REVIEW-20261015.md).
+
+## 2026-10-16 — Corrected 4.1.2 contents and publication gate
+
+The user authorized publication after passing checks and explicitly waived publication time windows for this session on 16 October 2026. They rejected the proposed exception for preliminary R01 package labels and requested correction plus repeated VM tests before publication. Preserve R01 privately; build a new unpublished R02 of the same 4.1.2 with consistent package/runtime/detection documentation and newly signed catalogs/metadata sequence 7. Only final R02 bytes passing the full MSI/ZIP VM gate may be published. This does not authorize replacing any previously public asset or closing #28 without complete acceptance evidence. See [final verification and exact hashes](MT-4.1.2-RELEASE-VERIFICATION.md). No operational architecture or dependency change.

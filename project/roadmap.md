@@ -1,6 +1,10 @@
 > Current release: **4.1.1 published on GitHub, 15 October 2026 at 21:15:54 Europe/Rome**, correcting hosting rejection of empty User-Agent requests. Real hosting downloads, 118 regressions, Foundation, signed final packages and public GitHub downloads verified. All 4.1.0 assets unchanged. **4.1.1 website/API uploaded by the user and verified at 21:20**: eighteen exact pages, three exact API files, authenticated sequence 5 and metadata-linked GitHub payload trust passed using the packaged production downloader. No installation performed. See [patch verification](MT-4.1.1-RELEASE-VERIFICATION.md). Status below preserves preceding checkpoints.
 
-## Local 4.1.2 checkpoint — 16 October 2026
+## Final 4.1.2 R02 — 16 October 2026
+
+Corrected R02 supersedes unpublished R01 below: package documentation, runtime stable channel and local detection manifest identify 4.1.2 consistently. New signatures/catalogs and authenticated metadata sequence 7 verified; final MSI/ZIP matrix repeated before publication (fresh MSI, upgrades from public 4.0.6/4.1.1, recovery and preservation). Fresh hosting sources supplied at 09:36 reviewed; complete IT/EN web ZIP prepared. [Final hashes, results and limitations](MT-4.1.2-RELEASE-VERIFICATION.md). Publication is authorized with an explicit session time-window waiver; deployment/public-download results are recorded separately after execution. #28 remains open pending full acceptance review.
+
+## Historical local 4.1.2 R01 checkpoint — 16 October 2026
 
 - [x] Fix malformed unrelated uninstall locations in Windows PowerShell 5.1; malformed MT registrations remain blocked. 122 regressions and Foundation (zero errors/warnings) passed.
 - [x] Final signed, frozen candidate: fresh MSI installation and manual authenticated MSI/ZIP upgrades from public 4.0.6 and 4.1.1 on the authorized VM. Native MSI/elevated installed SelfTest exit codes 0; configuration, logs/reports, protected consent, InventoryShare and task XML preserved.

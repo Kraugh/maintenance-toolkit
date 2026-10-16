@@ -1,7 +1,7 @@
 {
   "Project": "Maintenance Toolkit",
   "Version": "4.1.2",
-  "Channel": "candidate",
+  "Channel": "stable",
   "Baseline": "3.7.2",
   "NetworkBaseline": "NDP 0.0.19-RC",
   "Milestone": "4.1: standalone scheduling and verified self-update"

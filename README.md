@@ -1,17 +1,15 @@
-> Local 4.1.2 candidate: MSI/ZIP VM installation matrix passed on 16 October 2026; not published. Public stable remains 4.1.1. The candidate fixes install-kind detection with malformed unrelated uninstall locations on Windows PowerShell 5.1. See [verified results and limits](project/MT-4.1.2-LOCAL-CANDIDATE.md). Frozen test packages remain unchanged; these subsequent documentation updates are not embedded in them.
-
 <p align="center">
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>
 
-# Maintenance Toolkit 4.1.1
+# Maintenance Toolkit 4.1.2
 
 Maintenance Toolkit is a free and open-source PowerShell toolkit for Windows
 maintenance, diagnostics and technical reporting.
 
-**Current stable release:** [4.1.1](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.1)
+**Release package:** 4.1.2. Publication status and downloads: [GitHub Releases](https://github.com/Kraugh/maintenance-toolkit/releases).
 
-Release date: 15 October 2026. The website update manifest is deployed separately; GitHub Releases is authoritative for the downloadable version.
+Package date: 16 October 2026. The website update manifest is deployed separately; GitHub Releases is authoritative for the downloadable version.
 
 Version 4.0.6 adds machine-local Winget exceptions, inheriting SYSTEM Winget discovery and final Dell outcome verification from 4.0.5. Guarded Dell/HP OEM updates, verified restore points, advisory-only NVIDIA checks and no automatic restart remain in place.
 
@@ -20,9 +18,13 @@ Network Diagnostics, automatic health rules, Advanced VPN Diagnostics,
 technical network reports, a native Windows launcher and Authenticode code
 signing, while retaining the validated maintenance modules from the 3.7.x line.
 
+## 4.1.2 installation detection fix
+
+An unrelated malformed uninstall location no longer blocks MSI/ZIP detection on Windows PowerShell 5.1. Malformed MT registrations still block installation. Affected 4.1.1 installations require a verified manual MSI/ZIP upgrade. Package read-me, runtime channel and local detection metadata identify 4.1.2 consistently. See [upgrade instructions](docs/eng/UPGRADING-MT.md) / [istruzioni di aggiornamento](docs/ita/AGGIORNAMENTO-MT.md). Final package results are recorded separately in the repository; local candidates are not public releases.
+
 ## 4.1.1 hosting compatibility patch
 
-The updater now sends a product-only User-Agent required by the hosting service. **4.1.0 has been withdrawn from public releases; use 4.1.1.** The normal initial path is a manual upgrade from 4.0.6 with verified MSI/ZIP. Historical 4.1.0 test copies can receive HTTP 403 and also require a manual upgrade; their original assets/tag are preserved privately as a draft/source history. See [patch verification](project/MT-4.1.1-RELEASE-VERIFICATION.md) and [issue closure review](project/ISSUE-REVIEW-20261015.md).
+The updater now sends a product-only User-Agent required by the hosting service. **4.1.0 has been withdrawn from public releases; use the verified current release.** The normal initial path is a manual upgrade from 4.0.6 with verified MSI/ZIP. Historical 4.1.0 test copies can receive HTTP 403 and also require a manual upgrade; their original assets/tag are preserved privately as a draft/source history. See [patch verification](project/MT-4.1.1-RELEASE-VERIFICATION.md) and [issue closure review](project/ISSUE-REVIEW-20261015.md).
 
 ## MT 4.1 updates and scheduling
 
@@ -61,7 +63,7 @@ The first upgrade from 4.0.6 is manual: [English instructions](docs/eng/UPGRADIN
 
 Download the current stable release from the GitHub **Releases** page:
 
-**Maintenance Toolkit 4.1.1**
+**Maintenance Toolkit 4.1.2**
 
 Two official distribution formats are available:
 
