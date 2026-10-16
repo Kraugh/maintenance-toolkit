@@ -1,4 +1,4 @@
-> Current, 16 October 2026: **4.1.2 is a local signed candidate**, not published; public stable/feed remain 4.1.1 and 4.1.0 is withdrawn. Final MSI/ZIP VM installation matrix passed with unchanged package hashes. See [results and limits](MT-4.1.2-LOCAL-CANDIDATE.md). Dated design/pilot sections below preserve historical status.
+> Current, 16 October 2026: **4.1.2 R02 is published on GitHub** after the repeated final MSI/ZIP VM gate and public-download verification. Website/API upload is pending; deployed feed remains 4.1.1 until upload. 4.1.0 is withdrawn. See [final release results and limits](MT-4.1.2-RELEASE-VERIFICATION.md). R01 and dated design/pilot sections below preserve historical status.
 
 # MT 4.1 — piano di autoaggiornamento
 

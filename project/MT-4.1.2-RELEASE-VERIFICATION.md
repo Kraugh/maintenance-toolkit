@@ -52,4 +52,14 @@ Full web delivery: `dist/MaintenanceToolkit-4.1.2-Web-20261016-093835-web.zip`, 
 - `dist/staging/MaintenanceToolkit-4.1.2-Web-20261016-093835`: web staging.
 - Temporary task `\Kraugh\Maintenance Toolkit - MSI Managed` was created only when absent, had no triggers, was never started and was removed. Actual transaction GUID paths remain in protected results/journals; completed/recovered work is removed. No permanent updater task.
 
-Keep these files as review/recovery evidence; private snapshots must not be published. No manual cleanup requested. Final installed VM version is 4.1.2 with stable package metadata. Publication/download verification status is recorded below after the authorized action; website upload remains manual.
+Keep these files as review/recovery evidence; private snapshots must not be published. No manual cleanup requested. Final installed VM version is 4.1.2 with stable package metadata. Website upload remains manual.
+
+## Publication and public verification
+
+Published **16 October 2026 at 09:43:40 Europe/Rome**, [GitHub v4.1.2](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.2), release source/tag commit `64805fe16b27a1cfed90219fdcc56ab1a2a8e241`. Main was pushed normally; no force push. All eight uploaded draft asset digests matched verified local files before making the release public. GitHub Latest now identifies v4.1.2.
+
+Actual public GitHub downloads passed using the exact packaged R02 production downloader/trust functions: metadata JSON/catalog pair byte-matched, signatures/catalogs and sequence contract passed, all metadata-linked MSI/ZIP/payload-catalog hashes matched, MSI identity/signature passed and the downloaded ZIP payload catalog verified. Installation tests preceded publication; these are additional transport checks on the same pretested bytes. Original 4.1.1 MSI/ZIP local hashes remained unchanged. Earlier public artifacts were not replaced.
+
+Evidence: `launcher/build/Verify-Public412Release.ps1`, `launcher/build/published-412-release.json`, `dist/staging/MaintenanceToolkit-PublicVerification-412-20261016-093414`, preparation-directory `github-draft.json`, `github-public.json`, `public-download-verification.txt`. No new task or maintenance execution in this verification.
+
+The complete web ZIP above is ready for the user. Hosting still has its separately deployed 4.1.1 until upload; live 4.1.2 verification is pending. After upload, compare the eighteen pages and three API files against delivered bytes, authenticate sequence 7 and retrieve linked GitHub packages through deployed metadata. #28 remains open pending full acceptance/issue review.
