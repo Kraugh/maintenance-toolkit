@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 1,
+  "inventoryDate": "2026-10-16",
+  "basis": "Read-only inspection of existing local evidence; no tests rerun. Source file hashes identify raw evidence before cleanup; summaries are not raw forensic replacements.",
+  "directories": [
+    {
+      "directory": "MaintenanceToolkit-411-InstallTest-20261016-075607",
+      "files": 118,
+      "bytes": 3270852.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "B710DD81A78B15590D9E9E594B949C08FAD6A315943942FE3B19404B147AC30F",
+          "status": "Completed"
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "1D3001610DD15530C5137FB58C621CEBC9B27DC439326A0BB75A74C41E8EDFE5",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [],
+          "selfTestExitCodes": [],
+          "startedAt": "2026-10-16T08:01:53.1505383+02:00",
+          "finishedAt": "2026-10-16T08:01:54.3475119+02:00",
+          "checksRecorded": 4,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-412-InstallTest-20261016-090238",
+      "files": 243,
+      "bytes": 6610841.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "F8B324A9CD5486CC77FE33A87D24ADADEC926DA2790C6EA366B3E59686505962",
+          "status": "Completed"
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "5EFBC87FD4ECDCCC9E052D574793DB9677A94ACDB883608EC6C4B1B578CA974E",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "selfTestExitCodes": [
+            {
+              "kind": "zip",
+              "code": 0
+            },
+            {
+              "kind": "fresh-msi",
+              "code": 0
+            }
+          ],
+          "startedAt": "2026-10-16T09:07:01.1363689+02:00",
+          "finishedAt": "2026-10-16T09:07:35.0211286+02:00",
+          "checksRecorded": 33,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-412-InstallTest-20261016-090829-resume",
+      "files": 115,
+      "bytes": 2823492.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "A057D28BB4D24D51F7E4C2FE23E114C0D887A9530860E80D42A7382CA5725A5E",
+          "status": "Completed"
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "B5F810574AE917299D2134C678DAEA851B3B2B797451E1FC9353B00A5D4F2DEC",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [],
+          "selfTestExitCodes": [],
+          "startedAt": "2026-10-16T09:08:47.5051171+02:00",
+          "finishedAt": "2026-10-16T09:08:54.2454837+02:00",
+          "checksRecorded": 13,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-412-InstallTest-20261016-090927-bootstrap",
+      "files": 118,
+      "bytes": 3373853.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "F8E3BA4569AAEC7FAAD681AE6C02B25CBA6D6C6768AE3892B607EAEB85DB4059",
+          "status": "Completed"
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "3DBD01097077C11586D01495F1E5BE70B26CCD67616F57DC6EEC2CB02AA054EA",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [
+            0
+          ],
+          "selfTestExitCodes": [
+            {
+              "kind": "msi",
+              "code": 0
+            }
+          ],
+          "startedAt": "2026-10-16T09:09:56.6323748+02:00",
+          "finishedAt": "2026-10-16T09:10:21.5026041+02:00",
+          "checksRecorded": 29
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-412-InstallTest-20261016-091131-from411",
+      "files": 238,
+      "bytes": 6711353.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "FABDF1CFCF02A85A6F6BA9E33975E70E23B49BBF5B403995B577C30792689D3A",
+          "status": "Completed"
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "96C25ACA6DF8686A2B0EAD0038DD0EC3D5FE13124296B58BD44B902F9A3681BC",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [
+            0,
+            0,
+            0
+          ],
+          "selfTestExitCodes": [
+            {
+              "kind": "zip",
+              "code": 0
+            },
+            {
+              "kind": "msi",
+              "code": 0
+            }
+          ],
+          "startedAt": "2026-10-16T09:12:20.7243995+02:00",
+          "finishedAt": "2026-10-16T09:12:59.3460243+02:00",
+          "checksRecorded": 45
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-412-R02-InstallTest-20261016-093414",
+      "files": 251,
+      "bytes": 9406003.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "77F0C850BDFDAA19CF30059FFD5BAAD6F2AB820DA826B3349D45AD2E9D958D93",
+          "status": "Failed",
+          "errorRecorded": true
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "0005C3EE450E67CD3D6E27463D07965E62EA74B8706D62BCEACF3FAA89090CA8",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "selfTestExitCodes": [
+            {
+              "kind": "zip",
+              "code": 0
+            },
+            {
+              "kind": "fresh-msi",
+              "code": 0
+            },
+            {
+              "kind": "msi",
+              "code": 0
+            }
+          ],
+          "startedAt": "2026-10-16T09:37:10.5266864+02:00",
+          "finishedAt": "2026-10-16T09:37:44.5287696+02:00",
+          "checksRecorded": 43,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-412-R02-Resume-20261016-093939",
+      "files": 356,
+      "bytes": 10910102.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "aggregate-result.json",
+          "sha256": "1DBDEA7B8614DB42493EEEC2B483124EE11AA6658934BCF8C2609FCFEA83FAEC",
+          "status": "Passed",
+          "revision": "R02",
+          "phase406Checks": 17,
+          "phase411Checks": 45,
+          "msiNativeCodes": [
+            0,
+            0,
+            0
+          ],
+          "selfTests": [
+            {
+              "kind": "zip",
+              "code": 0
+            },
+            {
+              "kind": "msi",
+              "code": 0
+            }
+          ],
+          "ended": "2026-10-16T09:40:18.7628352+02:00"
+        },
+        {
+          "source": "bootstrap-result.json",
+          "sha256": "F42EA5FA3634B95EB9A0DF60E877549F29A981FE687340191BEED351E456712E",
+          "status": "Completed"
+        },
+        {
+          "source": "installation-result.json",
+          "sha256": "F5BD85E9979AB747234EAA706A81C6D7E92D87D8E78FD003F4E8A5506804E013",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [],
+          "selfTestExitCodes": [],
+          "checksRecorded": 17
+        },
+        {
+          "source": "phase411/installation-result.json",
+          "sha256": "DCAD3541303D4DF5687AD55390F7BE53724D4CDEEC38E3D10E95478C63BEDC9D",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "nativeMsiExitCodes": [
+            0,
+            0,
+            0
+          ],
+          "selfTestExitCodes": [
+            {
+              "kind": "zip",
+              "code": 0
+            },
+            {
+              "kind": "msi",
+              "code": 0
+            }
+          ],
+          "startedAt": "2026-10-16T09:39:50.3770444+02:00",
+          "finishedAt": "2026-10-16T09:40:18.746696+02:00",
+          "checksRecorded": 45
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-Pilot-20261015-175925-21af8173",
+      "files": 13,
+      "bytes": 2280085.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "pilot-result.json",
+          "sha256": "0A6206EED57C12BEF9CCA6CB450E8774E95723395F12FAEE14F23E4082A161BF",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:04:04.7022102+02:00",
+          "finishedAt": "2026-10-15T18:04:07.6011931+02:00",
+          "checksRecorded": 3,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-Pilot-20261015-175925-21af8173-R02",
+      "files": 14,
+      "bytes": 2568392.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "pilot-result.json",
+          "sha256": "78D4F762BB6B233109B9625EA0702DD725F2E6146376056D81C23EFAACA6312F",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:05:25.429859+02:00",
+          "finishedAt": "2026-10-15T18:05:43.2927918+02:00",
+          "checksRecorded": 7,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-Pilot-20261015-180705-9fde84c3-R03",
+      "files": 334,
+      "bytes": 7423778.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "grouped-result.json",
+          "sha256": "1D945646DE14A253FDBCF3287621149E6C332B9ED816647F78401A0F65EF0599",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:47:58.2697757+02:00",
+          "finishedAt": "2026-10-15T18:50:28.6762371+02:00",
+          "checksRecorded": 8
+        },
+        {
+          "source": "pilot-result.json",
+          "sha256": "C57DE59944054177AF5B1DB10089B64B4ED08C7198A49A753659519EDC423F68",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:08:56.523226+02:00",
+          "finishedAt": "2026-10-15T18:09:18.9439105+02:00",
+          "checksRecorded": 24
+        },
+        {
+          "source": "zip-recovery-result.json",
+          "sha256": "DA4C6B2030EBB6F79ED0D0931AAE868600D6B5CC31A7B28C221111BA3D4FEE69",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:47:59.002866+02:00",
+          "finishedAt": "2026-10-15T18:48:04.083726+02:00",
+          "checksRecorded": 6,
+          "errorRecorded": true
+        },
+        {
+          "source": "zip-result.json",
+          "sha256": "92557A00B42046F28345282CF3AAD0AFC7208C8840F981F9329CACEC98248FE1",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:42:18.8619276+02:00",
+          "finishedAt": "2026-10-15T18:42:25.9776979+02:00",
+          "checksRecorded": 4,
+          "errorRecorded": true
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-Pilot-20261015-185059-cf9a6d0b-R04",
+      "files": 253,
+      "bytes": 7770514.0,
+      "disposition": "removable-after-document-review",
+      "sources": [
+        {
+          "source": "grouped-result.json",
+          "sha256": "3DC0999DD92B26E0A7598CCEA228A548D5AAF61D9E7C752D391F2B57EE5057A9",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:54:27.5545023+02:00",
+          "finishedAt": "2026-10-15T18:57:16.0205065+02:00",
+          "checksRecorded": 13
+        },
+        {
+          "source": "msi-final-result.json",
+          "sha256": "A1A9B42954A1C9AA88D642645CAB63180CE4D10431A9C7E232B1AE73D4B49E0D",
+          "status": "Failed",
+          "maintenanceExecuted": false,
+          "nativeExitCodes": [
+            0
+          ],
+          "startedAt": "2026-10-15T19:01:48.990739+02:00",
+          "finishedAt": "2026-10-15T19:02:01.9921134+02:00",
+          "checksRecorded": 3,
+          "errorRecorded": true
+        },
+        {
+          "source": "msi-r04-verification.json",
+          "sha256": "A034DD60FF898AD447E2EB91988417FA6DA576EC857B517836E24F71FE8A9FE0",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "finishedAt": "2026-10-15T19:03:33.2424881+02:00",
+          "checksRecorded": 8
+        },
+        {
+          "source": "zip-recovery-result.json",
+          "sha256": "EDBFA1046FBDFED2AB0C90F597A8746550B9DFD32212D21CB3FA72A5C36B95CF",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "startedAt": "2026-10-15T18:54:28.3091498+02:00",
+          "finishedAt": "2026-10-15T18:54:39.0083913+02:00",
+          "checksRecorded": 16
+        },
+        {
+          "source": "group-6ada40cd/system-unc-result.json",
+          "sha256": "1E47607C78FEEC223147EF35C2739FC7080EFECEB45E4E82D10A6032B9E8029A",
+          "status": "Passed"
+        },
+        {
+          "source": "intentional-rollback/rollback-result.json",
+          "sha256": "978537DCE5EFE571C35864828EF36AAAF37E10A324FCC9D10760AE2E5AE0BD18",
+          "status": "Passed",
+          "maintenanceExecuted": false,
+          "nativeExitCodes": [
+            1603
+          ],
+          "startedAt": "2026-10-15T19:11:22.0422883+02:00",
+          "finishedAt": "2026-10-15T19:11:35.5450571+02:00",
+          "checksRecorded": 18
+        }
+      ]
+    },
+    {
+      "directory": "MaintenanceToolkit-ProtectedTest-20261014-141042-beed9ed1",
+      "files": 132,
+      "bytes": 1791116.0,
+      "disposition": "retain-pending-operational-review",
+      "sources": []
+    }
+  ],
+  "externalFiles": [
+    {
+      "path": "C:\\Temp\\MT-Install-4_0_4-20261009-164940-d2c3771a.log",
+      "bytes": 273768,
+      "sha256": "DAD59A20997418FD27E06FA82078193E6CBDC0CDBB52B1D3A9410E8886F6FD5C",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue-25-20261009-1842-8c03b578.md",
+      "bytes": 1627,
+      "sha256": "7BED692B835E3FC12B1D800049A43DD1B5EB77AA03C9A09E09F68F0A2B0C4046",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue-26-20261009-1842-8c03b578.md",
+      "bytes": 1699,
+      "sha256": "A5C51893A9473E8A02B48BB0D2A8755320B08BAEA61B7E36D8D6CA1B54686D03",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue-27-20261009-1842-8c03b578.md",
+      "bytes": 1023,
+      "sha256": "2AFBF2338BACEFBA891A30BDC76FD171E64324AA54022592E27B28639877C1B0",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue-29-20261009-1839-de59899a.md",
+      "bytes": 1801,
+      "sha256": "D614A03F437587EAF62DC6D9B3AC6D70BEF9EE4C6F6C9F8CCFC4D60EA90B8494",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue-30-20261009-1839-de59899a.md",
+      "bytes": 1414,
+      "sha256": "27426FAA11E01A9419ED1693467974A768792318E3C04DD037022C42CF8CA5E9",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue29-06948c13c66d4235b9b21b8320748754.md",
+      "bytes": 1772,
+      "sha256": "7D835972B5C092798FF670464344C46CA2B4ACF94D611A43BC19C61E7BC0A635",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Issue30-955ac82eb7a04754b77600c61742acf3.md",
+      "bytes": 2121,
+      "sha256": "D60BAF5F9E877CFA58D70305F6178284E9BC0D8D1826F07A4A1C1FD5CCBAC918",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "C:\\Temp\\MT-Uninstall-4_0_4-20261009-165053-5a4dcb90.log",
+      "bytes": 227846,
+      "sha256": "27276E43E628236C4330B847D4E33B7873A46C155491840363319A8462771948",
+      "disposition": "removable-historical-log-or-checkpoint"
+    },
+    {
+      "path": "%LOCALAPPDATA%\\Temp\\MT-inventory-finalization-error-test.json",
+      "bytes": 228405,
+      "sha256": "91CC30F7DE2CDC8259C3F82407C38EC31A9754608491298A95F09A111B286D3F",
+      "disposition": "retain-pending-provenance-or-recoverability"
+    },
+    {
+      "path": "%LOCALAPPDATA%\\Temp\\MT-inventory-finalization-test.json",
+      "bytes": 228383,
+      "sha256": "1D7DFAA65A934AF848757B986530BA08405BB5F2224633C6B8047390E0757048",
+      "disposition": "retain-pending-provenance-or-recoverability"
+    },
+    {
+      "path": "%LOCALAPPDATA%\\Temp\\mt-v4.0.0-release-notes.md",
+      "bytes": 1358,
+      "sha256": "3219344C511C8C53E1D5DE00A81E65D97D7CDCDC4F0FA11151B87C2F3092218C",
+      "disposition": "retain-pending-provenance-or-recoverability"
+    },
+    {
+      "path": "%LOCALAPPDATA%\\Temp\\mt-v4.0.0-release-notes.md",
+      "bytes": 1358,
+      "sha256": "3219344C511C8C53E1D5DE00A81E65D97D7CDCDC4F0FA11151B87C2F3092218C",
+      "disposition": "retain-pending-provenance-or-recoverability"
+    },
+    {
+      "path": "%USERPROFILE%\\Downloads\\api.tgz",
+      "bytes": 26102,
+      "sha256": "856D90652FBEFC621B4969DAA6C049CD92FE77D8BFB1BE6638A6016A018BCA5A",
+      "disposition": "retain-pending-provenance-or-recoverability"
+    },
+    {
+      "path": "%USERPROFILE%\\Downloads\\software.tgz",
+      "bytes": 5105295,
+      "sha256": "A05E1EBF277E0E174DD6D55CFCE89D282C5FD81752CA151C81007F8FFF538A9F",
+      "disposition": "retain-pending-provenance-or-recoverability"
+    }
+  ]
+}
