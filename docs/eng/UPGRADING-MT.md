@@ -26,4 +26,6 @@ If installation state is uncertain, do not resume maintenance or delete journals
 
 ## 4.1.1 HTTP transport patch
 
+4.1.0 is withdrawn from public releases; new users should take 4.1.1 directly. The maintainer reports no end-user 4.1.0 adoption; technical verification downloads are not end-user installation evidence. The compatibility guidance below is retained for historical/test copies, not as a recommended intermediate upgrade step. [Current acceptance/issue status](../../project/ISSUE-REVIEW-20261015.md).
+
 4.1.0 can receive HTTP 403 from hosting before retrieving metadata/payload because it sends no User-Agent. Manually upgrade to 4.1.1 with verified official MSI/ZIP, preserving settings, exceptions, logs/reports, InventoryShare and tasks as above. The patch sends product identity only, without machine/user names. Never delete journals/locks to bypass uncertain installation state. Published 4.1.0 packages remain unchanged.

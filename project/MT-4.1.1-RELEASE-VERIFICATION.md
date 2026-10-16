@@ -45,3 +45,7 @@ Post-publication evidence retained: preparation-root `github-draft` (eight downl
 This proves deployed transport/trust, not a new installation pilot. No install, maintenance, task, credential or restart operation occurred. Affected old 4.1.0 clients still need the documented manual upgrade. No claim of corporate SMB, Windows 10 or live selective Winget installation validation.
 
 Retained evidence: `launcher/build/Verify-411HostedRelease.ps1`, `launcher/build/current-411-hosting.json`, `launcher/build/MaintenanceToolkit-411-HostingVerification-20261015-212007` including `verification.json`, downloaded pages/API/artifacts and extracted payload. Kept for review. Website 4.1.1 deployment gate is now complete.
+
+## Subsequent issue audit and old-release withdrawal
+
+[15 October issue audit](ISSUE-REVIEW-20261015.md): #27 closed with complete scheduling evidence; #28 remains open for final public-package installation/bootstrap verification. #20 stays open for complete translations/locale validation and now reflects the approved Spanish target. 4.1.0 moved to a non-public draft, preserving all eight asset digests/sizes and its source tag; no old package was replaced or deleted. The maintainer reports no end-user adoption; download counters include technical verification requests and are not proof of external users. 4.1.1 remains the public Latest release and deployed site/API target. This documentation-only audit does not modify any published package or signed metadata.

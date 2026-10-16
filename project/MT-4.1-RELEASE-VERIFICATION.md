@@ -1,5 +1,7 @@
 # MT 4.1.0 — release verification
 
+Historical evidence: 4.1.0 was withdrawn to a non-public draft after 4.1.1 deployment; original assets/tag preserved. Public 4.1.0 release URLs below are historical, not current downloads. See [current issue/withdrawal review](ISSUE-REVIEW-20261015.md).
+
 **Published:** [GitHub v4.1.0](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.0), 15 October 2026 at 20:21:49 Europe/Rome, outside prohibited windows. Release/tag commit: 3b8d8e419c8fc7abd0aea3501057141e641acf01. Eight uploaded assets were downloaded from the draft and byte-matched before publication. After publication the production downloader fetched public metadata/catalog, MSI, ZIP and payload catalog; all production trust/hash/MSI-identity/ZIP-membership assertions passed. Website upload remains pending with the user. No issues closed by this publication.
 
 Release date: 15 October 2026. The user authorized final packages, signing, final verification and GitHub publication only if checks pass. Website deployment remains manual by the user after GitHub assets are available. Check the Rome publication window immediately before remote mutations.

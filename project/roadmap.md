@@ -1,6 +1,17 @@
 > Current release: **4.1.1 published on GitHub, 15 October 2026 at 21:15:54 Europe/Rome**, correcting hosting rejection of empty User-Agent requests. Real hosting downloads, 118 regressions, Foundation, signed final packages and public GitHub downloads verified. All 4.1.0 assets unchanged. **4.1.1 website/API uploaded by the user and verified at 21:20**: eighteen exact pages, three exact API files, authenticated sequence 5 and metadata-linked GitHub payload trust passed using the packaged production downloader. No installation performed. See [patch verification](MT-4.1.1-RELEASE-VERIFICATION.md). Status below preserves preceding checkpoints.
 
-## Current status — 15 October 2026 / Stato corrente
+## Current 4.1.1 completion and residual acceptance
+
+- [x] 4.1.1 signed packages published; complete website/API deployed and verified with the exact packaged production downloader.
+- [x] Standalone SYSTEM scheduling: create/inspect/update/remove, conditions, diagnostics and ownership boundary; [#27 closed](https://github.com/Kraugh/maintenance-toolkit/issues/27).
+- [x] Self-update implementation, private application/recovery pilots, live hosting and GitHub trust/download checks.
+- [ ] [#28](https://github.com/Kraugh/maintenance-toolkit/issues/28): final public 4.1.1 installation/bootstrap and post-install preservation evidence. Keep separate from successful transport tests.
+- [ ] Complete five partial translations and representative localization validation under #20; approved target uses Spanish, Swedish remains compatibility only.
+- [x] 4.1.0 withdrawn to non-public draft; eight assets and tag retained unchanged. Public users target 4.1.1.
+
+[Current issue review](ISSUE-REVIEW-20261015.md): one completed issue closed, sixteen remain open. Broader OEM, inventory, VPN, progress, support-package and complete GPO-documentation work is not closed by this release.
+
+## Historical pilot checkpoint — 15 October 2026
 
 - [x] GitHub stable 4.0.6 published, signed MSI and ZIP verified.
 - [x] Winget SYSTEM discovery and local exceptions validated with tests and read-only pilot diagnostics.
@@ -287,9 +298,9 @@ The MT 4.0 Network Diagnostics foundation is released. Future work is tracked as
 - [x] Enterprise MSI packaging source with reproducible WiX 5.0.2 build.
 - [x] MSI/GPO deployment guide and separate task-ownership model.
 - [x] Publish the signed MSI artifact and SHA-256 checksum in the GitHub 4.0.0 release.
-- [ ] Align kraugh.it release/download material with the published MSI before enterprise rollout.
+- [x] Align kraugh.it release/download material with published 4.1.1 MSI/ZIP; eighteen pages and three API files byte-verified after user upload.
 - [ ] Evaluate opening the official download page directly from MT.
-- [ ] Consider automatic self-update only after the manual update workflow remains proven and the trust/security model is explicitly designed.
+- [x] Implement standalone self-update with confirmed manual application, protected opt-in before scheduled maintenance/analysis and authenticated metadata/payloads; GPO/unknown detection-only. Final public-installation acceptance remains #28 as listed above.
 - [ ] Consider release-history and video material as documentation improvements, not release blockers unless explicitly selected for a release.
 
 ---

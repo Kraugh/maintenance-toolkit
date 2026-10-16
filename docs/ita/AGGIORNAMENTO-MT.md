@@ -26,4 +26,6 @@ Con installazione incerta non riprendere manutenzione e non eliminare manualment
 
 ## Patch 4.1.1 per il trasporto HTTP
 
+La 4.1.0 e ritirata dalle release pubbliche: usare direttamente la 4.1.1, senza passaggi intermedi. Il maintainer riferisce nessuna adozione 4.1.0 da parte degli utenti; i download tecnici di verifica non provano installazioni utente. Le indicazioni sotto restano per copie storiche/di prova. [Stato corrente issue e accettazione](../../project/ISSUE-REVIEW-20261015.md).
+
 La 4.1.0 puo ricevere HTTP 403 dall'hosting prima di scaricare metadati/payload, perche non invia User-Agent. Eseguire il passaggio manuale alla 4.1.1 con MSI/ZIP ufficiale verificato, conservando impostazioni, eccezioni, log/report, InventoryShare e task come sopra. La patch invia soltanto l'identificativo prodotto, senza nomi macchina o utenti. Non eliminare journal/lock per aggirare un eventuale stato incerto. I pacchetti 4.1.0 restano invariati.

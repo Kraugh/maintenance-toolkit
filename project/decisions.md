@@ -1271,3 +1271,7 @@ L’utente autorizza di saltare il controllo reale su Windows 10 per questa fase
 ## 2026-10-15 — Final 4.1.0 release authorization and metadata lifecycle
 
 The user subsequently authorized final 4.1 packages, signatures and checks, followed by GitHub publication if all checks pass and delivery of the full website upload ZIP. This supersedes the earlier no-publication restriction; Rome publication windows still apply. Final metadata uses sequence 4 (above private pilot sequence 3) and 30-day validity. Refresh requires explicit maintainer action, incremented sequence, fresh timestamps and re-signing/verifying the JSON/catalog pair; immutable packages remain unchanged. No new task/service is introduced for refresh. Full web bundle uses the existing dist outputs with software/ and api/maintenance-toolkit/ paths. See [release verification](MT-4.1-RELEASE-VERIFICATION.md).
+
+## 2026-10-15 — Withdraw superseded 4.1.0 without replacing bytes
+
+The user requested removing 4.1.0 after 4.1.1 deployment and reported no end-user adoption. Withdraw the old GitHub release reversibly to a non-public draft, preserving its tag, source history and all eight original asset bytes/digests; 4.1.1 remains Latest. Technical verification downloads explain nonzero counters, which cannot independently prove or exclude external users. No binary replacement, force push or destructive release/tag deletion. Current acceptance and issue closure are documented in [the issue review](ISSUE-REVIEW-20261015.md).

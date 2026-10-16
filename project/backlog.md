@@ -75,4 +75,4 @@ Possible future standalone utility for controlled cleanup of directory trees:
 
 ## Scope reference — 14 October 2026
 
-Approved 4.1 scheduling, self-update and Languages work belongs to the [roadmap](roadmap.md) and [4.1 plan](MT-4.1-SELF-UPDATE-PLAN.md), not to this unscheduled backlog. Remaining concrete acceptance criteria are recorded in the [issue review](ISSUE-REVIEW-20261014.md). Public documentation languages are IT/EN, independently of runtime multilingual resources.
+Approved 4.1 scheduling, self-update and Languages work belongs to the [roadmap](roadmap.md) and [4.1 plan](MT-4.1-SELF-UPDATE-PLAN.md), not to this unscheduled backlog. Current closures and remaining acceptance criteria are recorded in the [15 October issue review](ISSUE-REVIEW-20261015.md): #27 complete, #28 final public-installation evidence and #20 full translation validation pending. Public documentation languages are IT/EN, independently of runtime multilingual resources.

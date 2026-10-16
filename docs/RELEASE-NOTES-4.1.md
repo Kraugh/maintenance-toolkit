@@ -1,5 +1,7 @@
 # Maintenance Toolkit 4.1.0
 
+Historical release notes. 4.1.0 is withdrawn to a non-public draft; use [4.1.1](https://github.com/Kraugh/maintenance-toolkit/releases/tag/v4.1.1). Original assets/tag are preserved, not replaced. Note storiche: la 4.1.0 e ritirata, usare direttamente la 4.1.1.
+
 ## Italiano
 
 - **V — Aggiorna MT:** aggiornamento MSI/ZIP con conferma per installazioni esplicitamente standalone; metadati autenticati, catalogo firmato dei file ZIP, verifica produttore, integrità e recupero transazionale.

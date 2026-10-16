@@ -20,7 +20,7 @@ signing, while retaining the validated maintenance modules from the 3.7.x line.
 
 ## 4.1.1 hosting compatibility patch
 
-The updater now sends a product-only User-Agent required by the hosting service. Existing 4.1.0 installations may receive HTTP 403 before downloading the fix; upgrade manually to 4.1.1 with verified packages. Published 4.1.0 assets are unchanged. See [patch release verification](project/MT-4.1.1-RELEASE-VERIFICATION.md).
+The updater now sends a product-only User-Agent required by the hosting service. **4.1.0 has been withdrawn from public releases; use 4.1.1.** The normal initial path is a manual upgrade from 4.0.6 with verified MSI/ZIP. Historical 4.1.0 test copies can receive HTTP 403 and also require a manual upgrade; their original assets/tag are preserved privately as a draft/source history. See [patch verification](project/MT-4.1.1-RELEASE-VERIFICATION.md) and [issue closure review](project/ISSUE-REVIEW-20261015.md).
 
 ## MT 4.1 updates and scheduling
 

@@ -1,5 +1,7 @@
 # GitHub issue review — 14 October 2026
 
+Historical checkpoint. Current closure/remaining-work decisions after 4.1.1 deployment are in the [15 October review](ISSUE-REVIEW-20261015.md); the original findings below are preserved.
+
 Sources: live `gh issue list --state open --limit 100 --json number,title,body` and individual `gh issue view` reads; local source/roadmap and [4.1 validation record](MT-4.1-LOCAL-VALIDATION.md). Read-only GitHub review: no issue edited, commented on or closed.
 
 ## Conclusion / Esito

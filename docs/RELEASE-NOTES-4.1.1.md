@@ -1,5 +1,7 @@
 # Maintenance Toolkit 4.1.1
 
+**Current distribution / Distribuzione corrente:** 4.1.0 has been withdrawn from public releases; take 4.1.1 directly. Original 4.1.0 assets and source tag are preserved. La 4.1.0 e ritirata: usare direttamente la 4.1.1, senza passaggi intermedi. No 4.1.1 package bytes have changed.
+
 ## Italiano
 
 Corregge l’errore HTTP 403 dell’updater sull’hosting: le richieste inviano ora uno User-Agent identificativo di MT, senza dati macchina/utente. Verificato con il downloader reale su Windows PowerShell 5.1 contro i file API pubblicati, con verifica di firma/catalogo e download MSI/ZIP da GitHub.
