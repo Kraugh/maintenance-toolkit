@@ -1,4 +1,4 @@
-> Current, 16 October 2026: **4.1.2 R02 is published on GitHub** after the repeated final MSI/ZIP VM gate and public-download verification. Website/API upload is pending; deployed feed remains 4.1.1 until upload. 4.1.0 is withdrawn. See [final release results and limits](MT-4.1.2-RELEASE-VERIFICATION.md). R01 and dated design/pilot sections below preserve historical status.
+> Current, 16 October 2026: **4.1.2 R02 is published on GitHub** after the repeated final MSI/ZIP VM gate and public-download verification. User website/API upload verified at 09:53 Europe/Rome: detection 4.1.2, authenticated sequence 7, eighteen pages/three API files byte-matched and linked package trust passed. 4.1.0 is withdrawn. See [final release results and limits](MT-4.1.2-RELEASE-VERIFICATION.md). R01 and dated design/pilot sections below preserve historical status.
 
 # MT 4.1 — piano di autoaggiornamento
 
