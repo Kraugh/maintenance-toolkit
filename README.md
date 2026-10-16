@@ -1,3 +1,5 @@
+> Local 4.1.2 candidate: MSI/ZIP VM installation matrix passed on 16 October 2026; not published. Public stable remains 4.1.1. The candidate fixes install-kind detection with malformed unrelated uninstall locations on Windows PowerShell 5.1. See [verified results and limits](project/MT-4.1.2-LOCAL-CANDIDATE.md). Frozen test packages remain unchanged; these subsequent documentation updates are not embedded in them.
+
 <p align="center">
   <img src="https://www.kraugh.it/software/maintenance-toolkit/images/papera.png" alt="Maintenance Toolkit" width="180">
 </p>

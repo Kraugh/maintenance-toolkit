@@ -1,6 +1,14 @@
-> Current: **4.1.0 published on GitHub** after final package/signature/regression/Foundation/public-download checks, 15 October 2026. Website/API upload is pending with the user; issues are not automatically closed. See [release verification](MT-4.1-RELEASE-VERIFICATION.md). Dated design/pilot sections below preserve historical status.
+> Current, 16 October 2026: **4.1.2 is a local signed candidate**, not published; public stable/feed remain 4.1.1 and 4.1.0 is withdrawn. Final MSI/ZIP VM installation matrix passed with unchanged package hashes. See [results and limits](MT-4.1.2-LOCAL-CANDIDATE.md). Dated design/pilot sections below preserve historical status.
 
 # MT 4.1 — piano di autoaggiornamento
+
+## Checkpoint verificato — 16 ottobre 2026
+
+La 4.1.1 si è fermata prima dell'installazione: un percorso non valido nel registro di un altro programma impediva il riconoscimento MSI. Il candidato locale 4.1.2 ignora solo le voci estranee non valide e conserva il blocco delle registrazioni MT ambigue. Passano 122 regressioni e Foundation senza errori/avvisi.
+
+Sulla VM Windows 11 / PowerShell 5.1: installazione MSI da zero e passaggi MSI/ZIP da 4.0.6 e 4.1.1 completati, codici MSI e SelfTest elevati 0; preservati configurazione, log/report, opt-in protetto, InventoryShare e XML dei task. Verificati rifiuto di script alterato, recupero ZIP con file bloccato, ripresa SelfTest una sola volta e pulizia. I passaggi sono bootstrap manuali autenticati, non prove dell'updater delle versioni precedenti. Nessuna manutenzione o riavvio.
+
+Limiti: file eccezioni assente prima/dopo, non prova delle otto eccezioni storiche; Windows 10, GPO reale, SMB aziendale e installazioni Winget selettive non verificati qui. Rollback MSI reale resta evidenza del pilota privato precedente. #28 rimane aperta; nessun push o pubblicazione. I pacchetti testati restano immutati; documentazione successiva solo nel repository. Applicare il [gate VM e identità degli artefatti](DEVELOPMENT_WORKFLOW.md#mandatory-vm-installation-gate) prima di ogni futura pubblicazione.
 
 ## Stato sviluppo locale — 15 ottobre 2026
 

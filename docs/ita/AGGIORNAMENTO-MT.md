@@ -2,6 +2,12 @@
 
 Istruzioni per MT 4.1.1. Il primo passaggio dalla 4.0.6 richiede installazione manuale con pacchetti ufficiali verificati. Le prove con numerazione privata sono documentate separatamente.
 
+## Verifica locale 4.1.2 — nessun download pubblico
+
+Il 16 ottobre 2026 i pacchetti locali finali firmati 4.1.2 MSI/ZIP hanno superato i passaggi manuali autenticati dalle versioni pubbliche 4.0.6 e 4.1.1 sulla VM Windows 11 / Windows PowerShell 5.1, oltre all'installazione MSI da zero. MSI e SelfTest elevati della versione installata hanno restituito 0. Conservati impostazioni, log/report, opt-in protetto, InventoryShare e XML dei task; verificati recupero ZIP con file bloccato e rifiuto dello script alterato. Nessuna manutenzione o riavvio. [Risultati completi e limiti](../../project/MT-4.1.2-LOCAL-CANDIDATE.md).
+
+L'updater 4.1.1 può fermarsi prima dell'installazione se un altro programma ha un percorso di disinstallazione non valido nel registro: caso riprodotto sulla VM. Quell'installazione richiede un aggiornamento manuale verificato quando sarà disponibile una sostituzione autorizzata. Non modificare voci di registro estranee né aggirare i controlli di fiducia. Stabile pubblica/feed restano 4.1.1; la 4.1.2 è soltanto locale. Windows 10, GPO reale/SMB aziendale e conservazione di un file eccezioni aziendale presente non sono stati verificati qui. Queste istruzioni del repository sono aggiornate dopo i test; i contenuti dei pacchetti congelati restano invariati.
+
 ## Primo passaggio da 4.0.6
 
 La 4.0.6 non puo applicare l’updater 4.1. Il primo aggiornamento e manuale, con pacchetti ufficiali verificati e privilegi amministrativi. Attendere il termine di eventuale manutenzione attiva; non terminarla forzatamente.

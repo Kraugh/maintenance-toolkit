@@ -15,6 +15,21 @@ try {
     foreach($Name in @('Privileges','UpdateTrust','SelfUpdate','Scheduling','UpdateApplication')){. (Join-Path $ProjectRoot ('app/core/'+$Name+'.ps1'))}
     $HostingRequest=New-MTUpdateWebRequest 'https://www.kraugh.it/api/maintenance-toolkit/update-v1.json'
     Assert-Test ($HostingRequest.UserAgent -match '^MaintenanceToolkit/\d+\.\d+$') 'hosting requests identify only the MT product line before transport'
+    & {
+        $InstallRoot=Join-Path $Fixture 'registered-installation'
+        $Entries=[ordered]@{
+            bad=[pscustomobject]@{DisplayName='Unrelated application';InstallLocation='"C:\Unrelated Software"'}
+            good=[pscustomobject]@{DisplayName='Maintenance Toolkit';Publisher='Kraugh';WindowsInstaller=1;InstallLocation=$InstallRoot}
+        }
+        function Get-ChildItem {param($Path,$ErrorAction) foreach($Key in $Entries.Keys){[pscustomobject]@{PSPath=$Key}}}
+        function Get-ItemProperty {param($LiteralPath) $Entries[$LiteralPath]}
+        Assert-Test ((Get-MTInstallKind $InstallRoot) -eq 'msi') 'unrelated quoted uninstall location does not block valid MSI identification'
+        $Entries.bad.DisplayName='Maintenance Toolkit'
+        Assert-Rejected {Get-MTInstallKind $InstallRoot} 'malformed MT registration remains fail-closed'
+        $Entries.Remove('good');$Entries.bad.DisplayName='Unrelated application'
+        Assert-Rejected {Get-MTInstallKind (Join-Path ([Environment]::GetFolderPath('ProgramFiles')) 'MTMissingRegistration')} 'Program Files without valid MSI registration never falls back to ZIP'
+        Assert-Test ((Get-MTInstallKind (Join-Path $Fixture 'standalone')) -eq 'zip') 'unrelated invalid registry data does not prevent standalone ZIP classification'
+    }
     if($MsiIdentityFixture) {
         Assert-Test (@(Assert-MTMsiIdentity $MsiIdentityFixture $MsiIdentityVersion).Count -eq 0) 'real MSI COM identity validation emits no pipeline values'
         Assert-Rejected {Assert-MTMsiIdentity $MsiIdentityFixture '0.0.0'} 'real MSI COM rejects different product version'

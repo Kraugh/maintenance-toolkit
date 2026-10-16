@@ -157,7 +157,16 @@ function Get-MTInstallKind {
     $Root=[IO.Path]::GetFullPath($ProjectRoot).TrimEnd('\')
     $Matches=@(Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall' -ErrorAction Stop | ForEach-Object {
         $Product=Get-ItemProperty -LiteralPath $_.PSPath
-        if($Product.PSObject.Properties['InstallLocation'] -and $Product.InstallLocation -and ([IO.Path]::GetFullPath($Product.InstallLocation).TrimEnd('\') -eq $Root)){$Product}
+        if($Product.PSObject.Properties['InstallLocation'] -and $Product.InstallLocation){
+            try{$Location=[IO.Path]::GetFullPath($Product.InstallLocation).TrimEnd('\')}
+            catch{
+                # An unrelated malformed uninstall entry cannot identify this installation.
+                # Malformed MT registration remains ambiguous and must fail closed.
+                if($Product.PSObject.Properties['DisplayName'] -and $Product.DisplayName -eq 'Maintenance Toolkit'){throw 'MT41_INSTALL_KIND_INVALID'}
+                return
+            }
+            if($Location -eq $Root){$Product}
+        }
     })
     if($Matches.Count -gt 1){throw 'MT41_INSTALL_KIND_INVALID'}
     if($Matches.Count -eq 1) {

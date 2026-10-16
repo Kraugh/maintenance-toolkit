@@ -1,11 +1,20 @@
 > Current release: **4.1.1 published on GitHub, 15 October 2026 at 21:15:54 Europe/Rome**, correcting hosting rejection of empty User-Agent requests. Real hosting downloads, 118 regressions, Foundation, signed final packages and public GitHub downloads verified. All 4.1.0 assets unchanged. **4.1.1 website/API uploaded by the user and verified at 21:20**: eighteen exact pages, three exact API files, authenticated sequence 5 and metadata-linked GitHub payload trust passed using the packaged production downloader. No installation performed. See [patch verification](MT-4.1.1-RELEASE-VERIFICATION.md). Status below preserves preceding checkpoints.
 
-## Current 4.1.1 completion and residual acceptance
+## Local 4.1.2 checkpoint — 16 October 2026
+
+- [x] Fix malformed unrelated uninstall locations in Windows PowerShell 5.1; malformed MT registrations remain blocked. 122 regressions and Foundation (zero errors/warnings) passed.
+- [x] Final signed, frozen candidate: fresh MSI installation and manual authenticated MSI/ZIP upgrades from public 4.0.6 and 4.1.1 on the authorized VM. Native MSI/elevated installed SelfTest exit codes 0; configuration, logs/reports, protected consent, InventoryShare and task XML preserved.
+- [x] Signed-script tamper rejection, actual locked-file ZIP recovery, single SelfTest resume/replay rejection and payload/task cleanup verified; no maintenance or reboot. [Full results, hashes, intermediate harness failures and limits](MT-4.1.2-LOCAL-CANDIDATE.md).
+- [ ] Release/publication acceptance remains separate: no push, tag, release or stable-feed deployment; public stable remains 4.1.1. #28 remains open. Windows 10, real GPO/corporate SMB and live selective Winget are not established by this pilot; the machine exception file was absent, not the historical eight-entry file.
+
+Repository documentation is updated after the tests without rebuilding the frozen packages. Publishing these exact artifacts would retain their packaged preparation-time documentation; any repackaging requires a new local candidate and VM gate.
+
+## Published 4.1.1 completion and residual acceptance
 
 - [x] 4.1.1 signed packages published; complete website/API deployed and verified with the exact packaged production downloader.
 - [x] Standalone SYSTEM scheduling: create/inspect/update/remove, conditions, diagnostics and ownership boundary; [#27 closed](https://github.com/Kraugh/maintenance-toolkit/issues/27).
 - [x] Self-update implementation, private application/recovery pilots, live hosting and GitHub trust/download checks.
-- [ ] [#28](https://github.com/Kraugh/maintenance-toolkit/issues/28): final public 4.1.1 installation/bootstrap and post-install preservation evidence. Keep separate from successful transport tests.
+- [ ] [#28](https://github.com/Kraugh/maintenance-toolkit/issues/28): public 4.1.1 installation pilot stopped in preflight on a malformed unrelated registry location ([failure report](MT-4.1.1-INSTALLATION-20261016.md)); corrected local 4.1.2 MSI/ZIP matrix passed above. Publication/documentation acceptance and issue closure remain pending; transport tests alone are insufficient.
 - [ ] Complete five partial translations and representative localization validation under #20; approved target uses Spanish, Swedish remains compatibility only.
 - [x] 4.1.0 withdrawn to non-public draft; eight assets and tag retained unchanged. Public users target 4.1.1.
 

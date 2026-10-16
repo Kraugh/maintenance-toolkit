@@ -1,3 +1,9 @@
+## 4.1.2 — local candidate, not published
+
+- Ignore malformed uninstall locations belonging to unrelated applications under Windows PowerShell 5.1; malformed MT registrations remain blocked. This fixes MSI/ZIP classification before update preparation.
+- Verified on Windows 11 / Windows PowerShell 5.1: fresh signed MSI installation and authenticated manual MSI/ZIP upgrades from public 4.0.6 and 4.1.1; MSI and elevated installed SelfTest exit codes 0. Configuration, logs/reports, protected consent, InventoryShare and task XML preserved; no maintenance or reboot.
+- 122 regressions, Foundation zero errors/warnings, signed-script tamper rejection and real locked-file ZIP recovery passed. The exception file was absent before/after; Windows 10, real GPO and corporate SMB were not tested. [Full evidence and intermediate harness failures](../project/MT-4.1.2-LOCAL-CANDIDATE.md). Public stable/feed remain 4.1.1; no publication or issue closure. Tested package bytes are frozen; this updated changelog is repository documentation, not a repackaged payload.
+
 ## 4.1.1 — 2026-10-15
 
 - Fix updater HTTP requests rejected by hosting with HTTP 403 when User-Agent is empty. Every request/redirect now identifies only the MT product line; no machine/user identity is sent. URL allowlist, signature/catalog, hash, revocation and consent requirements are unchanged.
