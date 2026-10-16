@@ -21,6 +21,8 @@ deferred to the next development cycle.
 
 Please keep pull requests focused and explain the problem being solved.
 
+Every public release, including a patch, requires real VM installation/upgrade tests of the final signed MSI and ZIP before publication. Follow the [mandatory VM installation gate](project/DEVELOPMENT_WORKFLOW.md#mandatory-vm-installation-gate), record the source revision and artifact SHA-256 hashes, and publish exactly the verified bytes without rebuilding or re-signing. Failed candidates remain local; download and signature checks alone do not establish installation success.
+
 Thank you for contributing.
 
 A gentleman never runs.

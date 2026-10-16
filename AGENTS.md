@@ -21,6 +21,7 @@
 - Non creare release o tag né pubblicare senza autorizzazione. Esegui commit e push soltanto nell'ambito autorizzato della sessione.
 - Le pubblicazioni sono vietate dal lunedì al venerdì nelle fasce 08:30–12:30 e 13:30–17:30, fuso `Europe/Rome`, salvo deroga esplicita per la sessione. Verifica giorno e ora locali prima di pubblicare; una generica autorizzazione alla pubblicazione non costituisce deroga alle fasce.
 - Prima di una release, completa i controlli e il gate documentale previsti dal workflow, incluso il confronto con i sorgenti correnti del sito forniti dall'hosting. Non usare pagine memorizzate come prova del sito distribuito.
+- Prima di qualsiasi pubblicazione, anche di patch, completa il gate MSI/ZIP su VM del workflow con i pacchetti finali firmati e registra gli hash SHA-256. Test del codice, firme, download e prove di versioni private non sostituiscono questa prova. Un fallimento blocca la pubblicazione: correggi e verifica un nuovo candidato locale. Pubblica gli stessi byte approvati, senza ricompilare, rifirmare o ricreare i pacchetti; confronta gli hash prima dell'upload e sui download pubblici. Non distribuire il manifest/feed stabile prima del superamento del gate.
 
 ## Runtime, sicurezza e documentazione
 

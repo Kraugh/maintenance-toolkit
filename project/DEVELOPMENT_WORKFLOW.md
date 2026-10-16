@@ -92,6 +92,8 @@ Each candidate is tested to find regressions, not merely to confirm that the exp
 
 A failed candidate is never promoted because work has already been invested in it.
 
+Candidates remain local and unpublished while validation is incomplete. A local revision is not a public patch release. Signing or preparing packages does not authorize publication or installation tests.
+
 ## Validation
 
 Before a stable release, test the complete Toolkit on supported Windows versions and representative environments.
@@ -110,6 +112,26 @@ Validation includes, as applicable:
 - optional remote-output failure behaviour.
 
 Version-specific test matrices belong with the feature/release documentation rather than being frozen permanently in this workflow document.
+
+## Mandatory VM installation gate
+
+Before any public release, including a patch release, test the final signed MSI and final ZIP on an authorized VM with a restorable checkpoint. Run the packaged application under Windows PowerShell 5.1; source-only tests, mocks, signatures, archive inspection and successful downloads do not replace real installation tests.
+
+The release evidence must record:
+
+- fresh MSI installation and ZIP deployment, plus upgrade/bootstrap from the previous supported stable version for both formats; document any manual bootstrap rather than claiming an unavailable in-app update path;
+- native installer exit codes, installed version, payload verification and post-install startup/SelfTest results;
+- preservation of configuration, exceptions, protected update consent, logs/reports and existing tasks; GPO-owned tasks must remain unchanged;
+- applicable update/recovery failure tests, cleanup and confirmation that no automatic reboot occurred;
+- actual Windows/PowerShell versions, baseline versions, commands, results and limits, distinguishing executed tests from user reports and static analysis.
+
+Record the frozen source revision and exact paths, sizes and SHA-256 hashes of the final MSI, ZIP, payload catalog and authenticated metadata/catalog pair. Authenticate signatures, timestamps and publisher identity before installation. Private-version pilot results remain supporting evidence; they do not satisfy installation of the final release packages.
+
+Test the final authenticated update contract locally without deploying the stable feed. A harness may supply the exact signed candidate metadata and payloads without bypassing production trust checks; record this transport substitution and verify the real hosting separately after deployment.
+
+A failure or missing MSI/ZIP installation result blocks publication. An environment waiver must be explicit and documented; it does not waive this package-installation gate. If any candidate artifact changes (including rebuilding, re-signing, repackaging or changing bundled documentation), invalidate its previous approval, record a new local candidate and repeat the gate for that candidate, plus the affected regression tests. Keep failed-candidate evidence distinct from passing results.
+
+After a pass, freeze the verified artifacts. Publish those exact bytes: do not rebuild, re-sign or repackage between VM approval and upload. Recalculate and compare SHA-256 hashes immediately before upload; a mismatch blocks publication. After publication, download the public artifacts and compare them with the approved hashes. Hosting/download verification completes this gate; it cannot defer installation testing until after publication.
 
 ## Documentation gate
 
@@ -138,17 +160,17 @@ A documentation discrepancy is a release issue: either correct it before the rel
 
 Before publishing:
 
-1. update the version and changelog;
-2. complete runtime, localization and schema validation required by the release;
-3. complete the documentation gate, including the manual website-source review;
-4. update the public stable manifest;
-5. generate the release package and checksum;
-6. verify the archive contents;
-7. confirm that the repository is clean;
-8. publish the GitHub release;
-9. close or update the completed issues;
-10. close the release milestone only when its selected work is complete or explicitly deferred/re-scoped;
-11. verify that roadmap/backlog status still matches the published release.
+1. prepare the candidate version/changelog and complete runtime, localization and schema validation;
+2. complete the documentation gate, including the manual website-source review, before packaging;
+3. freeze the source revision, build/sign/package through the canonical procedures, then prepare checksums and authenticated candidate metadata locally; do not deploy the stable manifest/feed;
+4. verify contents, signatures, timestamps, publisher identity and metadata; record the artifact inventory and SHA-256 hashes;
+5. pass the mandatory VM installation gate for the final MSI/ZIP and record the evidence; stop on failure and iterate locally;
+6. freeze the passing artifacts, confirm the repository is clean and corresponds to the tested source revision, and recheck every upload hash;
+7. verify explicit publication authorization and the permitted Europe/Rome publication window;
+8. publish the exact verified GitHub artifacts, then deploy the aligned website/stable feed only within the authorized scope; no rebuild or replacement of published bytes;
+9. verify public downloads against the approved hashes and test actual hosting/update retrieval; record failures without claiming installation acceptance from transport results;
+10. close or update issues only against complete acceptance evidence; close the milestone only when selected work is complete or explicitly deferred/re-scoped;
+11. verify roadmap/backlog status matches the actual published results and remaining limits.
 
 ## User-interface principles
 
