@@ -6,6 +6,8 @@
 
 All four Definition of Done criteria and the supporting security/reliability requirements are satisfied within the approved deployment/consent contract. Close #28 as completed. The earlier final-public-package installation blocker is resolved by the final signed R02 VM tests preceding 4.1.2 publication; public transport alone was not used as installation evidence. The [15 October review](ISSUE-REVIEW-20261015.md) and failed 4.1.1/R01 reports remain historical.
 
+Execution confirmed: GitHub reports CLOSED / COMPLETED at **09:58:18 Europe/Rome**, 16 October 2026. [Closure evidence comment](https://github.com/Kraugh/maintenance-toolkit/issues/28#issuecomment-6210869862). The comment body and prior issue snapshot are retained as `issue-28-closure.md` and `issue-28-before-closure.json` under `launcher/build/MaintenanceToolkit-412-R02-20261016-093414`; no other temporary resource created by this audit. Fifteen open issues verified after closure.
+
 ## Definition of Done
 
 | Criterion | Evidence and limits |

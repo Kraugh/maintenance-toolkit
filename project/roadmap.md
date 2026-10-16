@@ -2,7 +2,9 @@
 
 ## Final 4.1.2 R02 — 16 October 2026
 
-Corrected R02 supersedes unpublished R01 below: package documentation, runtime stable channel and local detection manifest identify 4.1.2 consistently. New signatures/catalogs and authenticated metadata sequence 7 verified; final MSI/ZIP matrix repeated before publication (fresh MSI, upgrades from public 4.0.6/4.1.1, recovery and preservation). Fresh hosting sources supplied at 09:36 reviewed; complete IT/EN web ZIP prepared and deployed by the user. [Final hashes, results and limitations](MT-4.1.2-RELEASE-VERIFICATION.md). Published under the explicit session time-window waiver; public GitHub and live website/API verification passed. #28 remains open pending full acceptance review.
+Corrected R02 supersedes unpublished R01 below: package documentation, runtime stable channel and local detection manifest identify 4.1.2 consistently. New signatures/catalogs and authenticated metadata sequence 7 verified; final MSI/ZIP matrix repeated before publication (fresh MSI, upgrades from public 4.0.6/4.1.1, recovery and preservation). Fresh hosting sources supplied at 09:36 reviewed; complete IT/EN web ZIP prepared and deployed by the user. [Final hashes, results and limitations](MT-4.1.2-RELEASE-VERIFICATION.md). Published under the explicit session time-window waiver; public GitHub and live website/API verification passed.
+
+- [x] [#28 secure standalone updates](https://github.com/Kraugh/maintenance-toolkit/issues/28) closed as completed on 16 October at 09:58:18 Europe/Rome after the [criterion-by-criterion acceptance review](ISSUE-28-ACCEPTANCE-20261016.md). Exact final-package baseline/preservation proof resolves the earlier blocker; previous private helper/failure evidence remains labelled separately. Fifteen issues remain open; #26/#20 and the documented environment limits are unaffected.
 
 ## Historical local 4.1.2 R01 checkpoint — 16 October 2026
 
@@ -13,7 +15,7 @@ Corrected R02 supersedes unpublished R01 below: package documentation, runtime s
 
 Repository documentation is updated after the tests without rebuilding the frozen packages. Publishing these exact artifacts would retain their packaged preparation-time documentation; any repackaging requires a new local candidate and VM gate.
 
-## Published 4.1.1 completion and residual acceptance
+## Historical published 4.1.1 completion and residual acceptance
 
 - [x] 4.1.1 signed packages published; complete website/API deployed and verified with the exact packaged production downloader.
 - [x] Standalone SYSTEM scheduling: create/inspect/update/remove, conditions, diagnostics and ownership boundary; [#27 closed](https://github.com/Kraugh/maintenance-toolkit/issues/27).
@@ -22,7 +24,7 @@ Repository documentation is updated after the tests without rebuilding the froze
 - [ ] Complete five partial translations and representative localization validation under #20; approved target uses Spanish, Swedish remains compatibility only.
 - [x] 4.1.0 withdrawn to non-public draft; eight assets and tag retained unchanged. Public users target 4.1.1.
 
-[Current issue review](ISSUE-REVIEW-20261015.md): one completed issue closed, sixteen remain open. Broader OEM, inventory, VPN, progress, support-package and complete GPO-documentation work is not closed by this release.
+[Historical 4.1.1 issue review](ISSUE-REVIEW-20261015.md): one completed issue closed and sixteen remained open at that checkpoint. The subsequent [4.1.2 acceptance review](ISSUE-28-ACCEPTANCE-20261016.md) closes #28; fifteen remain open. Broader OEM, inventory, VPN, progress, support-package and complete GPO-documentation work is not closed by this release.
 
 ## Historical pilot checkpoint — 15 October 2026
 
