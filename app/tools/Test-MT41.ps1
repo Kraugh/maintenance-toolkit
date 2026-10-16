@@ -96,6 +96,43 @@ try {
     Assert-Test ((Resolve-MTSelfUpdateConfiguration -LocalConfiguration ([pscustomobject]@{Management='unknown';AutomaticInstallEnabled=$true})).Status -eq 'Invalid') 'unknown cannot enable automation'
     Assert-Test ((Resolve-MTSelfUpdateConfiguration -LocalConfiguration ([pscustomobject]@{Management='standalone';AutomaticInstallEnabled='false'})).Status -eq 'Invalid') 'string false is not a boolean'
     Assert-Test ((Resolve-MTSelfUpdateConfiguration -MachinePolicy $null -PolicyPresent $true).Status -eq 'Invalid') 'unreadable policy never falls back'
+    & {
+        $script:PreferenceTestState=Resolve-MTSelfUpdateConfiguration
+        $script:PreferenceTestWrites=0
+        function Get-MTSelfUpdateConfiguration {param($ProjectRoot) $script:PreferenceTestState}
+        function Set-MTStandalonePreference {
+            param($ProjectRoot,[bool]$AutomaticInstallEnabled,[switch]$PreserveUnknown)
+            $script:PreferenceTestWrites++
+            $Management=if($PreserveUnknown){'unknown'}else{'standalone'}
+            $script:PreferenceTestState=Resolve-MTSelfUpdateConfiguration -LocalConfiguration ([pscustomobject]@{Management=$Management;AutomaticInstallEnabled=$AutomaticInstallEnabled})
+        }
+        $script:MenuInputs.Enqueue('Sì')
+        Invoke-MTPreferenceWizard $Root
+        Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:PreferenceTestWrites -eq 1 -and $script:PreferenceTestState.AutomaticInstallEnabled -and $script:PreferenceTestState.Management -eq 'standalone') 'G enables automatic updates with one Italian yes and no extra prompts'
+        $script:MenuInputs.Enqueue('NO')
+        Invoke-MTPreferenceWizard $Root
+        Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:PreferenceTestWrites -eq 2 -and -not $script:PreferenceTestState.AutomaticInstallEnabled -and $script:PreferenceTestState.Management -eq 'standalone') 'returning to G disables automation with one no while preserving standalone'
+        $script:PreferenceTestState=Resolve-MTSelfUpdateConfiguration
+        $script:MenuInputs.Enqueue('NO');Invoke-MTPreferenceWizard $Root
+        Assert-Test ($script:PreferenceTestState.Management -eq 'unknown' -and -not $script:PreferenceTestState.CanInstall) 'G no on unknown never authorizes standalone installation'
+        $script:PreferenceTestState=Resolve-MTSelfUpdateConfiguration -MachinePolicy $Policy -PolicyPresent $true
+        $Before=$script:PreferenceTestWrites;Invoke-MTPreferenceWizard $Root
+        Assert-Test ($script:PreferenceTestWrites -eq $Before -and $script:MenuInputs.Count -eq 0) 'GPO preference entry asks nothing and cannot write'
+        $ShowFunction=$MainAst.Find({param($Node) $Node -is [Management.Automation.Language.FunctionDefinitionAst] -and $Node.Name -eq 'Show-Menu'},$true)
+        Invoke-Expression $ShowFunction.Extent.Text
+        function Clear-Host {}
+        function Write-Host {param($Object,$ForegroundColor) $script:ManagementMenuLines+=([string]$Object)}
+        $MT4Settings=[pscustomobject]@{NetworkDiagnostics=[pscustomobject]@{Enabled=$false}}
+        $Catalog=@();$CurrentLanguage='en-US';$Version='test';$script:ManagementMenuLines=@()
+        Show-Menu
+        Assert-Test (-not (($script:ManagementMenuLines -join "`n") -match '(?m)^\[[GP]\]')) 'G and P are absent from the real GPO menu'
+        foreach($InputValue in @('g','p','q')){$script:MenuInputs.Enqueue($InputValue)}
+        Select-Modules | Out-Null
+        Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:PreferenceTestWrites -eq $Before) 'typing hidden G or P under GPO cannot invoke either wizard'
+        $script:PreferenceTestState=Resolve-MTSelfUpdateConfiguration -LocalConfiguration $Standalone
+        $script:ManagementMenuLines=@();Show-Menu
+        Assert-Test ((($script:ManagementMenuLines -join "`n") -match '(?m)^\[G\]') -and (($script:ManagementMenuLines -join "`n") -match '(?m)^\[P\]')) 'standalone menu exposes both G and P'
+    }
     $Duplicate=Join-Path $Fixture 'duplicate.json'
     Set-Content $Duplicate '{"SelfUpdate":{"Management":"gpo","management":"standalone"}}'
     Assert-Rejected {Read-MTStrictJson $Duplicate} 'case-variant duplicate keys rejected'
@@ -204,7 +241,7 @@ try {
     function Get-ScheduledTaskInfo {param($TaskPath,$TaskName,$ErrorAction) [pscustomobject]@{LastRunTime=[datetime]'2026-10-14T03:00:00';LastTaskResult=20;NextRunTime=[datetime]'2026-10-15T03:00:00'}}
     $script:Removals=0
     function Unregister-ScheduledTask {param($TaskPath,$TaskName,[switch]$Confirm,$ErrorAction) $script:Removals++;$script:Task=$null}
-    function Register-ScheduledTask {param($TaskPath,$TaskName,$Action,$Trigger,$Principal,$Settings,[switch]$Force,$Xml) $script:Registrations++}
+    function Register-ScheduledTask {param($TaskPath,$TaskName,$Action,$Trigger,$Principal,$Settings,[switch]$Force,$Xml) $script:Registrations++;$script:LastRegisteredAction=$Action}
     New-Item -ItemType Directory -Path $TestRoot | Out-Null
     Set-Content (Join-Path $TestRoot 'MaintenanceToolkit.exe') 'dummy executable, never run'
     $Plan=New-MTSchedulePlan $TestRoot -Mode analysis -Frequency startup
@@ -249,10 +286,26 @@ try {
     $script:MenuInputs.Enqueue('3');$script:MenuInputs.Enqueue('YES')
     Invoke-MTScheduleWizard $TestRoot
     Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:Removals -eq $Before+1) 'wizard confirmed removal returns safely'
-    foreach($Answer in @('1','3','3','','NO','YES','YES','YES','NO')){$script:MenuInputs.Enqueue($Answer)}
+    foreach($Answer in @('1','3','3')){$script:MenuInputs.Enqueue($Answer)}
     $Before=$script:Registrations
     Invoke-MTScheduleWizard $TestRoot
-    Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:Registrations -eq $Before+1 -and $script:TaskSettings.Network -and $script:TaskSettings.Battery -and -not $script:TaskSettings.Missed) 'real startup wizard applies explicit conditions and consent'
+    Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:Registrations -eq $Before+1 -and $script:TaskSettings.Network -and $script:TaskSettings.Battery -and $script:TaskSettings.Missed) 'startup wizard asks only action mode frequency and enables automatic conditions'
+    foreach($Destination in @('C:\Reports','C:\Reports with spaces\','\\server\share\')){
+        $Args='-ScheduledMode analysis -JsonReportDestination '+(ConvertTo-MTWindowsArgument $Destination)
+        Assert-Test ((Get-MTScheduledJsonDestination $Args) -ceq $Destination) 'existing report destination survives simplified task update'
+    }
+    $script:Task=[pscustomobject]@{Actions=@([pscustomobject]@{Execute=$Plan.Executable;Arguments='-ScheduledMode analysis -JsonReportDestination "C:\Reports"'});State='Ready'}
+    $Catalog=@();$Config=@{}
+    foreach($Answer in @('1','','1','03:00')){$script:MenuInputs.Enqueue($Answer)}
+    $Before=$script:Registrations
+    Invoke-MTScheduleWizard $TestRoot
+    Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:Registrations -eq $Before+1 -and $script:LastRegisteredAction.Arguments -eq '-ScheduledMode maintenance -JsonReportDestination "C:\Reports"') 'daily wizard defaults to maintenance and preserves destination without redundant confirmation'
+    foreach($Answer in @('1','2','2','03:00,15:30','1,5')){$script:MenuInputs.Enqueue($Answer)}
+    $Before=$script:Registrations
+    Invoke-MTScheduleWizard $TestRoot
+    Assert-Test ($script:MenuInputs.Count -eq 0 -and $script:Registrations -eq $Before+1 -and $script:LastRegisteredAction.Arguments -like '-ScheduledMode analysis*') 'weekly wizard asks only required times and days'
+    Assert-Rejected {Get-MTScheduledJsonDestination '-ScheduledMode analysis -JsonReportDestination "C:\broken\"'} 'malformed previous destination cannot be silently erased'
+    $script:Task=$null
     function Get-MTSelfUpdateConfiguration {param($ProjectRoot) Resolve-MTSelfUpdateConfiguration -LocalConfiguration $Policy}
     Assert-Rejected {Register-MTStandaloneSchedule $Plan (Resolve-MTSelfUpdateConfiguration -LocalConfiguration $Standalone)} 'policy changed after preview blocks registration'
     Assert-Rejected {Remove-MTStandaloneSchedule $TestRoot (Resolve-MTSelfUpdateConfiguration -LocalConfiguration $Standalone) -Confirmed} 'policy changed after preview blocks removal'

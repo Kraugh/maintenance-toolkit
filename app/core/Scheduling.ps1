@@ -141,6 +141,21 @@ function Publish-MTSessionJson {
     }
 }
 
+function Get-MTScheduledJsonDestination {
+    param([AllowEmptyString()][string]$Arguments)
+    if($Arguments -notmatch '(?i)(?:^|\s)-JsonReportDestination(?:\s|$)'){return ''}
+    $Match=[regex]::Match($Arguments,'(?i)(?:^|\s)-JsonReportDestination\s+(?:"(?<quoted>[^"]*)"|(?<bare>\S+))\s*$')
+    if(-not $Match.Success){throw 'MT41_DESTINATION_INVALID'}
+    if($Match.Groups['bare'].Success){return $Match.Groups['bare'].Value}
+    $Value=$Match.Groups['quoted'].Value
+    $Tail=[regex]::Match($Value,'\\+$')
+    if($Tail.Success){
+        if($Tail.Length % 2){throw 'MT41_DESTINATION_INVALID'}
+        $Value=$Value.Substring(0,$Value.Length-$Tail.Length)+('\'*($Tail.Length/2))
+    }
+    $Value
+}
+
 function Invoke-MTScheduleWizard {
     param([Parameter(Mandatory)][string]$ProjectRoot)
     try {
@@ -162,7 +177,7 @@ function Invoke-MTScheduleWizard {
         if($Choice -ne '1'){throw 'MT41_MODE_INVALID'}
         Write-Host (T 'MT41_MODES')
         $ModeChoice=Read-Host (T 'MT41_MODE_PROMPT')
-        $Mode=switch($ModeChoice) { '1' {'maintenance'} '2' {'analysis'} '3' {'updates'} default {throw 'MT41_MODE_INVALID'} }
+        $Mode=switch($ModeChoice) { '' {'maintenance'} '1' {'maintenance'} '2' {'analysis'} '3' {'updates'} default {throw 'MT41_MODE_INVALID'} }
         Write-Host (T 'MT41_FREQUENCIES')
         $FrequencyChoice=Read-Host (T 'MT41_FREQUENCY_PROMPT')
         $Frequency=switch($FrequencyChoice) { '1' {'daily'} '2' {'weekly'} '3' {'startup'} default {throw 'MT41_FREQUENCY_INVALID'} }
@@ -175,19 +190,16 @@ function Invoke-MTScheduleWizard {
                 $Days += $DayNames[[int]$Number.Trim()-1]
             }
         }
-        $Destination=Read-Host (T 'MT41_DESTINATION_PROMPT')
-        $Missed=(Read-Host (T 'MT41_TASK_MISSED_PROMPT')) -cne 'NO'
-        $Battery=(Read-Host (T 'MT41_TASK_BATTERY_PROMPT')) -ceq 'YES'
-        $Network=(Read-Host (T 'MT41_TASK_NETWORK_PROMPT')) -ceq 'YES'
+        $Existing=Get-MTStandaloneSchedule $ProjectRoot
+        $Destination=if($Existing){Get-MTScheduledJsonDestination ([string]$Existing.Task.Actions[0].Arguments)}else{''}
+        $Missed=$true;$Battery=$true;$Network=$true
         $Plan=New-MTSchedulePlan -ProjectRoot $ProjectRoot -Mode $Mode -Frequency $Frequency -Times $Times -Days $Days -JsonDestination $Destination -StartWhenAvailable $Missed -AllowBattery $Battery -RequireNetwork $Network
         Write-Host (T 'MT41_SCHEDULE_SUMMARY' @($Plan.Mode,$Plan.Frequency,($Plan.Times -join ','),($Plan.Days -join ','),$Plan.JsonDestination,$Plan.Arguments))
         Write-Host (T 'MT41_TASK_CONDITIONS' @($Missed,$Battery,$Network))
         if ($Mode -eq 'maintenance') {
             foreach($Module in $Catalog) { if(Get-IniBool $Config 'Modules' $Module.Key $false) { Write-Host $Module.Name } }
         }
-        if ((Read-Host (T 'MT41_CONFIRM')) -cne 'YES') { return }
-        $Replace=(Read-Host (T 'MT41_REPLACE_CONFIRM')) -ceq 'YES'
-        $Result=Register-MTStandaloneSchedule -Plan $Plan -Management $Management -ReplaceExisting:$Replace
+        $Result=Register-MTStandaloneSchedule -Plan $Plan -Management $Management -ReplaceExisting
         Write-Host (T 'MT41_TASK_CREATED' @($Result.TaskPath+$Result.TaskName))
     } catch {
         $Code=$_.Exception.Message

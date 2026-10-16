@@ -121,13 +121,25 @@ function Save-MTUpdateJson {
 }
 
 function Set-MTStandalonePreference {
-    param([string]$ProjectRoot,[bool]$AutomaticInstallEnabled)
+    param([string]$ProjectRoot,[bool]$AutomaticInstallEnabled,[switch]$PreserveUnknown)
     if(-not (Test-MTAdministrator)){throw 'MT41_ADMIN_REQUIRED'}
     if(Test-Path 'HKLM:\SOFTWARE\Policies\Kraugh\Maintenance Toolkit\SelfUpdate'){throw 'MT41_POLICY_OWNED'}
     if(-not (Test-MTProtectedPath $ProjectRoot)){throw 'MT41_ROOT_UNPROTECTED'}
+    if((Get-MTSelfUpdateConfiguration $ProjectRoot).Management -eq 'gpo'){throw 'MT41_MANAGEMENT_BLOCKED'}
+    if($PreserveUnknown -and $AutomaticInstallEnabled){throw 'MT41_CONFIG_INVALID'}
     $State=Get-MTUpdateStatePath $ProjectRoot
     Initialize-MTProtectedDirectory $State
-    Save-MTUpdateJson (Join-Path $State 'preferences.json') ([pscustomobject]@{Management='standalone';AutomaticInstallEnabled=$AutomaticInstallEnabled})
+    $Management=if($PreserveUnknown){'unknown'}else{'standalone'}
+    Save-MTUpdateJson (Join-Path $State 'preferences.json') ([pscustomobject]@{Management=$Management;AutomaticInstallEnabled=$AutomaticInstallEnabled})
+}
+
+function Get-MTManagementMenuAvailability {
+    param([string]$ProjectRoot)
+    $Configuration=Get-MTSelfUpdateConfiguration $ProjectRoot
+    [pscustomobject]@{
+        Preferences=($Configuration.Status -eq 'Valid' -and $Configuration.Management -ne 'gpo' -and $Configuration.Source -ne 'MachinePolicy')
+        Schedule=[bool]$Configuration.CanInstall
+    }
 }
 
 function Enter-MTInstallationLock {
@@ -349,10 +361,14 @@ function Invoke-MTUpdateMenu {
 function Invoke-MTPreferenceWizard {
     param([string]$ProjectRoot)
     try {
-        Write-Host (T 'MT41_STANDALONE_WARNING')
-        if((Read-Host (T 'MT41_CONFIRM')) -cne 'YES'){return}
-        $Automatic=(Read-Host (T 'MT41_AUTO_CONFIRM')) -ceq 'YES'
-        Set-MTStandalonePreference $ProjectRoot $Automatic
+        if(-not (Get-MTManagementMenuAvailability $ProjectRoot).Preferences){throw 'MT41_MANAGEMENT_BLOCKED'}
+        $Configuration=Get-MTSelfUpdateConfiguration $ProjectRoot
+        $Current=T $(if($Configuration.AutomaticInstallEnabled){'MT41_AUTO_ON'}else{'MT41_AUTO_OFF'})
+        $Answer=(Read-Host (T 'MT41_AUTO_CONFIRM' @($Current))).Trim().ToUpperInvariant()
+        if($Answer -in @('YES','Y','SI','SÌ','SÍ','S','OUI','JA','J','是','はい')){$Automatic=$true}
+        elseif($Answer -in @('NO','N','NON','NEIN','NEJ','否','いいえ')){$Automatic=$false}
+        else{return}
+        Set-MTStandalonePreference $ProjectRoot $Automatic -PreserveUnknown:($Configuration.Management -eq 'unknown' -and -not $Automatic)
         Write-Host (T 'MT41_PREFERENCES_SAVED')
     }catch{
         $Code=$_.Exception.Message

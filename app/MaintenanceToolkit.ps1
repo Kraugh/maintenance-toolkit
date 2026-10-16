@@ -397,6 +397,7 @@ function Invoke-MTSelfTest {
 
 
 function Show-Menu {
+    $ManagementActions=Get-MTManagementMenuAvailability $Root
     Clear-Host
     Write-Host "============================================================"
     Write-Host " Maintenance Toolkit $Version"
@@ -419,9 +420,9 @@ function Show-Menu {
     Write-Host ("[C] {0}" -f (T "MENU_OPEN_CONFIG"))
     Write-Host ("[L] {0}" -f (T "MENU_OPEN_LOGS"))
     Write-Host ("[T] {0}" -f (T "MENU_SELFTEST"))
-    Write-Host ("[P] {0}" -f (T 'MT41_MENU_SCHEDULE'))
+    if($ManagementActions.Schedule){Write-Host ("[P] {0}" -f (T 'MT41_MENU_SCHEDULE'))}
     Write-Host ("[V] {0}" -f (T 'MT41_MENU_UPDATE'))
-    Write-Host ("[G] {0}" -f (T 'MT41_MENU_PREFERENCES'))
+    if($ManagementActions.Preferences){Write-Host ("[G] {0}" -f (T 'MT41_MENU_PREFERENCES'))}
     Write-Host ("[H] {0}" -f (T 'MT41_MENU_LANGUAGES'))
     Write-Host ("[I] {0}" -f (T "MENU_INFO"))
     Write-Host ("[Q] {0}" -f (T "MENU_EXIT"))
@@ -681,6 +682,7 @@ function Select-Modules {
         }
 
         if ($Choice -match '^[Pp]$') {
+            if(-not (Get-MTManagementMenuAvailability $Root).Schedule){continue}
             Invoke-MTScheduleWizard -ProjectRoot $Root
             [void](Read-Host (T 'MENU_PRESS_ENTER'))
             continue
@@ -691,8 +693,8 @@ function Select-Modules {
             continue
         }
         if ($Choice -match '^[Gg]$') {
+            if(-not (Get-MTManagementMenuAvailability $Root).Preferences){continue}
             Invoke-MTPreferenceWizard -ProjectRoot $Root
-            [void](Read-Host (T 'MENU_PRESS_ENTER'))
             continue
         }
         if ($Choice -match '^[Hh]$') {
