@@ -1,0 +1,40 @@
+# Issue #28 — acceptance review after public 4.1.2 deployment
+
+16 October 2026, Europe/Rome. User authorized reviewing every criterion and closing only if satisfied. Reviewed the live [issue body and comments](https://github.com/Kraugh/maintenance-toolkit/issues/28), approved [ownership/consent decisions](decisions.md#2026-10-13--mt-41-self-update-ownership-and-consent), production source, final 122-test log, raw R04 pilot/rollback results and [4.1.2 release/hosting verification](MT-4.1.2-RELEASE-VERIFICATION.md). No new installation, maintenance, task, runtime/package/version/metadata change or dependency acquisition was performed for this audit.
+
+## Decision
+
+All four Definition of Done criteria and the supporting security/reliability requirements are satisfied within the approved deployment/consent contract. Close #28 as completed. The earlier final-public-package installation blocker is resolved by the final signed R02 VM tests preceding 4.1.2 publication; public transport alone was not used as installation evidence. The [15 October review](ISSUE-REVIEW-20261015.md) and failed 4.1.1/R01 reports remain historical.
+
+## Definition of Done
+
+| Criterion | Evidence and limits |
+| --- | --- |
+| Successful upgrade from previous stable | Exact final R02 MSI/ZIP upgrades from public 4.1.1 passed on the VM; 4.0.6 bootstrap also passed. Native MSI and actual new-runtime elevated SelfTest exit 0, installed bytes/version/registration and preservation checked. Manual authenticated bootstrap is explicit: old 4.0.6 has no applying updater, and affected 4.1.1 fails before application. |
+| Invalid checksum, invalid signature, interrupted download, failed replacement | Final regression log records payload-tamper and unsigned-file rejection, truncated/oversized streams, invalid origins/redirects and cleanup. Final R02 signed ZIP rejects a modified script; real locked-file replacement/recovery passed for both baselines. R04 raw grouped result proves damaged signed-catalog rejection; real HTTPS interruption after 32 bytes and partial cleanup are documented. R04 intentional signed MSI failure returned 1603 after file changes and verified actual rollback/recovery; this is previous private-pilot evidence, not a repeated final-MSI rollback. |
+| ZIP, manual MSI and GPO distinction | Real final VM targets classified/installed as ZIP and MSI; malformed unrelated registration fix and malformed MT/Program Files rejection regressions passed. Configuration resolver tests cover missing/unknown, GPO overriding local opt-in, invalid policy and explicit standalone opt-in. GPO permits detection/reporting, never MT installation; unknown cannot install. These policy tests are isolated, not a real domain/GPO deployment certification. Domain membership alone is not ownership evidence. |
+| IT/EN documentation published with feature | Paired upgrade instructions, release notes and source-reviewed website published. Actual hosting check byte-matched eighteen pages and three API files, detection 4.1.2/authenticated sequence 7, and followed metadata-linked GitHub package trust. Runtime languages/partial coverage/fallback and manual bootstrap are disclosed. |
+
+## Supporting security and reliability requirements
+
+| Requirement | Implementation/evidence |
+| --- | --- |
+| Official manifest and package integrity | Exact packaged production downloader retrieved deployed official metadata; metadata catalog, pinned publisher, hashes/sizes, sequence/expiry, URL restrictions and MSI identity passed. Signed metadata supplies authoritative SHA-256 values; public checksum sidecars also ship. This is the approved authenticated-manifest contract, not trust in an unsigned downloaded checksum alone. |
+| Authenticode and authenticated scripts | Timestamped launcher/MSI and signed ZIP payload/metadata catalogs verify against the pinned approved Certum identity. Final payload tamper rejected without script execution. |
+| Mark of the Web | Static source review: New-MTPreparedUpdate calls Unblock-File only after catalog/hash/signature/MSI identity verification. No new explicit ADS/MOTW fixture was run in this audit; do not claim one. |
+| Staging and separate elevated updater | Protected installation-specific ProgramData state/work, validated paths/ACLs, installation mutex and external helper. Launcher manifest requires administrator; preparation checks administrator. R04 real helper waited for parent exit, applied ZIP and restarted one verified diagnostic session. |
+| Preservation | Final MSI/ZIP tests preserve settings/INI, log/report canaries, protected consent bytes/ACL, InventoryShare and canonical/original task XML. Exception file absent before/after, so the historical corporate eight-entry file is not claimed tested here. |
+| Safe failure and rollback | Preparation failure cleans partial work before changes; regression coverage. Final ZIP locked-file failure blocks maintenance and real recovery verifies old bytes. R04 real MSI 1603 triggers RecoveryRequired, blocks maintenance, verifies rollback, then clears block only after recovery; no blind downgrade/reboot. |
+| Restart and installed version | Final actual new-runtime SelfTest resume exits 0, installed bytes/version/registration verify, handoff consumed once and replay rejected. Separate-helper restart and single diagnostic resume are R04 evidence. No real maintenance run is claimed. |
+| Update diagnostics | Protected transaction.json, last-preparation.json, last-cleanup.json and last-msi.log record phases/errors, cleanup and native MSI detail; real pilot/final results inspected. Raw identity-bearing snapshots remain outside public documentation. |
+| Standalone consent | Static review of Invoke-MTUpdateMenu: first explicit YES before preparation/download, second before helper launch; cancellation cleans prepared payload. Unknown/GPO CanInstall is false and policy rechecked. The separately approved protected opt-in permits scheduled standalone automation only; the issue's confirmation sentence is interpreted with that explicit user-approved refinement, not as a newly removed requirement. |
+
+## Relevance of previous failure/helper evidence
+
+Compared the R04 frozen source (`dist/staging/mt-zip-r04`) with the exact public R02 extracted payload (`launcher/build/FinalReleaseVerification-412-R02/expanded/Maintenance-Toolkit-4.1.2`). `app/tools/Invoke-MTUpdateHelper.ps1` and `app/core/UpdateApplication.ps1` have identical decoded text; the final files add a UTF-8 BOM. Whole-file hashes therefore differ; byte identity is not claimed. Invoke-MTUpdateMenu, Start-MTPreparedHelper, Get-MTResumeProcessArguments and Receive-MTResume function texts are unchanged. R04 raw grouped-result.json, zip-recovery-result.json and intentional-rollback/rollback-result.json all report Passed. Final regressions/application tests additionally cover the current encoding/package environment. Historical failure tests are not reassigned to the final MSI.
+
+## Boundaries and retained evidence
+
+Windows 10 was explicitly waived for this phase. Real GPO assignment/upgrade GUI procedure remains #26; full translations #20; corporate SMB authorization, live selective Winget installation, arbitrary power-loss/MSI 1618 and real maintenance resume are not certified by this closure. They are not additional acceptance requirements invented for #28 or claimed satisfied. Separate private helper, final-package install and public transport checks remain distinct evidence layers; no single final-public V-menu-to-helper end-to-end test is claimed.
+
+Current release evidence paths and frozen hashes are in [the final report](MT-4.1.2-RELEASE-VERIFICATION.md). Previous raw pilot paths and intentional failure fixture are in [the historical VM pilot](MT-4.1-VM-PILOT-20261015.md). These artifacts are retained for review; no temporary task/file created by this audit besides this canonical document and the closure comment body recorded in the preparation directory. Do not change public package bytes to embed this later audit.
